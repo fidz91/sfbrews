@@ -5,127 +5,84 @@ import { getCollection } from 'astro:content';
 import { isPostVisible } from '../utils/srm';
 
 const recipePosts = (await getCollection('posts'))
-  .filter(isPostVisible)
-  .filter(
-    (post) =>
-      post.data.category === 'recipe' ||
-      post.data.category === 'brewday' ||
-      post.data.recipe !== undefined
-  )
+  .filter((post) => isPostVisible(post) && (post.data.recipe !== undefined || post.data.category === 'recipe'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <BaseLayout
-  title="Recipes & Brewdays — SFBrews"
-  description="All-grain homebrewing recipes and brewday logs with grist bill percentages, hop schedules, and fermentation notes."
+  title="Homebrewing Recipes — SFBrews"
+  description="All-grain homebrewing recipes with grist bill percentages, hop schedules, and brewday notes."
 >
   <div class="outer page-wrap">
     <div class="inner">
-      <header class="md-page-banner md-reveal">
-        <span class="banner-icon-badge">
-          <span class="material-symbols-outlined filled" aria-hidden="true">menu_book</span>
-        </span>
-        <div>
-          <span class="banner-kicker">Formulations &amp; Logs</span>
-          <h1>Recipes &amp; Brewdays</h1>
-          <p>
-            All-grain formulations and brewday notes with complete grist percentages, hop schedules, and water profiles.
-          </p>
-        </div>
+      <header class="page-head">
+        <h1>Recipes &amp; Brewdays</h1>
+        <p>All-grain formulations with grist bill percentages, hop schedules, water profiles, and brewday logs.</p>
       </header>
 
-      <div class="post-feed">
-        {recipePosts.map((post) => <PostCard post={post} />)}
-      </div>
+      {
+        recipePosts.length > 0 ? (
+          <div class="post-feed">
+            {recipePosts.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        ) : (
+          <p class="empty-msg">No recipes published yet.</p>
+        )
+      }
     </div>
   </div>
 </BaseLayout>
 
 <style>
   .page-wrap {
-    padding-top: 2rem;
+    padding-top: 4rem;
   }
 
-  .md-page-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    background-color: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    padding: clamp(1.35rem, 3vw, 2.25rem);
-    margin-bottom: 2.25rem;
-    box-shadow: var(--md-sys-elevation-1);
+  .page-head {
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
   }
 
-  .banner-icon-badge {
-    width: 54px;
-    height: 54px;
-    border-radius: var(--md-sys-shape-corner-large);
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .banner-icon-badge .material-symbols-outlined {
-    font-size: 26px;
-  }
-
-  .banner-kicker {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--md-sys-color-primary);
-    margin-bottom: 0.2rem;
-  }
-
-  .md-page-banner h1 {
-    font-size: clamp(1.8rem, 4vw, 2.45rem);
+  .page-head h1 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
     font-weight: 800;
     letter-spacing: -0.02em;
-    line-height: 1.15;
-    margin-bottom: 0.45rem;
-    color: var(--md-sys-color-on-surface);
+    margin-bottom: 0.6rem;
   }
 
-  .md-page-banner p {
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 1rem;
-    max-width: 680px;
+  .page-head p {
+    color: var(--text-muted);
+    font-size: 1.08rem;
   }
 
   .post-feed {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.75rem;
+    gap: 3.75rem 2.75rem;
+  }
+
+  .empty-msg {
+    color: var(--text-muted);
+    padding: 2.5rem 0;
   }
 
   @media (max-width: 960px) {
     .post-feed {
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.35rem;
+      gap: 3rem 2rem;
     }
   }
 
   @media (max-width: 640px) {
     .page-wrap {
-      padding-top: 1.25rem;
+      padding-top: 2.5rem;
     }
-
-    .md-page-banner {
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
     .post-feed {
       grid-template-columns: 1fr;
-      gap: 1.25rem;
+      gap: 2.75rem;
     }
   }
 </style>

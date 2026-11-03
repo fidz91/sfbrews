@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="14" fill="#FAF8F4"/>
-  <rect x="3" y="3" width="58" height="58" rx="11" stroke="#2C5538" stroke-width="2"/>
-  <path d="M32 13C25 18 22 25 22 33C22 41 27 47 32 51C37 47 42 41 42 33C42 25 39 18 32 13Z" fill="#E9F0EB" stroke="#2C5538" stroke-width="2.2" stroke-linejoin="round"/>
-  <path d="M32 13V51" stroke="#2C5538" stroke-width="2"/>
-  <path d="M23 27C27 29 30 29 32 27C34 29 37 29 41 27" stroke="#2C5538" stroke-width="2" stroke-linecap="round"/>
-  <path d="M22.5 36C27 38.5 30 38.5 32 36C34 38.5 37 38.5 41.5 36" stroke="#2C5538" stroke-width="2" stroke-linecap="round"/>
-  <circle cx="32" cy="10" r="2" fill="#B86B27"/>
+  <rect width="64" height="64" rx="14" fill="#FFFFFF"/>
+  <rect x="3" y="3" width="58" height="58" rx="11" stroke="#5B8C2A" stroke-width="2"/>
+  <path d="M32 13C25 18 22 25 22 33C22 41 27 47 32 51C37 47 42 41 42 33C42 25 39 18 32 13Z" fill="#E5F2C9" stroke="#2F3E1F" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M32 13V51" stroke="#2F3E1F" stroke-width="2"/>
+  <path d="M23 27C27 29 30 29 32 27C34 29 37 29 41 27" stroke="#5B8C2A" stroke-width="2" stroke-linecap="round"/>
+  <path d="M22.5 36C27 38.5 30 38.5 32 36C34 38.5 37 38.5 41.5 36" stroke="#5B8C2A" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="32" cy="10" r="2.5" fill="#F28C28"/>
 </svg>

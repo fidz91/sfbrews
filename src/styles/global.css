@@ -1,76 +1,84 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
 :root {
-  /* Material Design 3 Color System — Craft Brewery Warm Tonal Palette (Light) */
-  --md-sys-color-primary: #8b5000;
+  /* Core Brand Palette */
+  --palette-hop-green: #5B8C2A;
+  --palette-fresh-green: #9BC53D;
+  --palette-pale-green: #E5F2C9;
+  --palette-amber-orange: #F28C28;
+  --palette-deep-forest: #2F3E1F;
+
+  /* Material Design 3 Color System — Botanical Hop & Wort Palette (Light, High-Whitespace) */
+  --md-sys-color-primary: #5B8C2A;
   --md-sys-color-on-primary: #ffffff;
-  --md-sys-color-primary-container: #ffdcbe;
-  --md-sys-color-on-primary-container: #2c1600;
+  --md-sys-color-primary-container: #E5F2C9;
+  --md-sys-color-on-primary-container: #2F3E1F;
 
-  --md-sys-color-secondary: #4e6639;
-  --md-sys-color-on-secondary: #ffffff;
-  --md-sys-color-secondary-container: #cfecb4;
-  --md-sys-color-on-secondary-container: #0c2000;
+  --md-sys-color-secondary: #9BC53D;
+  --md-sys-color-on-secondary: #2F3E1F;
+  --md-sys-color-secondary-container: #E5F2C9;
+  --md-sys-color-on-secondary-container: #2F3E1F;
 
-  --md-sys-color-tertiary: #75543d;
+  --md-sys-color-tertiary: #F28C28;
   --md-sys-color-on-tertiary: #ffffff;
-  --md-sys-color-tertiary-container: #ffdcc5;
-  --md-sys-color-on-tertiary-container: #2b1504;
+  --md-sys-color-tertiary-container: #fff2e2;
+  --md-sys-color-on-tertiary-container: #2F3E1F;
 
   --md-sys-color-error: #ba1a1a;
   --md-sys-color-on-error: #ffffff;
   --md-sys-color-error-container: #ffdad6;
   --md-sys-color-on-error-container: #410002;
 
-  --md-sys-color-background: #fff8f4;
-  --md-sys-color-on-background: #211a14;
-  --md-sys-color-surface: #fff8f4;
-  --md-sys-color-surface-dim: #e5d8ce;
-  --md-sys-color-surface-bright: #fff8f4;
+  /* Crisp, airy white & pale botanical surfaces for ample breathing room */
+  --md-sys-color-background: #ffffff;
+  --md-sys-color-on-background: #2F3E1F;
+  --md-sys-color-surface: #ffffff;
+  --md-sys-color-surface-dim: #E5F2C9;
+  --md-sys-color-surface-bright: #ffffff;
   --md-sys-color-surface-container-lowest: #ffffff;
-  --md-sys-color-surface-container-low: #fef1e7;
-  --md-sys-color-surface-container: #f8ece2;
-  --md-sys-color-surface-container-high: #f2e6dc;
-  --md-sys-color-surface-container-highest: #ece0d6;
+  --md-sys-color-surface-container-low: #fafcf6;
+  --md-sys-color-surface-container: #f4f9ec;
+  --md-sys-color-surface-container-high: #E5F2C9;
+  --md-sys-color-surface-container-highest: #d7e9b2;
 
-  --md-sys-color-on-surface: #211a14;
-  --md-sys-color-on-surface-variant: #51443a;
-  --md-sys-color-outline: #837468;
-  --md-sys-color-outline-variant: #d5c3b5;
-  --md-sys-color-scrim: rgba(20, 14, 9, 0.48);
+  --md-sys-color-on-surface: #2F3E1F;
+  --md-sys-color-on-surface-variant: #4c5e37;
+  --md-sys-color-outline: #6c8252;
+  --md-sys-color-outline-variant: #e3edd0;
+  --md-sys-color-scrim: rgba(47, 62, 31, 0.45);
 
   /* State Layer Opacities (Material 3) */
-  --md-state-hover: rgba(139, 80, 0, 0.08);
-  --md-state-focus: rgba(139, 80, 0, 0.12);
-  --md-state-pressed: rgba(139, 80, 0, 0.14);
-  --md-ripple-color: rgba(139, 80, 0, 0.16);
+  --md-state-hover: rgba(91, 140, 42, 0.08);
+  --md-state-focus: rgba(91, 140, 42, 0.12);
+  --md-state-pressed: rgba(91, 140, 42, 0.15);
+  --md-ripple-color: rgba(91, 140, 42, 0.16);
 
   /* Legacy alias mappings for seamless compatibility */
   --bg: var(--md-sys-color-surface);
-  --bg-soft: var(--md-sys-color-surface-container);
+  --bg-soft: var(--md-sys-color-surface-container-low);
   --text-main: var(--md-sys-color-on-surface);
   --text-body: var(--md-sys-color-on-surface-variant);
   --text-muted: var(--md-sys-color-outline);
   --accent: var(--md-sys-color-primary);
-  --tag-color: var(--md-sys-color-secondary);
+  --tag-color: var(--md-sys-color-primary);
   --border: var(--md-sys-color-outline-variant);
 
   /* Material Design 3 Shape Scale */
   --md-sys-shape-corner-none: 0px;
-  --md-sys-shape-corner-extra-small: 4px;
-  --md-sys-shape-corner-small: 8px;
-  --md-sys-shape-corner-medium: 12px;
-  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-small: 6px;
+  --md-sys-shape-corner-small: 10px;
+  --md-sys-shape-corner-medium: 14px;
+  --md-sys-shape-corner-large: 20px;
   --md-sys-shape-corner-extra-large: 28px;
   --md-sys-shape-corner-full: 9999px;
 
-  /* Material Design 3 Elevation Shadows */
+  /* Softened, Airy Elevation Shadows */
   --md-sys-elevation-0: none;
-  --md-sys-elevation-1: 0 1px 2px rgba(33, 26, 20, 0.08), 0 1px 3px 1px rgba(33, 26, 20, 0.06);
-  --md-sys-elevation-2: 0 1px 2px rgba(33, 26, 20, 0.1), 0 2px 6px 2px rgba(33, 26, 20, 0.08);
-  --md-sys-elevation-3: 0 4px 8px 3px rgba(33, 26, 20, 0.1), 0 1px 3px rgba(33, 26, 20, 0.12);
-  --md-sys-elevation-4: 0 6px 10px 4px rgba(33, 26, 20, 0.12), 0 2px 4px rgba(33, 26, 20, 0.14);
-  --md-sys-elevation-5: 0 8px 12px 6px rgba(33, 26, 20, 0.14), 0 4px 6px rgba(33, 26, 20, 0.16);
+  --md-sys-elevation-1: 0 2px 10px rgba(47, 62, 31, 0.04), 0 1px 3px rgba(47, 62, 31, 0.03);
+  --md-sys-elevation-2: 0 6px 20px rgba(47, 62, 31, 0.07), 0 2px 6px rgba(47, 62, 31, 0.04);
+  --md-sys-elevation-3: 0 12px 28px rgba(47, 62, 31, 0.09), 0 4px 10px rgba(47, 62, 31, 0.05);
+  --md-sys-elevation-4: 0 16px 36px rgba(47, 62, 31, 0.11), 0 6px 14px rgba(47, 62, 31, 0.06);
+  --md-sys-elevation-5: 0 20px 44px rgba(47, 62, 31, 0.14), 0 8px 18px rgba(47, 62, 31, 0.08);
 
   /* Material Design 3 Motion System */
   --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
@@ -96,61 +104,61 @@
   --font-sans: 'Roboto', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: 'Lora', Georgia, serif;
 
-  /* Layout Dimensions */
-  --max-site: 1200px;
-  --max-canvas: 760px;
-  --top-bar-height: 68px;
+  /* Generous Layout Dimensions for Ample Whitespace */
+  --max-site: 1240px;
+  --max-canvas: 740px;
+  --top-bar-height: 76px;
   --bottom-nav-height: 72px;
 }
 
-/* Material Design 3 Dark Theme */
+/* Dark Theme anchored on Deep Forest #2F3E1F */
 [data-theme='dark'] {
-  --md-sys-color-primary: #ffb870;
-  --md-sys-color-on-primary: #4a2800;
-  --md-sys-color-primary-container: #693c00;
-  --md-sys-color-on-primary-container: #ffdcbe;
+  --md-sys-color-primary: #9BC53D;
+  --md-sys-color-on-primary: #2F3E1F;
+  --md-sys-color-primary-container: #5B8C2A;
+  --md-sys-color-on-primary-container: #E5F2C9;
 
-  --md-sys-color-secondary: #b4cf9a;
-  --md-sys-color-on-secondary: #213610;
-  --md-sys-color-secondary-container: #374d24;
-  --md-sys-color-on-secondary-container: #cfecb4;
+  --md-sys-color-secondary: #9BC53D;
+  --md-sys-color-on-secondary: #2F3E1F;
+  --md-sys-color-secondary-container: #3d5622;
+  --md-sys-color-on-secondary-container: #E5F2C9;
 
-  --md-sys-color-tertiary: #e4bfa6;
-  --md-sys-color-on-tertiary: #422915;
-  --md-sys-color-tertiary-container: #5b3f29;
-  --md-sys-color-on-tertiary-container: #ffdcc5;
+  --md-sys-color-tertiary: #F28C28;
+  --md-sys-color-on-tertiary: #2F3E1F;
+  --md-sys-color-tertiary-container: #5e380d;
+  --md-sys-color-on-tertiary-container: #ffe2c6;
 
   --md-sys-color-error: #ffb4ab;
   --md-sys-color-on-error: #690005;
   --md-sys-color-error-container: #93000a;
   --md-sys-color-on-error-container: #ffdad6;
 
-  --md-sys-color-background: #18120c;
-  --md-sys-color-on-background: #eee0d5;
-  --md-sys-color-surface: #18120c;
-  --md-sys-color-surface-dim: #18120c;
-  --md-sys-color-surface-bright: #403830;
-  --md-sys-color-surface-container-lowest: #130d08;
-  --md-sys-color-surface-container-low: #211a14;
-  --md-sys-color-surface-container: #251e18;
-  --md-sys-color-surface-container-high: #302822;
-  --md-sys-color-surface-container-highest: #3b332c;
+  --md-sys-color-background: #1b2412;
+  --md-sys-color-on-background: #E5F2C9;
+  --md-sys-color-surface: #1b2412;
+  --md-sys-color-surface-dim: #151c0e;
+  --md-sys-color-surface-bright: #364724;
+  --md-sys-color-surface-container-lowest: #141b0d;
+  --md-sys-color-surface-container-low: #232f17;
+  --md-sys-color-surface-container: #2F3E1F;
+  --md-sys-color-surface-container-high: #384a25;
+  --md-sys-color-surface-container-highest: #43572d;
 
-  --md-sys-color-on-surface: #eee0d5;
-  --md-sys-color-on-surface-variant: #d5c3b5;
-  --md-sys-color-outline: #9e8e81;
-  --md-sys-color-outline-variant: #51443a;
+  --md-sys-color-on-surface: #f2f8e4;
+  --md-sys-color-on-surface-variant: #c8dbb0;
+  --md-sys-color-outline: #8ea672;
+  --md-sys-color-outline-variant: #3d5029;
   --md-sys-color-scrim: rgba(0, 0, 0, 0.65);
 
-  --md-state-hover: rgba(255, 184, 112, 0.08);
-  --md-state-focus: rgba(255, 184, 112, 0.12);
-  --md-state-pressed: rgba(255, 184, 112, 0.16);
-  --md-ripple-color: rgba(255, 184, 112, 0.2);
+  --md-state-hover: rgba(155, 197, 61, 0.1);
+  --md-state-focus: rgba(155, 197, 61, 0.14);
+  --md-state-pressed: rgba(155, 197, 61, 0.18);
+  --md-ripple-color: rgba(155, 197, 61, 0.2);
 
-  --md-sys-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
-  --md-sys-elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.38), 0 1px 2px rgba(0, 0, 0, 0.3);
-  --md-sys-elevation-3: 0 4px 10px 3px rgba(0, 0, 0, 0.42), 0 2px 4px rgba(0, 0, 0, 0.32);
-  --md-sys-elevation-4: 0 6px 14px 4px rgba(0, 0, 0, 0.45), 0 3px 6px rgba(0, 0, 0, 0.35);
+  --md-sys-elevation-1: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --md-sys-elevation-2: 0 6px 16px rgba(0, 0, 0, 0.4);
+  --md-sys-elevation-3: 0 10px 24px rgba(0, 0, 0, 0.45);
+  --md-sys-elevation-4: 0 14px 32px rgba(0, 0, 0, 0.5);
 }
 
 *,
@@ -166,7 +174,7 @@ html {
   color: var(--md-sys-color-on-background);
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
@@ -192,6 +200,7 @@ h3,
 h4,
 .font-display {
   font-family: var(--font-display);
+  color: var(--md-sys-color-on-surface);
 }
 
 a {
@@ -243,9 +252,9 @@ img {
     'opsz' 24;
 }
 
-/* Layout Containers */
+/* Layout Containers — Generous Horizontal Padding */
 .outer {
-  padding: 0 clamp(1rem, 4vw, 2.5rem);
+  padding: 0 clamp(1.5rem, 6vw, 4rem);
 }
 
 .inner {
@@ -260,28 +269,28 @@ img {
   margin: 0 auto;
 }
 
-/* Material 3 Assist / Category Chip */
+/* Assist / Category Chip */
 .primary-tag {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--md-sys-color-on-secondary-container);
-  background-color: var(--md-sys-color-secondary-container);
-  padding: 0.28rem 0.75rem;
-  border-radius: var(--md-sys-shape-corner-small);
-  margin-bottom: 0.65rem;
+  color: var(--md-sys-color-on-primary-container);
+  background-color: var(--md-sys-color-primary-container);
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  margin-bottom: 0.75rem;
   width: fit-content;
   transition:
     background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
     transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-spring);
 }
 
-/* Material 3 Buttons */
+/* Buttons */
 .md-btn {
   position: relative;
   overflow: hidden;
@@ -290,7 +299,7 @@ img {
   justify-content: center;
   gap: 0.5rem;
   min-height: 44px;
-  padding: 0.625rem 1.35rem;
+  padding: 0.65rem 1.5rem;
   border-radius: var(--md-sys-shape-corner-full);
   font-family: var(--font-display);
   font-size: 0.9rem;
@@ -317,7 +326,7 @@ img {
 
 .md-btn-filled:hover {
   box-shadow: var(--md-sys-elevation-2);
-  filter: brightness(1.06);
+  background-color: var(--palette-deep-forest);
 }
 
 .md-btn-tonal {
@@ -339,7 +348,7 @@ img {
   background-color: var(--md-state-hover);
 }
 
-/* Material 3 Icon Button */
+/* Icon Button */
 .md-icon-btn {
   position: relative;
   overflow: hidden;
@@ -361,7 +370,7 @@ img {
 
 .md-icon-btn:hover {
   background-color: var(--md-state-hover);
-  color: var(--md-sys-color-on-surface);
+  color: var(--md-sys-color-primary);
 }
 
 .md-icon-btn:active {
@@ -369,10 +378,10 @@ img {
   background-color: var(--md-state-pressed);
 }
 
-/* Material 3 Surface Cards */
+/* Clean, Uncluttered Surface Cards */
 .md-card {
   position: relative;
-  background-color: var(--md-sys-color-surface-container-low);
+  background-color: var(--md-sys-color-surface-container-lowest);
   border-radius: var(--md-sys-shape-corner-large);
   border: 1px solid var(--md-sys-color-outline-variant);
   box-shadow: var(--md-sys-elevation-1);
@@ -386,12 +395,11 @@ img {
 .md-card-interactive:hover {
   transform: translateY(-4px);
   box-shadow: var(--md-sys-elevation-3);
-  background-color: var(--md-sys-color-surface-container);
-  border-color: var(--md-sys-color-outline);
+  border-color: var(--palette-fresh-green);
 }
 
 .md-card-interactive:active {
-  transform: translateY(-1px) scale(0.99);
+  transform: translateY(-1px) scale(0.995);
   box-shadow: var(--md-sys-elevation-1);
 }
 
@@ -420,7 +428,7 @@ img {
 /* Scroll-Triggered Entrance Motion */
 .md-reveal {
   opacity: 0;
-  transform: translateY(20px) scale(0.985);
+  transform: translateY(20px) scale(0.99);
   transition:
     opacity var(--md-sys-motion-duration-long1) var(--md-sys-motion-easing-emphasized-decelerate),
     transform var(--md-sys-motion-duration-long1) var(--md-sys-motion-easing-emphasized-decelerate);
@@ -433,7 +441,7 @@ img {
   transform: translateY(0) scale(1);
 }
 
-/* Astro View Transitions Custom Animations (Material Shared Axis Y / Container Transform) */
+/* Astro View Transitions Custom Animations */
 @keyframes md-fade-in {
   from {
     opacity: 0;
@@ -464,16 +472,16 @@ img {
   animation: 320ms var(--md-sys-motion-easing-emphasized-decelerate) both md-fade-in;
 }
 
-/* Clean Article Prose (Material 3 Long-form Reading) */
+/* Clean Article Prose (Generous Line Height & Breathing Room) */
 .prose {
   font-family: var(--font-sans);
-  font-size: 1.0625rem;
-  line-height: 1.8;
+  font-size: 1.075rem;
+  line-height: 1.85;
   color: var(--md-sys-color-on-surface-variant);
 }
 
 .prose p {
-  margin-bottom: 1.45rem;
+  margin-bottom: 1.65rem;
 }
 
 .prose strong {
@@ -483,53 +491,52 @@ img {
 
 .prose h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+  font-size: clamp(1.4rem, 2.5vw, 1.75rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--md-sys-color-on-surface);
-  margin: 2.5rem 0 1rem;
-  line-height: 1.25;
+  margin: 3.25rem 0 1.15rem;
+  line-height: 1.28;
 }
 
 .prose h3 {
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 2vw, 1.3rem);
+  font-size: clamp(1.18rem, 2vw, 1.35rem);
   font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--md-sys-color-on-surface);
-  margin: 2rem 0 0.75rem;
+  margin: 2.5rem 0 0.9rem;
 }
 
 .prose ul,
 .prose ol {
-  margin-bottom: 1.6rem;
-  padding-left: 1.4rem;
+  margin-bottom: 1.85rem;
+  padding-left: 1.5rem;
 }
 
 .prose li {
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.65rem;
 }
 
 .prose blockquote {
-  margin: 2rem 0;
-  padding: 1.25rem 1.5rem;
+  margin: 2.5rem 0;
+  padding: 1.5rem 1.85rem;
   background-color: var(--md-sys-color-surface-container-low);
-  border-left: 4px solid var(--md-sys-color-primary);
+  border-left: 4px solid var(--palette-amber-orange);
   border-radius: 0 var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1.12rem;
+  font-size: 1.14rem;
   color: var(--md-sys-color-on-surface);
-  box-shadow: var(--md-sys-elevation-1);
 }
 
-/* Material 3 Data Tables */
+/* Clean Data Tables */
 .prose table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  margin: 1.5rem 0 2rem;
-  font-size: 0.94rem;
+  margin: 2rem 0 2.75rem;
+  font-size: 0.95rem;
   background-color: var(--md-sys-color-surface-container-lowest);
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--md-sys-shape-corner-medium);
@@ -539,7 +546,7 @@ img {
 .prose th,
 .prose td {
   text-align: left;
-  padding: 0.85rem 1rem;
+  padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
@@ -552,7 +559,7 @@ img {
 }
 
 .prose tbody tr:hover {
-  background-color: var(--md-state-hover);
+  background-color: var(--md-sys-color-surface-container-low);
 }
 
 .prose th {
@@ -561,7 +568,7 @@ img {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--md-sys-color-on-surface);
   background-color: var(--md-sys-color-surface-container);
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
@@ -569,10 +576,10 @@ img {
 .prose code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.88em;
-  background-color: var(--md-sys-color-surface-container-high);
+  background-color: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface);
-  padding: 0.2rem 0.45rem;
-  border-radius: var(--md-sys-shape-corner-small);
+  padding: 0.22rem 0.5rem;
+  border-radius: var(--md-sys-shape-corner-extra-small);
 }
 
 .prose a {
@@ -583,7 +590,7 @@ img {
 }
 
 .prose a:hover {
-  opacity: 0.8;
+  color: var(--palette-amber-orange);
 }
 
 /* SRM Color Swatch Dot */
@@ -592,7 +599,7 @@ img {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 1.5px solid rgba(0, 0, 0, 0.22);
+  border: 1.5px solid rgba(47, 62, 31, 0.22);
   box-shadow: 0 0 0 2px var(--md-sys-color-surface-container-lowest);
   vertical-align: middle;
   flex-shrink: 0;

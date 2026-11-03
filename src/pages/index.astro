@@ -11,60 +11,78 @@ const allPosts = (await getCollection('posts'))
 ---
 
 <BaseLayout>
-  <!-- Material 3 Expressive Hero Card -->
-  <section class="hero-section outer">
-    <div class="inner">
-      <div class="md-hero-card md-reveal">
-        <img
-          class="md-hero-cover"
-          src="https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?auto=format&fit=crop&w=2000&q=80"
-          alt="SFBrews"
-        />
-        <div class="md-hero-scrim"></div>
-        <div class="md-hero-content">
-          <span class="md-hero-chip">
-            <span class="material-symbols-outlined filled" aria-hidden="true">local_drink</span>
-            Small-Batch All-Grain Brewhouse
-          </span>
-          <h1 class="md-hero-title">SFBREWS</h1>
-          <p class="md-hero-description">
-            Homebrewing writeups, recipe formulations, experiments and everything beer related.
-          </p>
-          <div class="md-hero-actions">
-            <a href={withBase('/recipes')} class="md-btn md-btn-filled">
-              <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
-              Recipes &amp; Brewdays
-            </a>
-            <a href={withBase('/journal')} class="md-btn md-btn-tonal">
-              <span class="material-symbols-outlined" aria-hidden="true">search</span>
-              Search Archive
-            </a>
-          </div>
+  <!-- Expressive Hero with Integrated Translucent Taplist, Fermenting & Coming Soon HUD -->
+  <section class="site-hero outer">
+    <div class="site-hero-media" aria-hidden="true">
+      <img
+        class="site-header-cover"
+        src="https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?auto=format&fit=crop&w=2000&q=80"
+        alt=""
+      />
+      <div class="site-hero-scrim"></div>
+      <div class="site-hero-glow glow-amber"></div>
+      <div class="site-hero-glow glow-hop"></div>
+    </div>
+
+    <div class="site-hero-inner inner">
+      <div class="hero-copy">
+        <div class="hero-eyebrow-pill">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span>All-Grain Brewhouse &bull; Cellar Log</span>
         </div>
+        <h1 class="site-title">
+          SFBREWS <span class="title-accent">Journal</span>
+        </h1>
+        <p class="site-description">
+          Homebrewing writeups, recipe formulations, split-batch experiments &amp; everything beer related.
+        </p>
+      </div>
+
+      <!-- Integrated What's On Tap, Fermenting & Coming Soon inside the Hero -->
+      <div class="hero-taplist-slot">
+        <TaplistBoard />
       </div>
     </div>
   </section>
 
-  <!-- Main Content & Post Feed -->
-  <div class="outer">
+  <!-- Main Content & Expressive Post Feed -->
+  <div class="outer feed-section">
     <div class="inner">
-      <TaplistBoard />
-
-      <div class="section-bar md-reveal">
-        <h2 class="section-heading">
-          <span class="material-symbols-outlined filled" aria-hidden="true">auto_stories</span>
-          Latest Brewhouse Dispatches
-        </h2>
-        <a href={withBase('/journal')} class="section-link md-ripple-surface">
-          View all {allPosts.length} entries
-          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-        </a>
+      <div class="feed-toolbar md-reveal">
+        <div class="feed-toolbar-title">
+          <span class="material-symbols-outlined filled" aria-hidden="true">auto_awesome_mosaic</span>
+          <h2>Latest Brewdays &amp; Writeups</h2>
+        </div>
+        <div class="feed-quick-links">
+          <a href={withBase('/recipes')} class="glass-filter-chip">Recipes</a>
+          <a href={withBase('/experiments')} class="glass-filter-chip">Experiments</a>
+          <a href={withBase('/competitions')} class="glass-filter-chip">Competitions</a>
+          <a href={withBase('/journal')} class="glass-filter-chip accent">
+            <span>Full Archive</span>
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          </a>
+        </div>
       </div>
 
       <div class="post-feed">
         {
           allPosts.map((post, idx) => (
-            <PostCard post={post} large={idx === 0} />
+            <div
+              class:list={[
+                'feed-cell',
+                {
+                  'cell-hero': idx === 0,
+                  'cell-wide': idx === 1,
+                  'cell-tall': idx === 2,
+                },
+              ]}
+            >
+              <PostCard
+                post={post}
+                large={idx === 0}
+                tall={idx === 1 || idx === 2 || idx % 4 === 3}
+              />
+            </div>
           ))
         }
       </div>
@@ -73,178 +91,318 @@ const allPosts = (await getCollection('posts'))
 </BaseLayout>
 
 <style>
-  .hero-section {
-    padding-top: 1.25rem;
-    margin-bottom: 1.75rem;
-  }
-
-  .md-hero-card {
+  .site-hero {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    min-height: 350px;
-    padding: clamp(2rem, 5vw, 3.75rem);
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    background-color: #1f1610;
+    justify-content: center;
+    padding-top: 2.75rem;
+    padding-bottom: 2.5rem;
     color: #ffffff;
+    background-color: #130e0a;
     overflow: hidden;
-    box-shadow: var(--md-sys-elevation-2);
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 210, 160, 0.16);
   }
 
-  .md-hero-cover {
+  .site-hero-media {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .site-header-cover {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.45;
+    opacity: 0.42;
     transform: scale(1.03);
-    transition: transform 8s var(--md-sys-motion-easing-standard);
+    filter: saturate(1.15) contrast(1.05);
   }
 
-  .md-hero-card:hover .md-hero-cover {
-    transform: scale(1.08);
-  }
-
-  .md-hero-scrim {
+  .site-hero-scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      115deg,
-      rgba(24, 16, 10, 0.9) 0%,
-      rgba(34, 22, 12, 0.72) 55%,
-      rgba(34, 22, 12, 0.35) 100%
-    );
+    background:
+      linear-gradient(
+        180deg,
+        rgba(16, 11, 7, 0.68) 0%,
+        rgba(19, 14, 10, 0.45) 45%,
+        rgba(19, 14, 10, 0.88) 100%
+      );
   }
 
-  .md-hero-content {
+  .site-hero-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(64px);
+    opacity: 0.55;
+  }
+
+  .glow-amber {
+    width: 420px;
+    height: 420px;
+    top: -120px;
+    left: 8%;
+    background: radial-gradient(circle, rgba(234, 143, 0, 0.42), transparent 70%);
+  }
+
+  .glow-hop {
+    width: 380px;
+    height: 380px;
+    bottom: -140px;
+    right: 6%;
+    background: radial-gradient(circle, rgba(120, 165, 85, 0.32), transparent 70%);
+  }
+
+  .site-hero-inner {
     position: relative;
     z-index: 2;
-    max-width: 660px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.65rem;
   }
 
-  .md-hero-chip {
+  .hero-copy {
+    text-align: center;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-eyebrow-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: rgba(255, 220, 190, 0.18);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 220, 190, 0.3);
-    color: #ffdcbe;
+    gap: 0.45rem;
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     font-family: var(--font-display);
-    font-size: 0.76rem;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 1rem;
-  }
-
-  .md-hero-chip .material-symbols-outlined {
-    font-size: 16px;
-  }
-
-  .md-hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 3.35rem);
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    line-height: 1.08;
-    color: #ffffff;
+    letter-spacing: 0.08em;
+    color: #ffdcb8;
     margin-bottom: 0.75rem;
   }
 
-  .md-hero-description {
-    font-size: clamp(0.98rem, 2vw, 1.15rem);
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #ffb870;
+    box-shadow: 0 0 10px #ffb870;
+  }
+
+  .site-title {
+    font-size: clamp(2.15rem, 5vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: #ffffff;
+    margin-bottom: 0.55rem;
+    text-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .title-accent {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 500;
+    color: #ffb870;
+  }
+
+  .site-description {
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
     font-weight: 400;
-    color: rgba(255, 248, 244, 0.88);
-    line-height: 1.55;
-    margin-bottom: 1.65rem;
+    color: rgba(255, 255, 255, 0.86);
+    line-height: 1.45;
+    max-width: 580px;
   }
 
-  .md-hero-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+  .hero-taplist-slot {
+    width: 100%;
   }
 
-  .section-bar {
+  /* Feed Section & Translucent Filter Toolbar */
+  .feed-section {
+    padding-bottom: 1rem;
+  }
+
+  .feed-toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.65rem;
+    padding: 0.85rem 1.15rem;
+    border-radius: 20px;
+    background: var(--glass-surface);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--md-sys-elevation-1), var(--glass-highlight);
   }
 
-  .section-heading {
-    display: inline-flex;
+  .feed-toolbar-title {
+    display: flex;
     align-items: center;
     gap: 0.55rem;
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 800;
     color: var(--md-sys-color-on-surface);
   }
 
-  .section-heading .material-symbols-outlined {
+  .feed-toolbar-title .material-symbols-outlined {
     color: var(--md-sys-color-primary);
+    font-size: 20px;
   }
 
-  .section-link {
+  .feed-toolbar-title h2 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .feed-quick-links {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+
+  .glass-filter-chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.3rem;
+    padding: 0.36rem 0.8rem;
+    border-radius: 999px;
     font-family: var(--font-display);
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: var(--md-sys-color-primary);
-    padding: 0.4rem 0.85rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 65%, transparent);
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 70%, transparent);
+    color: var(--md-sys-color-on-surface-variant);
+    transition:
+      background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+      color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+      transform var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-spring);
   }
 
-  .section-link:hover {
-    background-color: var(--md-sys-color-primary-container);
+  .glass-filter-chip:hover {
+    background: var(--md-sys-color-primary-container);
     color: var(--md-sys-color-on-primary-container);
+    transform: translateY(-1px);
   }
 
+  .glass-filter-chip.accent {
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    border-color: transparent;
+  }
+
+  .glass-filter-chip .material-symbols-outlined {
+    font-size: 15px;
+  }
+
+  /* Expressive Bento / Editorial Post Grid utilizing Article Height */
   .post-feed {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(12, 1fr);
     gap: 1.75rem;
+    align-items: stretch;
   }
 
-  @media (max-width: 960px) {
-    .post-feed {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.35rem;
+  .feed-cell {
+    grid-column: span 4;
+    display: flex;
+  }
+
+  .feed-cell > :global(.post-card) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .feed-cell.cell-hero {
+    grid-column: 1 / -1;
+  }
+
+  .feed-cell.cell-wide {
+    grid-column: span 7;
+  }
+
+  .feed-cell.cell-tall {
+    grid-column: span 5;
+  }
+
+  @media (max-width: 980px) {
+    .feed-cell,
+    .feed-cell.cell-wide,
+    .feed-cell.cell-tall {
+      grid-column: span 6;
+    }
+
+    .feed-cell.cell-hero {
+      grid-column: 1 / -1;
     }
   }
 
-  @media (max-width: 640px) {
-    .hero-section {
-      padding-top: 0.85rem;
-      margin-bottom: 1.25rem;
+  /* Mobile View: Compact Hero + Inline Taplist/Fermenting/Coming Soon so articles appear immediately */
+  @media (max-width: 680px) {
+    .site-hero {
+      padding-top: 1.1rem;
+      padding-bottom: 1.1rem;
+      margin-bottom: 1.15rem;
     }
 
-    .md-hero-card {
-      min-height: 260px;
-      padding: 1.65rem 1.35rem;
-      border-radius: var(--md-sys-shape-corner-large);
+    .site-hero-inner {
+      gap: 0.75rem;
     }
 
-    .md-hero-actions .md-btn {
-      flex: 1 1 auto;
+    .hero-eyebrow-pill {
+      display: none;
+    }
+
+    .site-title {
+      font-size: 1.75rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .site-description {
+      font-size: 0.84rem;
+      line-height: 1.32;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .feed-toolbar {
+      padding: 0.65rem 0.85rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .feed-quick-links {
+      display: none;
     }
 
     .post-feed {
       grid-template-columns: 1fr;
-      gap: 1.25rem;
+      gap: 1.35rem;
+    }
+
+    .feed-cell,
+    .feed-cell.cell-hero,
+    .feed-cell.cell-wide,
+    .feed-cell.cell-tall {
+      grid-column: 1 / -1;
     }
   }
 </style>
