@@ -47,10 +47,10 @@ export const ACTIVE_TAPS: TapEntry[] = [
     tapNumber: 1,
     tapLabel: 'ON TAP',
     name: 'Dark Rye Saison',
-    style: 'Specialty Dark Rye Saison',
+    style: 'Strong Dark Saison',
     bjcpCode: '25B',
-    srm: 18.0,
-    tastingNotes: 'Spicy rye character, dark malt depth, and dry farmhouse finish.',
+    srm: 16.5,
+    tastingNotes: 'Spicy rye character, sourdugh crust maltiness, and dry farmhouse finish.',
     postSlug: 'dark-rye-saison',
   },
 ];
@@ -61,15 +61,15 @@ export const ACTIVE_FERMENTERS: FermenterEntry[] = [
 
 export const UPCOMING_BREWS: UpcomingEntry[] = [
   {
-    name: 'Cherry Stout',
-    style: 'Fruit / Cherry Stout',
-    srm: 34.0,
+    name: 'Christmas Stout',
+    style: 'Black Forest Gateaux Stout',
+    srm: 48.0,
     notes: 'Planned upcoming brew',
   },
   {
     name: 'Hoppy Pilsner',
-    style: 'Hoppy Pilsner',
-    srm: 3.5,
+    style: 'Double Dry Hopped Pilsner',
+    srm: 5.2,
     notes: 'Planned upcoming brew',
   },
 ];
