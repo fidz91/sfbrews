@@ -2,7 +2,7 @@
 # ============================================================================
 # RECIPE POST TEMPLATE
 # Copy this file into `src/content/posts/` and rename it (e.g. `my-new-recipe.md`).
-# The filename becomes the page URL: /broadmeadowbrewery/posts/my-new-recipe
+# The filename becomes the page URL: /sfbrews/posts/my-new-recipe
 # ============================================================================
 
 title: "Beer Name: Recipe Title & Style Overview"

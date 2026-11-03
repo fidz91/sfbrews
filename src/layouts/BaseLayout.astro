@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
 import { withBase } from '../utils/srm';
 
@@ -9,61 +10,91 @@ interface Props {
 }
 
 const {
-  title = 'BROADMEADOW BREWERY',
+  title = 'SFBrews',
   description = 'Homebrewing writeups, recipe formulations, experiments, competitions and brewing notes.',
   currentPath = Astro.url.pathname,
 } = Astro.props;
 
 const homeHref = withBase('/');
 const navLinks = [
-  { href: homeHref, label: 'Home' },
-  { href: withBase('/about'), label: 'About' },
-  { href: withBase('/recipes'), label: 'Homebrewing Recipes' },
-  { href: withBase('/journal?category=brewday'), label: 'Brewdays' },
-  { href: withBase('/experiments'), label: 'Experiments' },
-  { href: withBase('/competitions'), label: 'Competitions' },
+  { href: homeHref, label: 'Home', icon: 'home' },
+  { href: withBase('/recipes'), label: 'Recipes & Brewdays', icon: 'menu_book' },
+  { href: withBase('/experiments'), label: 'Experiments', icon: 'science' },
+  { href: withBase('/competitions'), label: 'Competitions', icon: 'emoji_events' },
+  { href: withBase('/journal?category=news'), label: 'News', icon: 'campaign' },
+  { href: withBase('/about'), label: 'About', icon: 'info' },
 ];
+
+const bottomNavLinks = [
+  { href: homeHref, label: 'Home', icon: 'home' },
+  { href: withBase('/recipes'), label: 'Recipes', icon: 'menu_book' },
+  { href: withBase('/experiments'), label: 'Lab', icon: 'science' },
+  { href: withBase('/competitions'), label: 'Awards', icon: 'emoji_events' },
+  { href: withBase('/journal'), label: 'Archive', icon: 'manage_search' },
+];
+
+function checkActive(itemHref: string, path: string): boolean {
+  const cleanHref = itemHref.split('?')[0];
+  if (cleanHref === homeHref || cleanHref === homeHref.replace(/\/$/, '')) {
+    return path === homeHref || path === homeHref.replace(/\/$/, '');
+  }
+  return path.startsWith(cleanHref);
+}
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <ViewTransitions />
+    <script is:inline>
+      function applyTheme() {
+        const saved = localStorage.getItem('md-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
+    </script>
   </head>
   <body>
-    <header class="gh-head outer">
-      <div class="gh-head-inner inner">
-        <div class="gh-head-brand">
-          <a class="gh-head-logo" href={homeHref}>BROADMEADOW</a>
-          <div class="gh-mobile-actions">
-            <a href={withBase('/journal')} class="gh-search-btn" aria-label="Search articles">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </a>
-            <button type="button" class="gh-burger" id="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
-              <span class="burger-line"></span>
-              <span class="burger-line"></span>
-            </button>
-          </div>
+    <!-- Material 3 Top App Bar -->
+    <header class="md-top-app-bar outer" id="top-app-bar">
+      <div class="md-top-app-bar-inner inner">
+        <div class="md-brand-row">
+          <a class="md-brand-logo md-ripple-surface" href={homeHref}>
+            <span class="md-brand-badge">
+              <span class="material-symbols-outlined filled" aria-hidden="true">sports_bar</span>
+            </span>
+            <span class="md-brand-text">
+              <span class="md-brand-title">SFBREWS</span>
+              <span class="md-brand-subtitle">Homebrew Journal</span>
+            </span>
+          </a>
         </div>
 
-        <nav class="gh-head-menu" id="site-nav" aria-label="Primary Navigation">
-          <ul class="nav-list">
+        <!-- Desktop Navigation Pills -->
+        <nav class="md-desktop-nav" aria-label="Primary Navigation">
+          <ul class="md-nav-list">
             {
               navLinks.map((item) => {
-                const isActive =
-                  item.href === homeHref
-                    ? currentPath === homeHref || currentPath === homeHref.replace(/\/$/, '')
-                    : currentPath.startsWith(item.href.split('?')[0]) && item.href !== homeHref;
+                const isActive = checkActive(item.href, currentPath);
                 return (
                   <li>
-                    <a href={item.href} class:list={['nav-link', { active: isActive }]}>
-                      {item.label}
+                    <a
+                      href={item.href}
+                      class:list={['md-nav-pill', 'md-ripple-surface', { active: isActive }]}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      <span class:list={['material-symbols-outlined', 'nav-icon', { filled: isActive }]} aria-hidden="true">
+                        {item.icon}
+                      </span>
+                      <span>{item.label}</span>
                     </a>
                   </li>
                 );
@@ -72,241 +103,641 @@ const navLinks = [
           </ul>
         </nav>
 
-        <div class="gh-head-actions">
-          <a href={withBase('/journal')} class="gh-search-btn" aria-label="Search articles" title="Search & Archive">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+        <!-- App Bar Actions -->
+        <div class="md-app-bar-actions">
+          <a
+            href={withBase('/journal')}
+            class="md-icon-btn"
+            aria-label="Search & Archive"
+            title="Search & Archive"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
           </a>
+
+          <button
+            type="button"
+            class="md-icon-btn"
+            id="theme-toggle-btn"
+            aria-label="Toggle dark or light theme"
+            title="Toggle color theme"
+          >
+            <span class="material-symbols-outlined theme-icon-light" aria-hidden="true">dark_mode</span>
+            <span class="material-symbols-outlined theme-icon-dark" aria-hidden="true">light_mode</span>
+          </button>
+
+          <button
+            type="button"
+            class="md-icon-btn md-mobile-menu-btn"
+            id="mobile-drawer-toggle"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mobile-nav-drawer"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+          </button>
         </div>
       </div>
     </header>
 
+    <!-- Material 3 Modal Navigation Drawer (Mobile / Tablet) -->
+    <div class="md-drawer-scrim" id="drawer-scrim" aria-hidden="true"></div>
+    <aside class="md-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation Drawer" aria-hidden="true">
+      <div class="md-drawer-header">
+        <div class="md-brand-logo">
+          <span class="md-brand-badge">
+            <span class="material-symbols-outlined filled" aria-hidden="true">sports_bar</span>
+          </span>
+          <span class="md-brand-text">
+            <span class="md-brand-title">SFBREWS</span>
+            <span class="md-brand-subtitle">Brewery Journal</span>
+          </span>
+        </div>
+        <button type="button" class="md-icon-btn" id="mobile-drawer-close" aria-label="Close navigation menu">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </div>
+
+      <div class="md-drawer-section-label">Destinations</div>
+      <ul class="md-drawer-list">
+        {
+          navLinks.map((item) => {
+            const isActive = checkActive(item.href, currentPath);
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  class:list={['md-drawer-item', 'md-ripple-surface', { active: isActive }]}
+                >
+                  <span class:list={['material-symbols-outlined', { filled: isActive }]} aria-hidden="true">
+                    {item.icon}
+                  </span>
+                  <span>{item.label}</span>
+                </a>
+              </li>
+            );
+          })
+        }
+        <li>
+          <a
+            href={withBase('/journal')}
+            class:list={[
+              'md-drawer-item',
+              'md-ripple-surface',
+              { active: checkActive(withBase('/journal'), currentPath) },
+            ]}
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
+            <span>Search &amp; Full Archive</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
     <main class="site-main">
       <slot />
     </main>
 
-    <footer class="gh-foot outer">
-      <div class="gh-foot-inner inner">
-        <div class="gh-copyright">
-          <strong>BROADMEADOW BREWERY</strong> &copy; {new Date().getFullYear()}
+    <!-- Material 3 Footer -->
+    <footer class="md-footer outer">
+      <div class="md-footer-inner inner">
+        <div class="md-footer-brand">
+          <span class="md-brand-badge small">
+            <span class="material-symbols-outlined filled" aria-hidden="true">sports_bar</span>
+          </span>
+          <div>
+            <strong>SFBREWS</strong> &copy; {new Date().getFullYear()}
+            <p class="md-footer-tagline">All-Grain BrewZilla 4.1.1 Brewhouse &bull; Recipes, Trials &amp; Scoresheets</p>
+          </div>
         </div>
-        <nav class="gh-foot-menu">
-          <a href={homeHref}>Home</a>
-          <a href={withBase('/recipes')}>Recipes</a>
-          <a href={withBase('/experiments')}>Experiments</a>
-          <a href={withBase('/competitions')}>Competitions</a>
-          <a href={withBase('/journal')}>Search &amp; Archive</a>
-          <a href={withBase('/about')}>About</a>
+        <nav class="md-footer-nav" aria-label="Footer Navigation">
+          <a href={homeHref} class="md-footer-link">Home</a>
+          <a href={withBase('/recipes')} class="md-footer-link">Recipes</a>
+          <a href={withBase('/experiments')} class="md-footer-link">Experiments</a>
+          <a href={withBase('/competitions')} class="md-footer-link">Competitions</a>
+          <a href={withBase('/journal')} class="md-footer-link">Archive</a>
+          <a href={withBase('/about')} class="md-footer-link">About</a>
         </nav>
       </div>
     </footer>
 
-    <script>
-      const toggleBtn = document.getElementById('mobile-menu-toggle');
-      const siteNav = document.getElementById('site-nav');
+    <!-- Material 3 Mobile Bottom Navigation Bar -->
+    <nav class="md-bottom-nav" aria-label="Mobile Quick Navigation">
+      {
+        bottomNavLinks.map((item) => {
+          const isActive = checkActive(item.href, currentPath);
+          return (
+            <a
+              href={item.href}
+              class:list={['md-bottom-nav-item', 'md-ripple-surface', { active: isActive }]}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              <span class="md-bottom-nav-indicator">
+                <span class:list={['material-symbols-outlined', { filled: isActive }]} aria-hidden="true">
+                  {item.icon}
+                </span>
+              </span>
+              <span class="md-bottom-nav-label">{item.label}</span>
+            </a>
+          );
+        })
+      }
+    </nav>
 
-      toggleBtn?.addEventListener('click', () => {
-        const isOpen = siteNav?.classList.toggle('is-open');
-        toggleBtn.classList.toggle('is-active', Boolean(isOpen));
-        toggleBtn.setAttribute('aria-expanded', String(Boolean(isOpen)));
-      });
+    <script>
+      function initMaterialInteractions() {
+        const topBar = document.getElementById('top-app-bar');
+        const drawerToggle = document.getElementById('mobile-drawer-toggle');
+        const drawerClose = document.getElementById('mobile-drawer-close');
+        const drawer = document.getElementById('mobile-nav-drawer');
+        const scrim = document.getElementById('drawer-scrim');
+        const themeBtn = document.getElementById('theme-toggle-btn');
+
+        // Scroll elevation state on Top App Bar
+        const onScroll = () => {
+          if (!topBar) return;
+          if (window.scrollY > 12) {
+            topBar.classList.add('is-scrolled');
+          } else {
+            topBar.classList.remove('is-scrolled');
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        // Mobile Modal Navigation Drawer
+        const setDrawerOpen = (open: boolean) => {
+          drawer?.classList.toggle('is-open', open);
+          scrim?.classList.toggle('is-open', open);
+          drawer?.setAttribute('aria-hidden', String(!open));
+          drawerToggle?.setAttribute('aria-expanded', String(open));
+          document.body.style.overflow = open ? 'hidden' : '';
+        };
+
+        drawerToggle?.addEventListener('click', () => setDrawerOpen(true));
+        drawerClose?.addEventListener('click', () => setDrawerOpen(false));
+        scrim?.addEventListener('click', () => setDrawerOpen(false));
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && drawer?.classList.contains('is-open')) {
+            setDrawerOpen(false);
+          }
+        });
+
+        // Theme toggle button
+        if (themeBtn && !themeBtn.dataset.bound) {
+          themeBtn.dataset.bound = 'true';
+          themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('md-theme', next);
+          });
+        }
+
+        // Material Ripple Effect on interactive surfaces
+        const rippleTargets = document.querySelectorAll<HTMLElement>(
+          '.md-ripple-surface, .md-btn, .md-icon-btn, .cat-btn'
+        );
+        rippleTargets.forEach((surface) => {
+          if (surface.dataset.rippleBound) return;
+          surface.dataset.rippleBound = 'true';
+          surface.addEventListener('pointerdown', (e: PointerEvent) => {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const rect = surface.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            const wave = document.createElement('span');
+            wave.className = 'md-ripple-wave';
+            wave.style.width = `${size}px`;
+            wave.style.height = `${size}px`;
+            wave.style.left = `${x}px`;
+            wave.style.top = `${y}px`;
+            surface.appendChild(wave);
+            wave.addEventListener('animationend', () => wave.remove());
+          });
+        });
+
+        // Scroll-triggered Material Entrance Animations
+        const revealItems = document.querySelectorAll<HTMLElement>('.md-reveal');
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  observer.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.08, rootMargin: '0px 0px -32px 0px' }
+          );
+
+          revealItems.forEach((item, index) => {
+            if (!item.style.getPropertyValue('--reveal-delay')) {
+              const stagger = (index % 6) * 55;
+              item.style.setProperty('--reveal-delay', `${stagger}ms`);
+            }
+            observer.observe(item);
+          });
+        } else {
+          revealItems.forEach((item) => item.classList.add('is-visible'));
+        }
+      }
+
+      document.addEventListener('astro:page-load', initMaterialInteractions);
     </script>
   </body>
 </html>
 
 <style>
-  .gh-head {
-    height: 76px;
+  /* Material 3 Top App Bar */
+  .md-top-app-bar {
+    height: var(--top-bar-height);
     display: flex;
     align-items: center;
-    background-color: var(--bg);
-    border-bottom: 1px solid var(--border);
+    background-color: color-mix(in srgb, var(--md-sys-color-surface) 88%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: 60;
+    transition:
+      background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+      box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+      border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
   }
 
-  .gh-head-inner {
+  .md-top-app-bar.is-scrolled {
+    background-color: color-mix(in srgb, var(--md-sys-color-surface-container) 92%, transparent);
+    box-shadow: var(--md-sys-elevation-2);
+    border-bottom-color: var(--md-sys-color-outline-variant);
+  }
+
+  .md-top-app-bar-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
-  .gh-head-brand {
-    display: flex;
+  .md-brand-logo {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 0.7rem;
+    padding: 0.35rem 0.6rem 0.35rem 0.35rem;
+    border-radius: var(--md-sys-shape-corner-full);
   }
 
-  .gh-head-logo {
-    font-size: 1.25rem;
+  .md-brand-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--md-sys-elevation-1);
+    transition: transform var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-spring);
+  }
+
+  .md-brand-badge.small {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--md-sys-shape-corner-small);
+  }
+
+  .md-brand-logo:hover .md-brand-badge {
+    transform: rotate(-8deg) scale(1.06);
+  }
+
+  .md-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .md-brand-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
     font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--text-main);
+    letter-spacing: -0.01em;
+    color: var(--md-sys-color-on-surface);
   }
 
-  .gh-mobile-actions {
-    display: none;
-    align-items: center;
-    gap: 0.75rem;
+  .md-brand-subtitle {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--md-sys-color-on-surface-variant);
   }
 
-  .gh-head-menu .nav-list {
+  /* Desktop Navigation Pills */
+  .md-nav-list {
     list-style: none;
     display: flex;
     align-items: center;
-    gap: 1.75rem;
+    gap: 0.25rem;
+    background-color: var(--md-sys-color-surface-container-low);
+    padding: 0.25rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    border: 1px solid var(--md-sys-color-outline-variant);
   }
 
-  .nav-link {
-    font-size: 0.92rem;
-    font-weight: 500;
-    color: var(--text-body);
-  }
-
-  .nav-link:hover,
-  .nav-link.active {
-    color: var(--text-main);
-    opacity: 0.7;
-  }
-
-  .gh-search-btn {
+  .md-nav-pill {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    color: var(--text-main);
-    border-radius: 50%;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    font-family: var(--font-display);
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface-variant);
+    transition:
+      background-color var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-emphasized),
+      color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+      transform var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-spring);
   }
 
-  .gh-search-btn:hover {
-    background-color: var(--bg-soft);
+  .md-nav-pill .nav-icon {
+    font-size: 18px;
   }
 
-  .gh-burger {
+  .md-nav-pill:hover {
+    background-color: var(--md-state-hover);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .md-nav-pill.active {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    box-shadow: var(--md-sys-elevation-1);
+  }
+
+  .md-app-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .theme-icon-dark {
+    display: none;
+  }
+
+  :global([data-theme='dark']) .theme-icon-light {
+    display: none;
+  }
+
+  :global([data-theme='dark']) .theme-icon-dark {
     display: inline-flex;
+  }
+
+  .md-mobile-menu-btn {
+    display: none;
+  }
+
+  /* Material 3 Modal Navigation Drawer */
+  .md-drawer-scrim {
+    position: fixed;
+    inset: 0;
+    background-color: var(--md-sys-color-scrim);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 80;
+    transition: opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+  }
+
+  .md-drawer-scrim.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .md-nav-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(320px, 86vw);
+    background-color: var(--md-sys-color-surface-container-low);
+    border-radius: var(--md-sys-shape-corner-extra-large) 0 0 var(--md-sys-shape-corner-extra-large);
+    box-shadow: var(--md-sys-elevation-4);
+    z-index: 90;
+    padding: 1rem 0.75rem;
+    display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    width: 38px;
-    height: 38px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
+    transform: translateX(104%);
+    transition: transform var(--md-sys-motion-duration-medium3) var(--md-sys-motion-easing-emphasized);
+    overflow-y: auto;
   }
 
-  .burger-line {
-    display: block;
-    width: 100%;
-    height: 2px;
-    background-color: var(--text-main);
-    transition: transform 0.2s ease;
+  .md-nav-drawer.is-open {
+    transform: translateX(0);
   }
 
-  .gh-burger.is-active .burger-line:first-child {
-    transform: translateY(3.5px) rotate(45deg);
+  .md-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 0.5rem 1rem;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    margin-bottom: 0.75rem;
   }
 
-  .gh-burger.is-active .burger-line:last-child {
-    transform: translateY(-3.5px) rotate(-45deg);
+  .md-drawer-section-label {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 0.5rem 1rem;
+  }
+
+  .md-drawer-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .md-drawer-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    height: 52px;
+    padding: 0 1rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .md-drawer-item:hover {
+    background-color: var(--md-state-hover);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .md-drawer-item.active {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
   }
 
   .site-main {
     flex: 1;
   }
 
-  .gh-foot {
+  /* Material 3 Footer */
+  .md-footer {
     margin-top: 5rem;
     padding-top: 2.5rem;
     padding-bottom: 3rem;
-    border-top: 1px solid var(--border);
-    color: var(--text-muted);
-    font-size: 0.85rem;
+    background-color: var(--md-sys-color-surface-container-low);
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.88rem;
   }
 
-  .gh-foot-inner {
+  .md-footer-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 1.5rem;
     flex-wrap: wrap;
   }
 
-  .gh-copyright strong {
-    color: var(--text-main);
-  }
-
-  .gh-foot-menu {
+  .md-footer-brand {
     display: flex;
-    gap: 1.35rem;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .md-footer-brand strong {
+    font-family: var(--font-display);
+    color: var(--md-sys-color-on-surface);
+    letter-spacing: 0.01em;
+  }
+
+  .md-footer-tagline {
+    font-size: 0.8rem;
+    color: var(--md-sys-color-outline);
+    margin-top: 0.15rem;
+  }
+
+  .md-footer-nav {
+    display: flex;
+    gap: 0.5rem;
     flex-wrap: wrap;
   }
 
-  .gh-foot-menu a:hover {
-    color: var(--text-main);
+  .md-footer-link {
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
   }
 
-  /* Phone & Tablet Responsive Navigation */
+  .md-footer-link:hover {
+    background-color: var(--md-state-hover);
+    color: var(--md-sys-color-primary);
+  }
+
+  /* Material 3 Bottom Navigation Bar (Mobile / Tablet) */
+  .md-bottom-nav {
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background-color: color-mix(in srgb, var(--md-sys-color-surface-container) 94%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: var(--md-sys-elevation-3);
+    z-index: 70;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .md-bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.22rem;
+    height: 100%;
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: none;
+    user-select: none;
+  }
+
+  .md-bottom-nav-indicator {
+    width: 60px;
+    height: 30px;
+    border-radius: var(--md-sys-shape-corner-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      background-color var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-emphasized),
+      transform var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-spring);
+  }
+
+  .md-bottom-nav-item.active .md-bottom-nav-indicator {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    transform: scale(1.04);
+  }
+
+  .md-bottom-nav-item:active .md-bottom-nav-indicator {
+    transform: scale(0.92);
+  }
+
+  .md-bottom-nav-label {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  }
+
+  .md-bottom-nav-item.active .md-bottom-nav-label {
+    color: var(--md-sys-color-on-surface);
+    font-weight: 700;
+  }
+
+  /* Responsive Breakpoints */
+  @media (max-width: 980px) {
+    .md-desktop-nav {
+      display: none;
+    }
+
+    .md-mobile-menu-btn {
+      display: inline-flex;
+    }
+  }
+
   @media (max-width: 860px) {
-    .gh-head {
-      height: auto;
-      min-height: 64px;
-      padding-top: 0.75rem;
-      padding-bottom: 0.75rem;
-    }
-
-    .gh-head-inner {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0;
-    }
-
-    .gh-head-brand {
-      width: 100%;
-    }
-
-    .gh-mobile-actions {
+    .md-bottom-nav {
       display: flex;
     }
 
-    .gh-head-actions {
-      display: none;
+    .md-footer {
+      margin-top: 3.5rem;
+      padding-bottom: 2.25rem;
     }
 
-    .gh-head-menu {
-      display: none;
-      padding-top: 1rem;
-      padding-bottom: 0.5rem;
-      border-top: 1px solid var(--border);
-      margin-top: 0.75rem;
-    }
-
-    .gh-head-menu.is-open {
-      display: block;
-    }
-
-    .gh-head-menu .nav-list {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0;
-    }
-
-    .gh-head-menu .nav-list li {
-      width: 100%;
-    }
-
-    .nav-link {
-      display: block;
-      padding: 0.75rem 0;
-      font-size: 1.05rem;
-      border-bottom: 1px solid var(--bg-soft);
-    }
-
-    .gh-foot-inner {
+    .md-footer-inner {
       flex-direction: column;
       align-items: flex-start;
     }

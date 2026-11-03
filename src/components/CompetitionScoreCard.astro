@@ -2,22 +2,22 @@
 interface CompetitionData {
   eventName: string;
   date: string;
-  location: string;
+  location?: string;
   bjcpCategory: string;
   entryBeer: string;
-  batchNumber: string;
-  score: number;
+  batchNumber?: string;
+  score?: number;
   maxScore: number;
-  award: 'Best of Show' | 'Gold' | 'Silver' | 'Bronze' | 'Finalist' | 'Entered';
-  scoresBreakdown: {
+  award: 'Best of Show' | 'Gold' | 'Silver' | 'Bronze' | 'Finalist' | 'Entered' | 'Pending';
+  scoresBreakdown?: {
     aroma: number;
     appearance: number;
     flavor: number;
     mouthfeel: number;
     overall: number;
   };
-  judgeConsensus: string;
-  recipeImprovements: string;
+  judgeConsensus?: string;
+  recipeImprovements?: string;
 }
 
 interface Props {
@@ -25,32 +25,231 @@ interface Props {
 }
 
 const { competition } = Astro.props;
+const breakdownItems = competition.scoresBreakdown
+  ? [
+      { label: 'Aroma', val: competition.scoresBreakdown.aroma, max: 12 },
+      { label: 'Appearance', val: competition.scoresBreakdown.appearance, max: 3 },
+      { label: 'Flavor', val: competition.scoresBreakdown.flavor, max: 20 },
+      { label: 'Mouthfeel', val: competition.scoresBreakdown.mouthfeel, max: 5 },
+      { label: 'Overall', val: competition.scoresBreakdown.overall, max: 10 },
+    ]
+  : [];
 ---
 
-<section class="comp-minimal prose">
-  <div class="comp-summary-box">
-    <p>
-      <strong>Competition:</strong> {competition.eventName} ({competition.date}, {competition.location})<br />
-      <strong>Entry:</strong> {competition.entryBeer} ({competition.batchNumber}) &bull; BJCP {competition.bjcpCategory}<br />
-      <strong>Result:</strong> <strong>{competition.award} Medal ({competition.score} / {competition.maxScore} pts)</strong><br />
-      <strong>Scoresheet Breakdown:</strong> Aroma {competition.scoresBreakdown.aroma}/12 &bull; Appearance {competition.scoresBreakdown.appearance}/3 &bull; Flavor {competition.scoresBreakdown.flavor}/20 &bull; Mouthfeel {competition.scoresBreakdown.mouthfeel}/5 &bull; Overall {competition.scoresBreakdown.overall}/10<br />
-      <strong>Judge Notes:</strong> {competition.judgeConsensus}
-    </p>
+<section class="md-comp-card md-reveal">
+  <div class="comp-header">
+    <div class="comp-title-group">
+      <span class="comp-medal-badge">
+        <span class="material-symbols-outlined filled" aria-hidden="true">emoji_events</span>
+      </span>
+      <div>
+        <span class="comp-kicker">
+          {competition.eventName}
+          {competition.location ? ` • ${competition.location}` : ''} ({competition.date})
+        </span>
+        <h3 class="comp-entry">
+          {competition.entryBeer}
+          {competition.batchNumber ? ` (${competition.batchNumber})` : ''} &bull; BJCP {competition.bjcpCategory}
+        </h3>
+      </div>
+    </div>
+
+    <div class="comp-award-pill">
+      <span class="award-label">{competition.award}</span>
+      {
+        competition.score !== undefined && (
+          <strong class="award-score">
+            {competition.score} / {competition.maxScore} pts
+          </strong>
+        )
+      }
+    </div>
   </div>
+
+  {
+    breakdownItems.length > 0 && (
+      <div class="comp-bars-grid">
+        {breakdownItems.map((item) => {
+          const pct = Math.round((item.val / item.max) * 100);
+          return (
+            <div class="score-bar-card">
+              <div class="score-bar-top">
+                <span class="score-bar-label">{item.label}</span>
+                <strong class="score-bar-num">
+                  {item.val}/{item.max}
+                </strong>
+              </div>
+              <div class="score-bar-track">
+                <div class="score-bar-fill" style={`width: ${pct}%;`} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )
+  }
+
+  {
+    (competition.judgeConsensus || competition.recipeImprovements) && (
+      <div class="comp-notes">
+        {competition.judgeConsensus && (
+          <p>
+            <strong>Judge Consensus:</strong> {competition.judgeConsensus}
+          </p>
+        )}
+        {competition.recipeImprovements && (
+          <p class="comp-next">
+            <strong>Next Iteration Plan:</strong> {competition.recipeImprovements}
+          </p>
+        )}
+      </div>
+    )
+  }
 </section>
 
 <style>
-  .comp-summary-box {
-    background-color: var(--bg-soft);
-    padding: 1.25rem 1.35rem;
-    border-left: 3px solid var(--text-main);
-    border-radius: 0 4px 4px 0;
-    margin: 1.5rem 0 2rem;
-    font-size: 0.96rem;
+  .md-comp-card {
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    padding: 1.5rem;
+    margin: 1.5rem 0 2.25rem;
+    box-shadow: var(--md-sys-elevation-1);
   }
 
-  .comp-summary-box p {
+  .comp-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+
+  .comp-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .comp-medal-badge {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .comp-kicker {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--md-sys-color-outline);
+  }
+
+  .comp-entry {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    margin: 0.15rem 0 0;
+  }
+
+  .comp-award-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    padding: 0.45rem 1rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    box-shadow: var(--md-sys-elevation-1);
+  }
+
+  .award-label {
+    font-weight: 600;
+  }
+
+  .award-score {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    font-weight: 800;
+  }
+
+  .comp-bars-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.65rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .score-bar-card {
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-medium);
+    padding: 0.7rem 0.8rem;
+  }
+
+  .score-bar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.76rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .score-bar-label {
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 600;
+  }
+
+  .score-bar-num {
+    font-family: var(--font-display);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .score-bar-track {
+    height: 6px;
+    background-color: var(--md-sys-color-surface-container-highest);
+    border-radius: var(--md-sys-shape-corner-full);
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    background-color: var(--md-sys-color-primary);
+    border-radius: var(--md-sys-shape-corner-full);
+  }
+
+  .comp-notes {
+    background-color: var(--md-sys-color-surface-container);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 1rem 1.15rem;
+    font-size: 0.92rem;
+    color: var(--md-sys-color-on-surface-variant);
+    line-height: 1.65;
+  }
+
+  .comp-notes p {
     margin: 0;
-    line-height: 1.8;
+  }
+
+  .comp-notes .comp-next {
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 760px) {
+    .comp-bars-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 </style>

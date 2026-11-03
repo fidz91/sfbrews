@@ -70,38 +70,74 @@ const hexColor = srmToHex(recipe.srm);
 const colorDesc = srmDescriptor(recipe.srm);
 ---
 
-<section class="recipe-minimal prose">
-  <hr class="recipe-divider" />
+<section class="md-recipe-sheet md-reveal prose">
+  <div class="recipe-header-card">
+    <div class="recipe-header-top">
+      <div class="recipe-title-row">
+        <span class="recipe-icon-badge">
+          <span class="material-symbols-outlined filled" aria-hidden="true">menu_book</span>
+        </span>
+        <div>
+          <h2 class="recipe-sheet-title">Recipe Specifications</h2>
+          <p class="recipe-sheet-sub">
+            Batch: {recipe.batchSize} &bull; Boil: {recipe.boilTime} &bull; Brewhouse Efficiency: {recipe.efficiency}
+          </p>
+        </div>
+      </div>
 
-  <h2>Recipe Specifications</h2>
-  <p class="recipe-specs-list">
-    <strong>Batch Size:</strong> {recipe.batchSize} &nbsp;&bull;&nbsp;
-    <strong>Boil Time:</strong> {recipe.boilTime} &nbsp;&bull;&nbsp;
-    <strong>Efficiency:</strong> {recipe.efficiency}<br />
-    <strong>ABV:</strong> {recipe.abv.toFixed(1)}% &nbsp;&bull;&nbsp;
-    <strong>OG:</strong> {recipe.og.toFixed(3)} &nbsp;&bull;&nbsp;
-    <strong>FG:</strong> {recipe.fg.toFixed(3)} &nbsp;&bull;&nbsp;
-    <strong>IBUs:</strong> {recipe.ibu}<br />
-    <strong>Color:</strong> <span class="srm-dot" style={`background-color: ${hexColor};`}></span> {recipe.srm} SRM ({colorDesc})
-  </p>
+      <div class="srm-badge-pill">
+        <span class="srm-circle" style={`background-color: ${hexColor};`}></span>
+        <span><strong>{recipe.srm} SRM</strong> ({colorDesc})</span>
+      </div>
+    </div>
 
-  <h3>Malt Bill</h3>
+    <div class="recipe-metrics-grid">
+      <div class="metric-tile">
+        <span class="metric-label">ABV</span>
+        <strong class="metric-value">{recipe.abv.toFixed(1)}%</strong>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-label">Original Gravity</span>
+        <strong class="metric-value">{recipe.og.toFixed(3)}</strong>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-label">Final Gravity</span>
+        <strong class="metric-value">{recipe.fg.toFixed(3)}</strong>
+      </div>
+      <div class="metric-tile">
+        <span class="metric-label">Bitterness</span>
+        <strong class="metric-value">{recipe.ibu} IBU</strong>
+      </div>
+    </div>
+  </div>
+
+  <h3>Malt Bill &amp; Fermentables</h3>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Amount</th>
-          <th>Grist %</th>
+          <th>Fermentable</th>
+          <th>Weight</th>
+          <th>Grist Share</th>
         </tr>
       </thead>
       <tbody>
         {
           recipe.fermentables.map((grain) => (
             <tr>
-              <td>{grain.name}</td>
+              <td>
+                <strong>{grain.name}</strong>
+                {grain.notes && <div class="grain-note">{grain.notes}</div>}
+              </td>
               <td class="nowrap">{grain.weight}</td>
-              <td class="nowrap"><strong>{grain.percentage.toFixed(1)}%</strong></td>
+              <td class="nowrap grist-cell">
+                <div class="grist-bar-wrap">
+                  <span class="grist-pct">{grain.percentage.toFixed(1)}%</span>
+                  <div class="grist-track">
+                    <div class="grist-fill" style={`width: ${Math.min(grain.percentage, 100)}%;`} />
+                  </div>
+                </div>
+              </td>
             </tr>
           ))
         }
@@ -109,26 +145,26 @@ const colorDesc = srmDescriptor(recipe.srm);
     </table>
   </div>
 
-  <h3>Hops</h3>
+  <h3>Hop Schedule</h3>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>Name</th>
+          <th>Hop Variety</th>
           <th>Amount</th>
-          <th>Time</th>
-          <th>Use</th>
-          <th>AA%</th>
+          <th>Timing</th>
+          <th>Stage</th>
+          <th>Alpha</th>
         </tr>
       </thead>
       <tbody>
         {
           recipe.hops.map((hop) => (
             <tr>
-              <td>{hop.name}</td>
+              <td><strong>{hop.name}</strong></td>
               <td class="nowrap">{hop.weight}</td>
               <td class="nowrap">{hop.timing}</td>
-              <td>{hop.use}</td>
+              <td><span class="hop-use-chip">{hop.use}</span></td>
               <td class="nowrap">{hop.alphaAcid}</td>
             </tr>
           ))
@@ -137,46 +173,261 @@ const colorDesc = srmDescriptor(recipe.srm);
     </table>
   </div>
 
-  <h3>Mash &amp; Yeast</h3>
-  <ul>
-    {
-      recipe.mash.map((step) => (
-        <li>
-          <strong>{step.step}:</strong> {step.temp} for {step.duration}
-          {step.notes ? ` — ${step.notes}` : ''}
-        </li>
-      ))
-    }
-    <li>
-      <strong>Yeast:</strong> {recipe.yeast.name} ({recipe.yeast.lab} {recipe.yeast.code}) &bull; {recipe.yeast.tempRange} ({recipe.yeast.attenuation} attenuation)
-    </li>
+  <h3>Mash, Fermentation &amp; Water Chemistry</h3>
+  <div class="recipe-subcards">
+    <div class="recipe-subcard">
+      <div class="subcard-head">
+        <span class="material-symbols-outlined" aria-hidden="true">thermostat</span>
+        <strong>Mash Schedule</strong>
+      </div>
+      <ul class="subcard-list">
+        {
+          recipe.mash.map((step) => (
+            <li>
+              <strong>{step.step}:</strong> {step.temp} for {step.duration}
+              {step.notes ? ` — ${step.notes}` : ''}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="recipe-subcard">
+      <div class="subcard-head">
+        <span class="material-symbols-outlined" aria-hidden="true">biotech</span>
+        <strong>Yeast &amp; Fermentation</strong>
+      </div>
+      <p class="subcard-text">
+        <strong>{recipe.yeast.name}</strong> ({recipe.yeast.lab} {recipe.yeast.code})<br />
+        Temp Range: {recipe.yeast.tempRange} &bull; Attenuation: {recipe.yeast.attenuation}
+      </p>
+      {recipe.yeast.pitchNotes && <p class="subcard-note">{recipe.yeast.pitchNotes}</p>}
+    </div>
+
     {
       recipe.waterProfile && (
-        <li>
-          <strong>Water Profile ({recipe.waterProfile.profileName}):</strong> Ca {recipe.waterProfile.ca} ppm, Mg {recipe.waterProfile.mg} ppm, Na {recipe.waterProfile.na} ppm, SO₄ {recipe.waterProfile.so4} ppm, Cl {recipe.waterProfile.cl} ppm &bull; Mash pH {recipe.waterProfile.mashPh.toFixed(2)}
-        </li>
+        <div class="recipe-subcard full-span">
+          <div class="subcard-head">
+            <span class="material-symbols-outlined" aria-hidden="true">water_drop</span>
+            <strong>Water Profile — {recipe.waterProfile.profileName} (Mash pH {recipe.waterProfile.mashPh.toFixed(2)})</strong>
+          </div>
+          <div class="ion-pills">
+            <span class="ion-pill"><strong>Ca²⁺</strong> {recipe.waterProfile.ca} ppm</span>
+            <span class="ion-pill"><strong>Mg²⁺</strong> {recipe.waterProfile.mg} ppm</span>
+            <span class="ion-pill"><strong>Na⁺</strong> {recipe.waterProfile.na} ppm</span>
+            <span class="ion-pill"><strong>SO₄²⁻</strong> {recipe.waterProfile.so4} ppm</span>
+            <span class="ion-pill"><strong>Cl⁻</strong> {recipe.waterProfile.cl} ppm</span>
+          </div>
+        </div>
       )
     }
-  </ul>
+  </div>
 </section>
 
 <style>
-  .recipe-minimal {
-    margin: 2.5rem 0;
+  .md-recipe-sheet {
+    margin: 2.75rem 0;
   }
 
-  .recipe-divider {
-    border: none;
-    border-top: 1px solid var(--border);
+  .recipe-header-card {
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    padding: 1.5rem;
+    box-shadow: var(--md-sys-elevation-1);
     margin-bottom: 2rem;
   }
 
-  .recipe-specs-list {
-    background-color: var(--bg-soft);
-    padding: 1.15rem 1.35rem;
-    border-radius: 4px;
-    font-size: 0.96rem;
-    line-height: 1.85;
+  .recipe-header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.35rem;
+  }
+
+  .recipe-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .recipe-icon-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .recipe-sheet-title {
+    margin: 0 !important;
+    font-size: 1.35rem !important;
+  }
+
+  .recipe-sheet-sub {
+    margin: 0.15rem 0 0 !important;
+    font-size: 0.85rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .srm-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-surface-container-highest);
+    font-size: 0.82rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .srm-circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0, 0, 0, 0.25);
+  }
+
+  .recipe-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+
+  .metric-tile {
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .metric-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--md-sys-color-outline);
+  }
+
+  .metric-value {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--md-sys-color-primary);
+  }
+
+  .grain-note {
+    font-size: 0.8rem;
+    color: var(--md-sys-color-outline);
+    margin-top: 0.15rem;
+  }
+
+  .grist-cell {
+    min-width: 140px;
+  }
+
+  .grist-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .grist-pct {
+    font-weight: 700;
+    min-width: 44px;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .grist-track {
+    flex: 1;
+    height: 8px;
+    background-color: var(--md-sys-color-surface-container-highest);
+    border-radius: var(--md-sys-shape-corner-full);
+    overflow: hidden;
+  }
+
+  .grist-fill {
+    height: 100%;
+    background-color: var(--md-sys-color-primary);
+    border-radius: var(--md-sys-shape-corner-full);
+  }
+
+  .hop-use-chip {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--md-sys-shape-corner-small);
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .recipe-subcards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .recipe-subcard {
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 1.25rem;
+  }
+
+  .recipe-subcard.full-span {
+    grid-column: 1 / -1;
+  }
+
+  .subcard-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--md-sys-color-primary);
+    margin-bottom: 0.75rem;
+    font-family: var(--font-display);
+  }
+
+  .subcard-list {
+    margin: 0 !important;
+    padding-left: 1.2rem !important;
+    font-size: 0.92rem;
+  }
+
+  .subcard-text {
+    margin: 0 !important;
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+
+  .subcard-note {
+    margin: 0.5rem 0 0 !important;
+    font-size: 0.85rem;
+    color: var(--md-sys-color-outline);
+  }
+
+  .ion-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .ion-pill {
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-full);
+    padding: 0.35rem 0.85rem;
+    font-size: 0.84rem;
   }
 
   .table-scroll {
@@ -187,5 +438,15 @@ const colorDesc = srmDescriptor(recipe.srm);
 
   .nowrap {
     white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .recipe-metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .recipe-subcards {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

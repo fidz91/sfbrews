@@ -2,21 +2,36 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
+import { isPostVisible } from '../utils/srm';
 
 const recipePosts = (await getCollection('posts'))
-  .filter((post) => post.data.recipe !== undefined)
+  .filter(isPostVisible)
+  .filter(
+    (post) =>
+      post.data.category === 'recipe' ||
+      post.data.category === 'brewday' ||
+      post.data.recipe !== undefined
+  )
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <BaseLayout
-  title="Homebrewing Recipes — Broadmeadow Brewery"
-  description="All-grain homebrewing recipes with grist bill percentages, hop schedules, and fermentation notes."
+  title="Recipes & Brewdays — SFBrews"
+  description="All-grain homebrewing recipes and brewday logs with grist bill percentages, hop schedules, and fermentation notes."
 >
   <div class="outer page-wrap">
     <div class="inner">
-      <header class="page-head">
-        <h1>Homebrewing Recipes</h1>
-        <p>All-grain formulations with full grist bill percentages, hop schedules, and water profiles.</p>
+      <header class="md-page-banner md-reveal">
+        <span class="banner-icon-badge">
+          <span class="material-symbols-outlined filled" aria-hidden="true">menu_book</span>
+        </span>
+        <div>
+          <span class="banner-kicker">Formulations &amp; Logs</span>
+          <h1>Recipes &amp; Brewdays</h1>
+          <p>
+            All-grain formulations and brewday notes with complete grist percentages, hop schedules, and water profiles.
+          </p>
+        </div>
       </header>
 
       <div class="post-feed">
@@ -28,46 +43,89 @@ const recipePosts = (await getCollection('posts'))
 
 <style>
   .page-wrap {
-    padding-top: 3rem;
+    padding-top: 2rem;
   }
 
-  .page-head {
-    margin-bottom: 3rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
+  .md-page-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    padding: clamp(1.35rem, 3vw, 2.25rem);
+    margin-bottom: 2.25rem;
+    box-shadow: var(--md-sys-elevation-1);
   }
 
-  .page-head h1 {
-    font-size: clamp(1.85rem, 4vw, 2.5rem);
+  .banner-icon-badge {
+    width: 54px;
+    height: 54px;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .banner-icon-badge .material-symbols-outlined {
+    font-size: 26px;
+  }
+
+  .banner-kicker {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--md-sys-color-primary);
+    margin-bottom: 0.2rem;
+  }
+
+  .md-page-banner h1 {
+    font-size: clamp(1.8rem, 4vw, 2.45rem);
     font-weight: 800;
     letter-spacing: -0.02em;
-    margin-bottom: 0.4rem;
+    line-height: 1.15;
+    margin-bottom: 0.45rem;
+    color: var(--md-sys-color-on-surface);
   }
 
-  .page-head p {
-    color: var(--text-muted);
-    font-size: 1.05rem;
+  .md-page-banner p {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 1rem;
+    max-width: 680px;
   }
 
   .post-feed {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3rem 2.25rem;
+    gap: 1.75rem;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     .post-feed {
       grid-template-columns: repeat(2, 1fr);
+      gap: 1.35rem;
     }
   }
 
   @media (max-width: 640px) {
     .page-wrap {
-      padding-top: 2rem;
+      padding-top: 1.25rem;
     }
+
+    .md-page-banner {
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
     .post-feed {
       grid-template-columns: 1fr;
-      gap: 2.5rem;
+      gap: 1.25rem;
     }
   }
 </style>

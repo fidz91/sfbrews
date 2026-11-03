@@ -36,6 +36,6 @@ Write paragraphs as normal text. Use `**bold text**` for emphasis, `*italics*` f
 
 To use your own photos instead of Unsplash links:
 1. Drop your image file into the `public/images/` folder (e.g. `public/images/my-brewday.jpg`).
-2. For `heroImage` at the top of the file, use `"/broadmeadowbrewery/images/my-brewday.jpg"`.
+2. For `heroImage` at the top of the file, use `"/sfbrews/images/my-brewday.jpg"`.
 3. Inside the post body, embed images with:
-   `![Description of photo](/broadmeadowbrewery/images/my-brewday.jpg)`
+   `![Description of photo](/sfbrews/images/my-brewday.jpg)`

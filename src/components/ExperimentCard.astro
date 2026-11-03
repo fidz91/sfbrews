@@ -18,30 +18,183 @@ interface Props {
 const { experiment } = Astro.props;
 ---
 
-<section class="experiment-minimal prose">
-  <div class="exp-summary-box">
-    <p>
-      <strong>Variable Tested:</strong> {experiment.variableTested}<br />
-      <strong>Control Arm:</strong> {experiment.controlBatch}<br />
-      <strong>Experimental Arm:</strong> {experiment.experimentalBatch}<br />
-      <strong>Triangle Test Result:</strong> {experiment.panelSize} &bull; <strong>{experiment.pValueSummary}</strong><br />
+<section class="md-exp-card md-reveal">
+  <div class="exp-header">
+    <div class="exp-title-group">
+      <span class="exp-badge-icon">
+        <span class="material-symbols-outlined filled" aria-hidden="true">science</span>
+      </span>
+      <div>
+        <span class="exp-kicker">Split-Batch Lab Summary</span>
+        <h3 class="exp-variable">{experiment.variableTested}</h3>
+      </div>
+    </div>
+
+    <span class:list={['sig-pill', { significant: experiment.significantResult }]}>
+      <span class="material-symbols-outlined" aria-hidden="true">
+        {experiment.significantResult ? 'verified' : 'balance'}
+      </span>
+      {experiment.pValueSummary}
+    </span>
+  </div>
+
+  <div class="exp-arms-grid">
+    <div class="exp-arm">
+      <span class="arm-label">Control Arm</span>
+      <p class="arm-val">{experiment.controlBatch}</p>
+    </div>
+    <div class="exp-arm experimental">
+      <span class="arm-label">Experimental Arm</span>
+      <p class="arm-val">{experiment.experimentalBatch}</p>
+    </div>
+  </div>
+
+  <div class="exp-footer">
+    <div class="exp-stat-row">
+      <span class="material-symbols-outlined" aria-hidden="true">groups</span>
+      <span><strong>Triangle Test Panel:</strong> {experiment.panelSize}</span>
+    </div>
+    <p class="exp-verdict">
       <strong>Verdict:</strong> {experiment.verdict}
     </p>
   </div>
 </section>
 
 <style>
-  .exp-summary-box {
-    background-color: var(--bg-soft);
-    padding: 1.25rem 1.35rem;
-    border-left: 3px solid var(--text-main);
-    border-radius: 0 4px 4px 0;
-    margin: 1.5rem 0 2rem;
-    font-size: 0.96rem;
+  .md-exp-card {
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    padding: 1.5rem;
+    margin: 1.5rem 0 2.25rem;
+    box-shadow: var(--md-sys-elevation-1);
   }
 
-  .exp-summary-box p {
+  .exp-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+
+  .exp-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .exp-badge-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .exp-kicker {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--md-sys-color-outline);
+  }
+
+  .exp-variable {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    margin: 0.1rem 0 0;
+  }
+
+  .sig-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-surface-container-highest);
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .sig-pill.significant {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .sig-pill .material-symbols-outlined {
+    font-size: 16px;
+  }
+
+  .exp-arms-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .exp-arm {
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 0.9rem 1.05rem;
+  }
+
+  .exp-arm.experimental {
+    border-color: var(--md-sys-color-primary);
+  }
+
+  .arm-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--md-sys-color-outline);
+    margin-bottom: 0.25rem;
+  }
+
+  .arm-val {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface);
     margin: 0;
-    line-height: 1.8;
+  }
+
+  .exp-footer {
+    background-color: var(--md-sys-color-surface-container);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 1rem 1.15rem;
+    font-size: 0.92rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .exp-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.45rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .exp-verdict {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .exp-arms-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

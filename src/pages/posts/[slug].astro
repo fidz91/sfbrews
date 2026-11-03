@@ -5,10 +5,10 @@ import ExperimentCard from '../../components/ExperimentCard.astro';
 import CompetitionScoreCard from '../../components/CompetitionScoreCard.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getCollection } from 'astro:content';
-import { CATEGORY_META, withBase } from '../../utils/srm';
+import { CATEGORY_META, isPostVisible, withBase } from '../../utils/srm';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
+  const posts = (await getCollection('posts')).filter(isPostVisible);
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: { post },
@@ -40,34 +40,74 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 });
 
 const morePosts = (await getCollection('posts'))
+  .filter(isPostVisible)
   .filter((p) => p.slug !== post.slug)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
 ---
 
-<BaseLayout title={`${title} — Broadmeadow Brewery`} description={description}>
-  <article class="article outer">
-    <header class="article-header canvas">
-      <a href={withBase(`/journal?category=${category}`)} class="primary-tag">
-        {meta.plural}
-      </a>
+<BaseLayout title={`${title} — SFBrews`} description={description}>
+  <!-- Material 3 Linear Progress Indicator -->
+  <div class="md-reading-progress-track" aria-hidden="true">
+    <div class="md-reading-progress-fill" id="reading-progress-fill"></div>
+  </div>
 
-      <h1 class="article-title">{title}</h1>
+  <article class="article outer">
+    <header class="article-header canvas md-reveal">
+      <div class="article-top-chips">
+        <a href={withBase('/journal')} class="back-chip md-ripple-surface">
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+          Archive
+        </a>
+        <a href={withBase(`/journal?category=${category}`)} class="primary-tag">
+          {meta.plural}
+        </a>
+      </div>
+
+      <h1 class="article-title" transition:name={`post-title-${post.slug}`}>{title}</h1>
 
       {subtitle && <p class="article-excerpt">{subtitle}</p>}
 
-      <div class="article-byline">
-        <time datetime={pubDate.toISOString()}>{formattedDate}</time>
-        {readingTime && <span>&bull; {readingTime}</span>}
-        {batchNumber && <span>&bull; {batchNumber}</span>}
-        {beerStyle && <span>&bull; {beerStyle}</span>}
+      <div class="article-byline-chips">
+        <span class="byline-chip">
+          <span class="material-symbols-outlined" aria-hidden="true">calendar_today</span>
+          <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+        </span>
+        {
+          readingTime && (
+            <span class="byline-chip">
+              <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+              {readingTime}
+            </span>
+          )
+        }
+        {
+          batchNumber && (
+            <span class="byline-chip highlight">
+              <span class="material-symbols-outlined" aria-hidden="true">tag</span>
+              {batchNumber}
+            </span>
+          )
+        }
+        {
+          beerStyle && (
+            <span class="byline-chip">
+              <span class="material-symbols-outlined" aria-hidden="true">sports_bar</span>
+              {beerStyle}
+            </span>
+          )
+        }
       </div>
     </header>
 
     {
       heroImage && (
         <figure class="article-image inner">
-          <img src={heroImage} alt={title} />
+          <img
+            src={heroImage}
+            alt={title}
+            transition:name={`post-img-${post.slug}`}
+          />
         </figure>
       )
     }
@@ -76,7 +116,7 @@ const morePosts = (await getCollection('posts'))
       {competition && <CompetitionScoreCard competition={competition} />}
       {experiment && <ExperimentCard experiment={experiment} title={title} />}
 
-      <div class="prose">
+      <div class="prose md-article-surface md-reveal">
         <Content />
       </div>
 
@@ -95,7 +135,12 @@ const morePosts = (await getCollection('posts'))
 
   <section class="read-more-section outer">
     <div class="inner">
-      <h3 class="read-more-heading">More from Broadmeadow Brewery</h3>
+      <div class="read-more-bar md-reveal">
+        <h3 class="read-more-heading">
+          <span class="material-symbols-outlined filled" aria-hidden="true">library_books</span>
+          More from SFBrews
+        </h3>
+      </div>
       <div class="read-more-grid">
         {morePosts.map((related) => <PostCard post={related} />)}
       </div>
@@ -103,76 +148,190 @@ const morePosts = (await getCollection('posts'))
   </section>
 </BaseLayout>
 
+<script>
+  function initReadingProgress() {
+    const fill = document.getElementById('reading-progress-fill');
+    if (!fill) return;
+
+    const updateProgress = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+      fill.style.width = `${pct}%`;
+    };
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  }
+
+  document.addEventListener('astro:page-load', initReadingProgress);
+</script>
+
 <style>
+  .md-reading-progress-track {
+    position: fixed;
+    top: var(--top-bar-height);
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: transparent;
+    z-index: 55;
+    pointer-events: none;
+  }
+
+  .md-reading-progress-fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--md-sys-color-primary);
+    border-radius: 0 2px 2px 0;
+    transition: width 80ms linear;
+  }
+
   .article {
-    padding-top: 3.5rem;
+    padding-top: 2.25rem;
   }
 
   .article-header {
     margin-bottom: 2rem;
   }
 
+  .article-top-chips {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .article-top-chips .primary-tag {
+    margin-bottom: 0;
+  }
+
+  .back-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.28rem 0.75rem;
+    border-radius: var(--md-sys-shape-corner-small);
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .back-chip .material-symbols-outlined {
+    font-size: 16px;
+  }
+
+  .back-chip:hover {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+  }
+
   .article-title {
-    font-size: clamp(1.85rem, 4.2vw, 2.75rem);
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 4.2vw, 2.85rem);
     font-weight: 800;
-    line-height: 1.15;
+    line-height: 1.14;
     letter-spacing: -0.025em;
-    color: var(--text-main);
-    margin-bottom: 1rem;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 0.9rem;
   }
 
   .article-excerpt {
-    font-size: clamp(1.05rem, 2vw, 1.22rem);
+    font-size: clamp(1.04rem, 2vw, 1.2rem);
     line-height: 1.55;
-    color: var(--text-muted);
+    color: var(--md-sys-color-on-surface-variant);
     margin-bottom: 1.35rem;
   }
 
-  .article-byline {
+  .article-byline-chips {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-    font-size: 0.86rem;
-    color: var(--text-muted);
     padding-top: 1rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .byline-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .byline-chip.highlight {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    border-color: transparent;
+    font-weight: 700;
+  }
+
+  .byline-chip .material-symbols-outlined {
+    font-size: 15px;
   }
 
   .article-image {
-    max-width: 960px;
-    margin: 0 auto 2.75rem;
+    max-width: 980px;
+    margin: 0 auto 2.5rem;
   }
 
   .article-image img {
     width: 100%;
     max-height: 520px;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    box-shadow: var(--md-sys-elevation-2);
+  }
+
+  .md-article-surface {
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    padding: clamp(1.35rem, 3.5vw, 2.5rem);
+    box-shadow: var(--md-sys-elevation-1);
   }
 
   .read-more-section {
-    margin-top: 5rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--border);
+    margin-top: 4.5rem;
+    padding-top: 2.75rem;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .read-more-bar {
+    margin-bottom: 1.5rem;
   }
 
   .read-more-heading {
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    margin-bottom: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .read-more-heading .material-symbols-outlined {
+    color: var(--md-sys-color-primary);
   }
 
   .read-more-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     .read-more-grid {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -180,11 +339,20 @@ const morePosts = (await getCollection('posts'))
 
   @media (max-width: 640px) {
     .article {
-      padding-top: 2rem;
+      padding-top: 1.35rem;
     }
 
     .article-image {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .article-image img {
+      border-radius: var(--md-sys-shape-corner-large);
+    }
+
+    .md-article-surface {
+      padding: 1.25rem 1.15rem;
+      border-radius: var(--md-sys-shape-corner-large);
     }
 
     .read-more-grid {

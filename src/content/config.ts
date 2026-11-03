@@ -83,22 +83,26 @@ const experimentSchema = z.object({
 const competitionSchema = z.object({
   eventName: z.string(),
   date: z.string(),
-  location: z.string(),
+  location: z.string().optional(),
   bjcpCategory: z.string(),
   entryBeer: z.string(),
-  batchNumber: z.string(),
-  score: z.number(),
+  batchNumber: z.string().optional(),
+  score: z.number().optional(),
   maxScore: z.number().default(50),
-  award: z.enum(['Best of Show', 'Gold', 'Silver', 'Bronze', 'Finalist', 'Entered']),
-  scoresBreakdown: z.object({
-    aroma: z.number(),
-    appearance: z.number(),
-    flavor: z.number(),
-    mouthfeel: z.number(),
-    overall: z.number(),
-  }),
-  judgeConsensus: z.string(),
-  recipeImprovements: z.string(),
+  award: z
+    .enum(['Best of Show', 'Gold', 'Silver', 'Bronze', 'Finalist', 'Entered', 'Pending'])
+    .default('Pending'),
+  scoresBreakdown: z
+    .object({
+      aroma: z.number(),
+      appearance: z.number(),
+      flavor: z.number(),
+      mouthfeel: z.number(),
+      overall: z.number(),
+    })
+    .optional(),
+  judgeConsensus: z.string().optional(),
+  recipeImprovements: z.string().optional(),
 });
 
 const postsCollection = defineCollection({
@@ -109,6 +113,8 @@ const postsCollection = defineCollection({
     description: z.string(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
+    hidden: z.boolean().default(false),
+    publishAfter: z.coerce.date().optional(),
     category: z.enum(['brewday', 'recipe', 'experiment', 'competition', 'news']),
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false),

@@ -1,69 +1,151 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { COMPETITION_RECORDS } from '../data/competitions';
+import { COMPETITION_RECORDS, isCompetitionVisible } from '../data/competitions';
 import { srmToHex, withBase } from '../utils/srm';
+
+const visibleRecords = COMPETITION_RECORDS.filter(isCompetitionVisible);
 ---
 
 <BaseLayout
-  title="Competitions — Broadmeadow Brewery"
+  title="Competitions — SFBrews"
   description="Competition entries, BJCP scoresheets, and judge feedback."
 >
   <div class="outer page-wrap">
-    <div class="canvas prose">
-      <h1>Competitions &amp; Scoresheets</h1>
-      <p>
-        We enter regional and national BJCP competitions for honest blind feedback. Every scoresheet directly informs the next iteration of our recipes.
-      </p>
-
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Competition</th>
-              <th>Beer &amp; Style</th>
-              <th>Score</th>
-              <th>Award</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              COMPETITION_RECORDS.map((rec) => (
-                <tr>
-                  <td class="nowrap">{rec.date}</td>
-                  <td>{rec.competitionName}</td>
-                  <td>
-                    <span class="srm-dot" style={`background-color: ${srmToHex(rec.srm)};`} />{' '}
-                    {rec.postSlug ? (
-                      <a href={withBase(`/posts/${rec.postSlug}`)}><strong>{rec.beerName}</strong></a>
-                    ) : (
-                      <strong>{rec.beerName}</strong>
-                    )}{' '}
-                    <span class="muted">({rec.bjcpCategory} {rec.bjcpStyleName})</span>
-                  </td>
-                  <td class="nowrap">{rec.score} / {rec.maxScore}</td>
-                  <td class="nowrap"><strong>{rec.award}</strong></td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
-
-      <h2>Judge Notes &amp; Recipe Adjustments</h2>
-      {
-        COMPETITION_RECORDS.map((rec) => (
-          <div class="comp-item">
-            <h3>
-              {rec.beerName} — {rec.award} ({rec.score}/50)
-            </h3>
-            <p class="comp-meta">
-              {rec.competitionName} ({rec.date}) &bull; Aroma {rec.scoresBreakdown.aroma}/12, Appearance {rec.scoresBreakdown.appearance}/3, Flavor {rec.scoresBreakdown.flavor}/20, Mouthfeel {rec.scoresBreakdown.mouthfeel}/5, Overall {rec.scoresBreakdown.overall}/10
+    <div class="inner">
+      <header class="md-page-banner md-reveal">
+        <div class="banner-main">
+          <span class="banner-icon-badge">
+            <span class="material-symbols-outlined filled" aria-hidden="true">emoji_events</span>
+          </span>
+          <div>
+            <span class="banner-kicker">BJCP Blind Feedback</span>
+            <h1>Competitions &amp; Scoresheets</h1>
+            <p>
+              Entering regional and national BJCP competitions for honest blind feedback. Every scoresheet directly informs the next iteration of our recipes.
             </p>
-            <p><strong>Judge Summary:</strong> “{rec.judgeSummary}”</p>
-            <p><strong>Next Iteration:</strong> {rec.nextIterationPlan}</p>
           </div>
-        ))
+        </div>
+      </header>
+
+      {
+        visibleRecords.length > 0 ? (
+          <>
+            <div class="prose md-reveal">
+              <div class="table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Competition</th>
+                      <th>Beer &amp; BJCP Style</th>
+                      <th>Score</th>
+                      <th>Award</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {visibleRecords.map((rec) => (
+                      <tr>
+                        <td class="nowrap">{rec.date}</td>
+                        <td>{rec.competitionName}</td>
+                        <td>
+                          <span class="srm-dot" style={`background-color: ${srmToHex(rec.srm)};`} />{' '}
+                          {rec.postSlug ? (
+                            <a href={withBase(`/posts/${rec.postSlug}`)}>
+                              <strong>{rec.beerName}</strong>
+                            </a>
+                          ) : (
+                            <strong>{rec.beerName}</strong>
+                          )}{' '}
+                          <span class="muted">
+                            ({rec.bjcpCategory} {rec.bjcpStyleName})
+                          </span>
+                        </td>
+                        <td class="nowrap">
+                          {rec.score !== undefined ? (
+                            <>
+                              <strong>{rec.score}</strong> / {rec.maxScore}
+                            </>
+                          ) : (
+                            'Pending'
+                          )}
+                        </td>
+                        <td class="nowrap">
+                          <span class:list={['award-chip', `award-${rec.award.toLowerCase().replace(/\s+/g, '-')}`]}>
+                            {rec.award}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <h2 class="section-subtitle md-reveal">Judge Notes &amp; Recipe Adjustments</h2>
+            <div class="comp-cards-grid">
+              {visibleRecords.map((rec) => (
+                <article class="md-card md-comp-detail-card md-reveal">
+                  <div class="comp-detail-head">
+                    <div>
+                      <span class="comp-detail-meta">
+                        {rec.competitionName} ({rec.date})
+                        {rec.location ? ` • ${rec.location}` : ''}
+                      </span>
+                      <h3>
+                        <span class="srm-dot" style={`background-color: ${srmToHex(rec.srm)};`} />
+                        {rec.postSlug ? (
+                          <a href={withBase(`/posts/${rec.postSlug}`)}>{rec.beerName}</a>
+                        ) : (
+                          rec.beerName
+                        )}
+                      </h3>
+                    </div>
+                    <span class="comp-score-pill">
+                      {rec.award}
+                      {rec.score !== undefined ? ` • ${rec.score}/${rec.maxScore}` : ''}
+                    </span>
+                  </div>
+
+                  {rec.scoresBreakdown && (
+                    <div class="mini-breakdown">
+                      <span>
+                        <strong>Aroma:</strong> {rec.scoresBreakdown.aroma}/12
+                      </span>
+                      <span>
+                        <strong>Appearance:</strong> {rec.scoresBreakdown.appearance}/3
+                      </span>
+                      <span>
+                        <strong>Flavor:</strong> {rec.scoresBreakdown.flavor}/20
+                      </span>
+                      <span>
+                        <strong>Mouthfeel:</strong> {rec.scoresBreakdown.mouthfeel}/5
+                      </span>
+                      <span>
+                        <strong>Overall:</strong> {rec.scoresBreakdown.overall}/10
+                      </span>
+                    </div>
+                  )}
+
+                  <p class="comp-quote">“{rec.judgeSummary}”</p>
+                  <p class="comp-plan">
+                    <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+                    <span>
+                      <strong>Next Iteration:</strong> {rec.nextIterationPlan}
+                    </span>
+                  </p>
+                </article>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div class="md-empty-card md-reveal">
+            <span class="material-symbols-outlined empty-icon" aria-hidden="true">emoji_events</span>
+            <h3>Upcoming Competition Entries</h3>
+            <p>
+              Entries are currently being judged—full BJCP scoresheet breakdowns and judge notes will be published here once results are announced.
+            </p>
+          </div>
+        )
       }
     </div>
   </div>
@@ -71,14 +153,69 @@ import { srmToHex, withBase } from '../utils/srm';
 
 <style>
   .page-wrap {
-    padding-top: 3rem;
+    padding-top: 2rem;
   }
 
-  .page-wrap h1 {
-    font-size: clamp(1.85rem, 4vw, 2.5rem);
+  .md-page-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    padding: clamp(1.35rem, 3vw, 2.25rem);
+    margin-bottom: 2rem;
+    box-shadow: var(--md-sys-elevation-1);
+  }
+
+  .banner-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    max-width: 720px;
+  }
+
+  .banner-icon-badge {
+    width: 54px;
+    height: 54px;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .banner-icon-badge .material-symbols-outlined {
+    font-size: 26px;
+  }
+
+  .banner-kicker {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--md-sys-color-primary);
+    margin-bottom: 0.2rem;
+  }
+
+  .md-page-banner h1 {
+    font-size: clamp(1.8rem, 4vw, 2.45rem);
     font-weight: 800;
     letter-spacing: -0.02em;
-    margin-bottom: 0.75rem;
+    line-height: 1.15;
+    margin-bottom: 0.45rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .md-page-banner p {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 1rem;
   }
 
   .table-scroll {
@@ -92,28 +229,158 @@ import { srmToHex, withBase } from '../utils/srm';
   }
 
   .muted {
-    color: var(--text-muted);
-    font-size: 0.88rem;
-  }
-
-  .comp-item {
-    padding: 1.5rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .comp-item h3 {
-    margin-top: 0;
-  }
-
-  .comp-meta {
+    color: var(--md-sys-color-outline);
     font-size: 0.86rem;
-    color: var(--text-muted);
+  }
+
+  .award-chip {
+    display: inline-block;
+    padding: 0.24rem 0.7rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    font-family: var(--font-display);
+    font-size: 0.76rem;
+    font-weight: 700;
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .award-gold,
+  .award-best-of-show {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+  }
+
+  .section-subtitle {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin: 2.5rem 0 1.25rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .comp-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .md-comp-detail-card {
+    padding: 1.5rem;
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .comp-detail-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .comp-detail-meta {
+    display: block;
+    font-size: 0.76rem;
+    color: var(--md-sys-color-outline);
+    margin-bottom: 0.2rem;
+  }
+
+  .comp-detail-head h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .comp-detail-head h3 a:hover {
+    color: var(--md-sys-color-primary);
+  }
+
+  .comp-score-pill {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+  }
+
+  .mini-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--md-sys-shape-corner-medium);
+    background-color: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .comp-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.98rem;
+    color: var(--md-sys-color-on-surface);
+    line-height: 1.6;
+  }
+
+  .comp-plan {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .comp-plan .material-symbols-outlined {
+    font-size: 18px;
+    color: var(--md-sys-color-primary);
+    margin-top: 0.1rem;
+  }
+
+  .md-empty-card {
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px dashed var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .empty-icon {
+    font-size: 42px;
+    color: var(--md-sys-color-outline);
     margin-bottom: 0.75rem;
+  }
+
+  .md-empty-card h3 {
+    font-size: 1.2rem;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 0.35rem;
+  }
+
+  @media (max-width: 860px) {
+    .comp-cards-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 640px) {
     .page-wrap {
-      padding-top: 2rem;
+      padding-top: 1.25rem;
+    }
+
+    .banner-main {
+      flex-direction: column;
+      gap: 0.85rem;
     }
   }
 </style>

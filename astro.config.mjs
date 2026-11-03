@@ -3,7 +3,7 @@ import mdx from '@astrojs/mdx';
 
 export default defineConfig({
   site: 'https://fidz91.github.io',
-  base: '/broadmeadowbrewery',
+  base: '/sfbrews',
   integrations: [mdx()],
   markdown: {
     shikiConfig: {

@@ -64,13 +64,13 @@ export const CATEGORY_META: Record<
     label: 'Brewday Log',
     plural: 'Brewdays',
     badgeClass: 'badge-brewday',
-    description: 'Grain-to-glass field notes, mash performance, boil-day mishaps, and fermentation logs.',
+    description: 'Grain-to-glass field notes, mash performance, boil-day logs, and fermentation notes.',
   },
   recipe: {
-    label: 'Recipe Formulation',
-    plural: 'Recipes',
+    label: 'Recipe & Brewday',
+    plural: 'Recipes & Brewdays',
     badgeClass: 'badge-recipe',
-    description: 'Iterative grist builds, hop schedules, water chemistry profiles, and yeast pairings.',
+    description: 'All-grain formulations, grist builds, hop schedules, water profiles, and brewday logs.',
   },
   experiment: {
     label: 'Split-Batch & Lab',
@@ -82,19 +82,26 @@ export const CATEGORY_META: Record<
     label: 'Competition Report',
     plural: 'Competitions',
     badgeClass: 'badge-competition',
-    description: 'BJCP scoresheet breakdowns, judge feedback analysis, and medal results.',
+    description: 'BJCP scoresheet breakdowns, judge feedback analysis, and competition entries.',
   },
   news: {
-    label: 'Brewery Dispatch',
-    plural: 'News',
+    label: 'Equipment & News',
+    plural: 'Equipment & News',
     badgeClass: 'badge-news',
-    description: 'Brewhouse upgrades, seasonal releases, hop harvest notes, and Broadmeadow updates.',
+    description: 'Brewhouse upgrades, seasonal releases, and SFBrews updates.',
   },
 };
+
+export function isPostVisible(post: {
+  data: { hidden?: boolean; publishAfter?: Date };
+}): boolean {
+  if (post.data.hidden) return false;
+  if (post.data.publishAfter && new Date() < post.data.publishAfter) return false;
+  return true;
+}
 
 export function withBase(path: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${base}${cleanPath}` || '/';
 }
-

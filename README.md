@@ -1,4 +1,4 @@
-# Broadmeadow Brewery
+# SFBrews
 
 Small-batch homebrewery journal, recipe library, split-batch experiment log, and BJCP competition ledger built with [Astro](https://astro.build/).
 
@@ -37,6 +37,6 @@ Starter copy-paste templates live in the [`_templates/`](./_templates/) folder (
 
 | Command | Action |
 | :--- | :--- |
-| `npm run dev` | Starts local preview server at `http://localhost:4321/broadmeadowbrewery` |
+| `npm run dev` | Starts local preview server at `http://localhost:4321/sfbrews` |
 | `npm run build` | Builds the production site to `./dist/` (and validates all recipe/post schemas) |
 | `npm run preview` | Previews the production build locally |

@@ -3,47 +3,157 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="About — Broadmeadow Brewery"
-  description="About Broadmeadow Brewery, our 21L all-grain setup, and brewing philosophy."
+  title="About — SFBrews"
+  description="About SFBrews, our all-grain BrewZilla 4.1.1 setup, and brewing philosophy."
 >
   <div class="outer page-wrap">
-    <div class="canvas prose">
-      <h1>About Broadmeadow Brewery</h1>
-      <p>
-        Welcome to <strong>Broadmeadow Brewery</strong>—a personal homebrewing journal documenting brewday writeups, iterative recipe developments, split-batch experiments, and competition results.
-      </p>
+    <div class="canvas">
+      <header class="md-about-hero md-reveal">
+        <span class="about-badge">
+          <span class="material-symbols-outlined filled" aria-hidden="true">sports_bar</span>
+          Brewhouse Profile
+        </span>
+        <h1>About SFBrews</h1>
+        <p>
+          Welcome to <strong>SFBrews</strong>—a personal homebrewing journal documenting brewday writeups, recipe formulations, split-batch experiments, equipment reviews, and competition results.
+        </p>
+      </header>
 
-      <h2>The Brewhouse</h2>
-      <ul>
-        <li><strong>Batch Volume:</strong> 21.0 L (5.5 US Gal) all-grain electric HERMS system</li>
-        <li><strong>Milling:</strong> Two-roller mill set to a <code>0.95 mm</code> gap with malt conditioning</li>
-        <li><strong>Water Treatment:</strong> Reverse-osmosis blank slate mineralized with precision salt additions for each style</li>
-        <li><strong>Fermentation &amp; Cellar:</strong> Temperature-controlled stainless conicals, pressure spunding, and a 3-tap keezer with a Czech LUKR side-pull faucet</li>
-      </ul>
+      <section class="spec-grid md-reveal">
+        <div class="md-card spec-card">
+          <span class="material-symbols-outlined spec-icon" aria-hidden="true">water_heater</span>
+          <h3>BrewZilla Gen 4.1.1</h3>
+          <p>All-grain electric brewing system with RAPT PID step-mash control, dish base drain, and pumped mash recirculation.</p>
+        </div>
+        <div class="md-card spec-card">
+          <span class="material-symbols-outlined spec-icon" aria-hidden="true">grain</span>
+          <h3>Recipe Formulation</h3>
+          <p>Balanced grist builds, hop schedules, and iterative batch adjustments informed by tasting notes and BJCP feedback.</p>
+        </div>
+        <div class="md-card spec-card">
+          <span class="material-symbols-outlined spec-icon" aria-hidden="true">water_drop</span>
+          <h3>Water Chemistry</h3>
+          <p>Tailored mineral additions and mash pH control matched to classic and modern beer styles.</p>
+        </div>
+        <div class="md-card spec-card">
+          <span class="material-symbols-outlined spec-icon" aria-hidden="true">kitchen</span>
+          <h3>Fermentation &amp; Cellar</h3>
+          <p>Temperature-controlled fermentation, pressure spunding, and draft dispensing.</p>
+        </div>
+      </section>
 
-      <h2>Adding a New Post</h2>
-      <p>
-        Every writeup lives as a simple Markdown file in <code>src/content/posts/</code>. Include a <code>recipe</code> block in the frontmatter to automatically render the recipe specification and Malt Bill table with grist percentages.
-      </p>
+      <div class="md-card prose-card prose md-reveal">
+        <h2>Adding a New Post</h2>
+        <p>
+          Every writeup lives as a simple Markdown file in <code>src/content/posts/</code>. Include a <code>recipe</code> block in the frontmatter to automatically render the recipe specification and Malt Bill table with grist percentages.
+        </p>
+      </div>
     </div>
   </div>
 </BaseLayout>
 
 <style>
   .page-wrap {
-    padding-top: 3rem;
+    padding-top: 2rem;
   }
 
-  .page-wrap h1 {
+  .md-about-hero {
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    padding: clamp(1.5rem, 3.5vw, 2.5rem);
+    margin-bottom: 1.75rem;
+    box-shadow: var(--md-sys-elevation-1);
+  }
+
+  .about-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.85rem;
+  }
+
+  .about-badge .material-symbols-outlined {
+    font-size: 16px;
+  }
+
+  .md-about-hero h1 {
     font-size: clamp(1.85rem, 4vw, 2.5rem);
     font-weight: 800;
     letter-spacing: -0.02em;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .md-about-hero p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .spec-card {
+    padding: 1.35rem;
+    border-radius: var(--md-sys-shape-corner-large);
+  }
+
+  .spec-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    margin-bottom: 0.85rem;
+  }
+
+  .spec-card h3 {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 0.35rem;
+  }
+
+  .spec-card p {
+    font-size: 0.92rem;
+    color: var(--md-sys-color-on-surface-variant);
+    line-height: 1.6;
+  }
+
+  .prose-card {
+    padding: 1.5rem 1.75rem;
+    border-radius: var(--md-sys-shape-corner-extra-large);
+  }
+
+  .prose-card h2 {
+    margin-top: 0;
+  }
+
+  .prose-card p:last-child {
+    margin-bottom: 0;
   }
 
   @media (max-width: 640px) {
     .page-wrap {
-      padding-top: 2rem;
+      padding-top: 1.25rem;
+    }
+
+    .spec-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>

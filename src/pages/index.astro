@@ -3,32 +3,63 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import TaplistBoard from '../components/TaplistBoard.astro';
 import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
+import { isPostVisible, withBase } from '../utils/srm';
 
-const allPosts = (await getCollection('posts')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const allPosts = (await getCollection('posts'))
+  .filter(isPostVisible)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <BaseLayout>
-  <!-- Minimalist Cover Header (Humebrew style) -->
-  <div class="site-header-content outer">
-    <img
-      class="site-header-cover"
-      src="https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?auto=format&fit=crop&w=2000&q=80"
-      alt="Broadmeadow Brewery"
-    />
-    <div class="site-header-inner inner">
-      <h1 class="site-title">BROADMEADOW BREWERY</h1>
-      <p class="site-description">
-        Homebrewing writeups, recipe formulations, experiments and everything beer related.
-      </p>
+  <!-- Material 3 Expressive Hero Card -->
+  <section class="hero-section outer">
+    <div class="inner">
+      <div class="md-hero-card md-reveal">
+        <img
+          class="md-hero-cover"
+          src="https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?auto=format&fit=crop&w=2000&q=80"
+          alt="SFBrews"
+        />
+        <div class="md-hero-scrim"></div>
+        <div class="md-hero-content">
+          <span class="md-hero-chip">
+            <span class="material-symbols-outlined filled" aria-hidden="true">local_drink</span>
+            Small-Batch All-Grain Brewhouse
+          </span>
+          <h1 class="md-hero-title">SFBREWS</h1>
+          <p class="md-hero-description">
+            Homebrewing writeups, recipe formulations, experiments and everything beer related.
+          </p>
+          <div class="md-hero-actions">
+            <a href={withBase('/recipes')} class="md-btn md-btn-filled">
+              <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+              Recipes &amp; Brewdays
+            </a>
+            <a href={withBase('/journal')} class="md-btn md-btn-tonal">
+              <span class="material-symbols-outlined" aria-hidden="true">search</span>
+              Search Archive
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- Main Content & Post Feed -->
   <div class="outer">
     <div class="inner">
       <TaplistBoard />
+
+      <div class="section-bar md-reveal">
+        <h2 class="section-heading">
+          <span class="material-symbols-outlined filled" aria-hidden="true">auto_stories</span>
+          Latest Brewhouse Dispatches
+        </h2>
+        <a href={withBase('/journal')} class="section-link md-ripple-surface">
+          View all {allPosts.length} entries
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </a>
+      </div>
 
       <div class="post-feed">
         {
@@ -42,75 +73,178 @@ const allPosts = (await getCollection('posts')).sort(
 </BaseLayout>
 
 <style>
-  .site-header-content {
+  .hero-section {
+    padding-top: 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .md-hero-card {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    min-height: 320px;
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-    text-align: center;
+    justify-content: flex-start;
+    min-height: 350px;
+    padding: clamp(2rem, 5vw, 3.75rem);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    background-color: #1f1610;
     color: #ffffff;
-    background-color: #15171a;
     overflow: hidden;
-    margin-bottom: 1.5rem;
+    box-shadow: var(--md-sys-elevation-2);
   }
 
-  .site-header-cover {
+  .md-hero-cover {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.42;
+    opacity: 0.45;
+    transform: scale(1.03);
+    transition: transform 8s var(--md-sys-motion-easing-standard);
   }
 
-  .site-header-inner {
+  .md-hero-card:hover .md-hero-cover {
+    transform: scale(1.08);
+  }
+
+  .md-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      115deg,
+      rgba(24, 16, 10, 0.9) 0%,
+      rgba(34, 22, 12, 0.72) 55%,
+      rgba(34, 22, 12, 0.35) 100%
+    );
+  }
+
+  .md-hero-content {
     position: relative;
     z-index: 2;
-    max-width: 680px;
+    max-width: 660px;
   }
 
-  .site-title {
-    font-size: clamp(2rem, 5vw, 3.2rem);
+  .md-hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: rgba(255, 220, 190, 0.18);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 220, 190, 0.3);
+    color: #ffdcbe;
+    font-family: var(--font-display);
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  .md-hero-chip .material-symbols-outlined {
+    font-size: 16px;
+  }
+
+  .md-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.35rem);
     font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
     color: #ffffff;
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.75rem;
   }
 
-  .site-description {
-    font-size: clamp(1rem, 2.2vw, 1.25rem);
+  .md-hero-description {
+    font-size: clamp(0.98rem, 2vw, 1.15rem);
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.9);
-    line-height: 1.45;
+    color: rgba(255, 248, 244, 0.88);
+    line-height: 1.55;
+    margin-bottom: 1.65rem;
+  }
+
+  .md-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .section-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .section-heading .material-symbols-outlined {
+    color: var(--md-sys-color-primary);
+  }
+
+  .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .section-link:hover {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
   }
 
   .post-feed {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3.25rem 2.25rem;
+    gap: 1.75rem;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     .post-feed {
       grid-template-columns: repeat(2, 1fr);
-      gap: 2.5rem 1.75rem;
+      gap: 1.35rem;
     }
   }
 
   @media (max-width: 640px) {
-    .site-header-content {
-      min-height: 220px;
-      padding-top: 2.75rem;
-      padding-bottom: 2.75rem;
+    .hero-section {
+      padding-top: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .md-hero-card {
+      min-height: 260px;
+      padding: 1.65rem 1.35rem;
+      border-radius: var(--md-sys-shape-corner-large);
+    }
+
+    .md-hero-actions .md-btn {
+      flex: 1 1 auto;
     }
 
     .post-feed {
       grid-template-columns: 1fr;
-      gap: 2.5rem;
+      gap: 1.25rem;
     }
   }
 </style>

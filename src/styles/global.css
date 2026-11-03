@@ -1,20 +1,156 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
 :root {
-  --bg: #ffffff;
-  --bg-soft: #f8f9fa;
-  --text-main: #15171a;
-  --text-body: #2e3238;
-  --text-muted: #738a94;
-  --accent: #15171a;
-  --tag-color: #5c705e;
-  --border: #e6e9ec;
+  /* Material Design 3 Color System — Craft Brewery Warm Tonal Palette (Light) */
+  --md-sys-color-primary: #8b5000;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #ffdcbe;
+  --md-sys-color-on-primary-container: #2c1600;
 
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --md-sys-color-secondary: #4e6639;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #cfecb4;
+  --md-sys-color-on-secondary-container: #0c2000;
+
+  --md-sys-color-tertiary: #75543d;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #ffdcc5;
+  --md-sys-color-on-tertiary-container: #2b1504;
+
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+
+  --md-sys-color-background: #fff8f4;
+  --md-sys-color-on-background: #211a14;
+  --md-sys-color-surface: #fff8f4;
+  --md-sys-color-surface-dim: #e5d8ce;
+  --md-sys-color-surface-bright: #fff8f4;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #fef1e7;
+  --md-sys-color-surface-container: #f8ece2;
+  --md-sys-color-surface-container-high: #f2e6dc;
+  --md-sys-color-surface-container-highest: #ece0d6;
+
+  --md-sys-color-on-surface: #211a14;
+  --md-sys-color-on-surface-variant: #51443a;
+  --md-sys-color-outline: #837468;
+  --md-sys-color-outline-variant: #d5c3b5;
+  --md-sys-color-scrim: rgba(20, 14, 9, 0.48);
+
+  /* State Layer Opacities (Material 3) */
+  --md-state-hover: rgba(139, 80, 0, 0.08);
+  --md-state-focus: rgba(139, 80, 0, 0.12);
+  --md-state-pressed: rgba(139, 80, 0, 0.14);
+  --md-ripple-color: rgba(139, 80, 0, 0.16);
+
+  /* Legacy alias mappings for seamless compatibility */
+  --bg: var(--md-sys-color-surface);
+  --bg-soft: var(--md-sys-color-surface-container);
+  --text-main: var(--md-sys-color-on-surface);
+  --text-body: var(--md-sys-color-on-surface-variant);
+  --text-muted: var(--md-sys-color-outline);
+  --accent: var(--md-sys-color-primary);
+  --tag-color: var(--md-sys-color-secondary);
+  --border: var(--md-sys-color-outline-variant);
+
+  /* Material Design 3 Shape Scale */
+  --md-sys-shape-corner-none: 0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 9999px;
+
+  /* Material Design 3 Elevation Shadows */
+  --md-sys-elevation-0: none;
+  --md-sys-elevation-1: 0 1px 2px rgba(33, 26, 20, 0.08), 0 1px 3px 1px rgba(33, 26, 20, 0.06);
+  --md-sys-elevation-2: 0 1px 2px rgba(33, 26, 20, 0.1), 0 2px 6px 2px rgba(33, 26, 20, 0.08);
+  --md-sys-elevation-3: 0 4px 8px 3px rgba(33, 26, 20, 0.1), 0 1px 3px rgba(33, 26, 20, 0.12);
+  --md-sys-elevation-4: 0 6px 10px 4px rgba(33, 26, 20, 0.12), 0 2px 4px rgba(33, 26, 20, 0.14);
+  --md-sys-elevation-5: 0 8px 12px 6px rgba(33, 26, 20, 0.14), 0 4px 6px rgba(33, 26, 20, 0.16);
+
+  /* Material Design 3 Motion System */
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --md-sys-motion-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --md-sys-motion-duration-short1: 50ms;
+  --md-sys-motion-duration-short2: 100ms;
+  --md-sys-motion-duration-short3: 150ms;
+  --md-sys-motion-duration-short4: 200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium3: 350ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1: 450ms;
+  --md-sys-motion-duration-long2: 500ms;
+
+  /* Typography */
+  --font-display: 'Plus Jakarta Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Roboto', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: 'Lora', Georgia, serif;
 
-  --max-site: 1160px;
-  --max-canvas: 720px;
+  /* Layout Dimensions */
+  --max-site: 1200px;
+  --max-canvas: 760px;
+  --top-bar-height: 68px;
+  --bottom-nav-height: 72px;
+}
+
+/* Material Design 3 Dark Theme */
+[data-theme='dark'] {
+  --md-sys-color-primary: #ffb870;
+  --md-sys-color-on-primary: #4a2800;
+  --md-sys-color-primary-container: #693c00;
+  --md-sys-color-on-primary-container: #ffdcbe;
+
+  --md-sys-color-secondary: #b4cf9a;
+  --md-sys-color-on-secondary: #213610;
+  --md-sys-color-secondary-container: #374d24;
+  --md-sys-color-on-secondary-container: #cfecb4;
+
+  --md-sys-color-tertiary: #e4bfa6;
+  --md-sys-color-on-tertiary: #422915;
+  --md-sys-color-tertiary-container: #5b3f29;
+  --md-sys-color-on-tertiary-container: #ffdcc5;
+
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffdad6;
+
+  --md-sys-color-background: #18120c;
+  --md-sys-color-on-background: #eee0d5;
+  --md-sys-color-surface: #18120c;
+  --md-sys-color-surface-dim: #18120c;
+  --md-sys-color-surface-bright: #403830;
+  --md-sys-color-surface-container-lowest: #130d08;
+  --md-sys-color-surface-container-low: #211a14;
+  --md-sys-color-surface-container: #251e18;
+  --md-sys-color-surface-container-high: #302822;
+  --md-sys-color-surface-container-highest: #3b332c;
+
+  --md-sys-color-on-surface: #eee0d5;
+  --md-sys-color-on-surface-variant: #d5c3b5;
+  --md-sys-color-outline: #9e8e81;
+  --md-sys-color-outline-variant: #51443a;
+  --md-sys-color-scrim: rgba(0, 0, 0, 0.65);
+
+  --md-state-hover: rgba(255, 184, 112, 0.08);
+  --md-state-focus: rgba(255, 184, 112, 0.12);
+  --md-state-pressed: rgba(255, 184, 112, 0.16);
+  --md-ripple-color: rgba(255, 184, 112, 0.2);
+
+  --md-sys-elevation-1: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --md-sys-elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.38), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --md-sys-elevation-3: 0 4px 10px 3px rgba(0, 0, 0, 0.42), 0 2px 4px rgba(0, 0, 0, 0.32);
+  --md-sys-elevation-4: 0 6px 14px 4px rgba(0, 0, 0, 0.45), 0 3px 6px rgba(0, 0, 0, 0.35);
 }
 
 *,
@@ -26,25 +162,46 @@
 }
 
 html {
-  background-color: var(--bg);
-  color: var(--text-main);
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.65;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg);
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-surface);
+  transition:
+    background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-display);
 }
 
 a {
   color: inherit;
   text-decoration: none;
-  transition: opacity 0.15s ease, color 0.15s ease;
+  transition:
+    color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-standard),
+    transform var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-emphasized);
 }
 
 img {
@@ -53,8 +210,42 @@ img {
   height: auto;
 }
 
+/* Material Symbols Helper */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
+  transition: font-variation-settings var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+.material-symbols-outlined.filled {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 600,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+/* Layout Containers */
 .outer {
-  padding: 0 4vw;
+  padding: 0 clamp(1rem, 4vw, 2.5rem);
 }
 
 .inner {
@@ -69,46 +260,243 @@ img {
   margin: 0 auto;
 }
 
-/* Primary Tag Style (Humebrew / Ghost style) */
+/* Material 3 Assist / Category Chip */
 .primary-tag {
-  display: inline-block;
-  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-display);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--tag-color);
-  margin-bottom: 0.45rem;
+  color: var(--md-sys-color-on-secondary-container);
+  background-color: var(--md-sys-color-secondary-container);
+  padding: 0.28rem 0.75rem;
+  border-radius: var(--md-sys-shape-corner-small);
+  margin-bottom: 0.65rem;
+  width: fit-content;
+  transition:
+    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-spring);
 }
 
-/* Clean Article Prose (Humebrew Long-form Reading) */
+/* Material 3 Buttons */
+.md-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.625rem 1.35rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-standard),
+    transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized);
+}
+
+.md-btn:active {
+  transform: scale(0.97);
+}
+
+.md-btn-filled {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  box-shadow: var(--md-sys-elevation-1);
+}
+
+.md-btn-filled:hover {
+  box-shadow: var(--md-sys-elevation-2);
+  filter: brightness(1.06);
+}
+
+.md-btn-tonal {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.md-btn-tonal:hover {
+  box-shadow: var(--md-sys-elevation-1);
+}
+
+.md-btn-outlined {
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.md-btn-outlined:hover {
+  background-color: var(--md-state-hover);
+}
+
+/* Material 3 Icon Button */
+.md-icon-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    transform var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-spring);
+}
+
+.md-icon-btn:hover {
+  background-color: var(--md-state-hover);
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-icon-btn:active {
+  transform: scale(0.92);
+  background-color: var(--md-state-pressed);
+}
+
+/* Material 3 Surface Cards */
+.md-card {
+  position: relative;
+  background-color: var(--md-sys-color-surface-container-low);
+  border-radius: var(--md-sys-shape-corner-large);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: var(--md-sys-elevation-1);
+  transition:
+    transform var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized),
+    box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized),
+    background-color var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-standard),
+    border-color var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-standard);
+}
+
+.md-card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--md-sys-elevation-3);
+  background-color: var(--md-sys-color-surface-container);
+  border-color: var(--md-sys-color-outline);
+}
+
+.md-card-interactive:active {
+  transform: translateY(-1px) scale(0.99);
+  box-shadow: var(--md-sys-elevation-1);
+}
+
+/* Material Ripple Wave */
+.md-ripple-surface {
+  position: relative;
+  overflow: hidden;
+}
+
+.md-ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  pointer-events: none;
+  background-color: var(--md-ripple-color);
+  animation: md-ripple-expand 550ms var(--md-sys-motion-easing-emphasized-decelerate) forwards;
+}
+
+@keyframes md-ripple-expand {
+  to {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+/* Scroll-Triggered Entrance Motion */
+.md-reveal {
+  opacity: 0;
+  transform: translateY(20px) scale(0.985);
+  transition:
+    opacity var(--md-sys-motion-duration-long1) var(--md-sys-motion-easing-emphasized-decelerate),
+    transform var(--md-sys-motion-duration-long1) var(--md-sys-motion-easing-emphasized-decelerate);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.md-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Astro View Transitions Custom Animations (Material Shared Axis Y / Container Transform) */
+@keyframes md-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes md-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+::view-transition-old(root) {
+  animation: 180ms var(--md-sys-motion-easing-emphasized-accelerate) both md-fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 320ms var(--md-sys-motion-easing-emphasized-decelerate) both md-fade-in;
+}
+
+/* Clean Article Prose (Material 3 Long-form Reading) */
 .prose {
   font-family: var(--font-sans);
-  font-size: 1.08rem;
+  font-size: 1.0625rem;
   line-height: 1.8;
-  color: var(--text-body);
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .prose p {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.45rem;
+}
+
+.prose strong {
+  color: var(--md-sys-color-on-surface);
+  font-weight: 600;
 }
 
 .prose h2 {
-  font-family: var(--font-sans);
-  font-size: 1.55rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.5vw, 1.65rem);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--text-main);
-  margin: 2.6rem 0 1rem;
+  color: var(--md-sys-color-on-surface);
+  margin: 2.5rem 0 1rem;
   line-height: 1.25;
 }
 
 .prose h3 {
-  font-family: var(--font-sans);
-  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2vw, 1.3rem);
   font-weight: 700;
   letter-spacing: -0.015em;
-  color: var(--text-main);
+  color: var(--md-sys-color-on-surface);
   margin: 2rem 0 0.75rem;
 }
 
@@ -119,65 +507,117 @@ img {
 }
 
 .prose li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.55rem;
 }
 
 .prose blockquote {
   margin: 2rem 0;
-  padding-left: 1.25rem;
-  border-left: 3px solid var(--text-main);
+  padding: 1.25rem 1.5rem;
+  background-color: var(--md-sys-color-surface-container-low);
+  border-left: 4px solid var(--md-sys-color-primary);
+  border-radius: 0 var(--md-sys-shape-corner-medium) var(--md-sys-shape-corner-medium) 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 1.15rem;
-  color: var(--text-main);
+  font-size: 1.12rem;
+  color: var(--md-sys-color-on-surface);
+  box-shadow: var(--md-sys-elevation-1);
 }
 
+/* Material 3 Data Tables */
 .prose table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   margin: 1.5rem 0 2rem;
-  font-size: 0.95rem;
+  font-size: 0.94rem;
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  overflow: hidden;
 }
 
 .prose th,
 .prose td {
   text-align: left;
-  padding: 0.7rem 0.75rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tbody tr {
+  transition: background-color var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+
+.prose tbody tr:hover {
+  background-color: var(--md-state-hover);
 }
 
 .prose th {
-  font-size: 0.78rem;
+  font-family: var(--font-display);
+  font-size: 0.76rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-  border-bottom: 2px solid var(--border);
+  letter-spacing: 0.06em;
+  color: var(--md-sys-color-on-surface-variant);
+  background-color: var(--md-sys-color-surface-container);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .prose code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.88em;
-  background-color: var(--bg-soft);
-  padding: 0.15rem 0.35rem;
-  border-radius: 3px;
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--md-sys-shape-corner-small);
 }
 
 .prose a {
+  color: var(--md-sys-color-primary);
   text-decoration: underline;
   text-underline-offset: 3px;
+  font-weight: 500;
 }
 
 .prose a:hover {
-  opacity: 0.75;
+  opacity: 0.8;
 }
 
-/* SRM minimal dot */
+/* SRM Color Swatch Dot */
 .srm-dot {
   display: inline-block;
-  width: 11px;
-  height: 11px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1.5px solid rgba(0, 0, 0, 0.22);
+  box-shadow: 0 0 0 2px var(--md-sys-color-surface-container-lowest);
   vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Mobile Bottom Nav Spacer */
+@media (max-width: 860px) {
+  body {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .md-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

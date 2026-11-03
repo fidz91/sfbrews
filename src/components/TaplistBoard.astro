@@ -1,102 +1,324 @@
 ---
-import { ACTIVE_TAPS, ACTIVE_FERMENTERS } from '../data/taplist';
+import { ACTIVE_TAPS, ACTIVE_FERMENTERS, UPCOMING_BREWS } from '../data/taplist';
 import { srmToHex, withBase } from '../utils/srm';
 ---
 
-<section class="cellar-strip" aria-label="Currently On Tap and Fermenting">
-  <div class="cellar-row">
-    <span class="cellar-label">On Tap:</span>
-    <div class="cellar-items">
+<section class="md-cellar-board md-reveal" aria-label="Currently On Tap, Fermenting, and Upcoming">
+  <!-- On Tap Panel -->
+  <div class="cellar-panel">
+    <div class="cellar-panel-header">
+      <span class="cellar-icon-badge tap">
+        <span class="material-symbols-outlined filled" aria-hidden="true">sports_bar</span>
+      </span>
+      <div>
+        <h2 class="cellar-panel-title">On Tap</h2>
+        <span class="cellar-panel-sub">Currently Pouring</span>
+      </div>
+    </div>
+
+    <div class="cellar-chips-track">
       {
-        ACTIVE_TAPS.map((tap) => (
-          <a href={tap.postSlug ? withBase(`/posts/${tap.postSlug}`) : '#'} class="cellar-item">
-            <span class="srm-dot" style={`background-color: ${srmToHex(tap.srm)};`} />
-            <strong>{tap.name}</strong>
-            <span class="cellar-meta">({tap.style}, {tap.abv.toFixed(1)}%)</span>
-          </a>
-        ))
+        ACTIVE_TAPS.length > 0 ? (
+          ACTIVE_TAPS.map((tap) => (
+            <a
+              href={tap.postSlug ? withBase(`/posts/${tap.postSlug}`) : '#'}
+              class="cellar-chip md-ripple-surface"
+            >
+              <span
+                class="srm-swatch"
+                style={`background-color: ${srmToHex(tap.srm)};`}
+                title={`${tap.srm} SRM`}
+              />
+              <span class="cellar-chip-body">
+                <strong class="cellar-chip-name">{tap.name}</strong>
+                <span class="cellar-chip-meta">
+                  {tap.style}
+                  {tap.abv !== undefined ? ` • ${tap.abv.toFixed(1)}% ABV` : ''}
+                </span>
+              </span>
+              {tap.postSlug && (
+                <span class="material-symbols-outlined cellar-chip-arrow" aria-hidden="true">
+                  chevron_right
+                </span>
+              )}
+            </a>
+          ))
+        ) : (
+          <div class="cellar-empty-chip">No active taps right now</div>
+        )
       }
     </div>
   </div>
 
-  <div class="cellar-row">
-    <span class="cellar-label">Fermenting:</span>
-    <div class="cellar-items">
+  <!-- Fermenting Panel -->
+  <div class="cellar-panel">
+    <div class="cellar-panel-header">
+      <span class="cellar-icon-badge fv">
+        <span class="material-symbols-outlined filled" aria-hidden="true">science</span>
+      </span>
+      <div>
+        <h2 class="cellar-panel-title">Fermenting</h2>
+        <span class="cellar-panel-sub">In the Fermenter</span>
+      </div>
+    </div>
+
+    <div class="cellar-chips-track">
       {
-        ACTIVE_FERMENTERS.map((fv) => (
-          <a href={fv.postSlug ? withBase(`/posts/${fv.postSlug}`) : '#'} class="cellar-item">
-            <span class="srm-dot" style={`background-color: ${srmToHex(fv.srm)};`} />
-            <strong>{fv.name}</strong>
-            <span class="cellar-meta">({fv.stage} &bull; {fv.currentGravity.toFixed(3)} SG)</span>
-          </a>
-        ))
+        ACTIVE_FERMENTERS.length > 0 ? (
+          ACTIVE_FERMENTERS.map((fv) => (
+            <a
+              href={fv.postSlug ? withBase(`/posts/${fv.postSlug}`) : '#'}
+              class="cellar-chip md-ripple-surface"
+            >
+              <span
+                class="srm-swatch"
+                style={`background-color: ${srmToHex(fv.srm)};`}
+                title={`${fv.srm} SRM`}
+              />
+              <span class="cellar-chip-body">
+                <strong class="cellar-chip-name">{fv.name}</strong>
+                <span class="cellar-chip-meta">
+                  {fv.stage}
+                  {fv.currentGravity !== undefined ? ` • ${fv.currentGravity.toFixed(3)} SG` : ''}
+                </span>
+              </span>
+              {fv.postSlug && (
+                <span class="material-symbols-outlined cellar-chip-arrow" aria-hidden="true">
+                  chevron_right
+                </span>
+              )}
+            </a>
+          ))
+        ) : (
+          <div class="cellar-empty-chip">
+            <span class="material-symbols-outlined" aria-hidden="true">hourglass_empty</span>
+            <span>Fermenters currently empty</span>
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <!-- Upcoming Brews Panel -->
+  <div class="cellar-panel">
+    <div class="cellar-panel-header">
+      <span class="cellar-icon-badge upcoming">
+        <span class="material-symbols-outlined filled" aria-hidden="true">event_upcoming</span>
+      </span>
+      <div>
+        <h2 class="cellar-panel-title">Upcoming Brews</h2>
+        <span class="cellar-panel-sub">Next on the Schedule</span>
+      </div>
+    </div>
+
+    <div class="cellar-chips-track">
+      {
+        UPCOMING_BREWS.map((up) =>
+          up.postSlug ? (
+            <a href={withBase(`/posts/${up.postSlug}`)} class="cellar-chip md-ripple-surface">
+              <span
+                class="srm-swatch"
+                style={`background-color: ${srmToHex(up.srm)};`}
+                title={`${up.srm} SRM`}
+              />
+              <span class="cellar-chip-body">
+                <strong class="cellar-chip-name">{up.name}</strong>
+                <span class="cellar-chip-meta">{up.style}</span>
+              </span>
+              <span class="material-symbols-outlined cellar-chip-arrow" aria-hidden="true">
+                chevron_right
+              </span>
+            </a>
+          ) : (
+            <div class="cellar-chip static">
+              <span
+                class="srm-swatch"
+                style={`background-color: ${srmToHex(up.srm)};`}
+                title={`${up.srm} SRM`}
+              />
+              <span class="cellar-chip-body">
+                <strong class="cellar-chip-name">{up.name}</strong>
+                <span class="cellar-chip-meta">{up.style}</span>
+              </span>
+            </div>
+          )
+        )
       }
     </div>
   </div>
 </section>
 
 <style>
-  .cellar-strip {
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 0;
-    margin-bottom: 3rem;
-    font-size: 0.88rem;
+  .md-cellar-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.15rem;
+    margin-bottom: 2.75rem;
+  }
+
+  .cellar-panel {
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    padding: 1.2rem;
+    box-shadow: var(--md-sys-elevation-1);
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.9rem;
   }
 
-  .cellar-row {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  .cellar-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    min-width: 90px;
-  }
-
-  .cellar-items {
+  .cellar-panel-header {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
-    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 
-  .cellar-item {
+  .cellar-icon-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--md-sys-shape-corner-medium);
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    color: var(--text-body);
+    justify-content: center;
+    flex-shrink: 0;
   }
 
-  .cellar-item:hover {
-    opacity: 0.7;
+  .cellar-icon-badge.tap {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
   }
 
-  .cellar-meta {
-    color: var(--text-muted);
-    font-size: 0.83rem;
+  .cellar-icon-badge.fv {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+  }
+
+  .cellar-icon-badge.upcoming {
+    background-color: var(--md-sys-color-tertiary-container);
+    color: var(--md-sys-color-on-tertiary-container);
+  }
+
+  .cellar-panel-title {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    line-height: 1.2;
+  }
+
+  .cellar-panel-sub {
+    font-size: 0.75rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .cellar-chips-track {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .cellar-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 0.85rem;
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    transition:
+      transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-emphasized),
+      box-shadow var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+      border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+      background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  }
+
+  .cellar-chip:not(.static):hover {
+    transform: translateY(-2px);
+    box-shadow: var(--md-sys-elevation-2);
+    border-color: var(--md-sys-color-primary);
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  .cellar-chip:not(.static):active {
+    transform: scale(0.98);
+  }
+
+  .cellar-empty-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-outline);
+    font-size: 0.84rem;
+    font-style: italic;
+  }
+
+  .cellar-empty-chip .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  .srm-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 0 2px var(--md-sys-color-surface-container-high);
+    flex-shrink: 0;
+  }
+
+  .cellar-chip-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .cellar-chip-name {
+    font-family: var(--font-display);
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cellar-chip-meta {
+    font-size: 0.76rem;
+    color: var(--md-sys-color-on-surface-variant);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cellar-chip-arrow {
+    font-size: 18px;
+    color: var(--md-sys-color-outline);
+    transition: transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-spring);
+  }
+
+  .cellar-chip:hover .cellar-chip-arrow {
+    transform: translateX(3px);
+    color: var(--md-sys-color-primary);
+  }
+
+  @media (max-width: 960px) {
+    .md-cellar-board {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 640px) {
-    .cellar-strip {
+    .md-cellar-board {
+      gap: 0.85rem;
       margin-bottom: 2rem;
     }
-    .cellar-row {
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-    .cellar-items {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.4rem;
+
+    .cellar-panel {
+      padding: 1rem;
+      border-radius: var(--md-sys-shape-corner-large);
     }
   }
 </style>
