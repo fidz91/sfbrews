@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { resolveAboutHeroImage } from '../utils/images';
+
+const aboutHeroImage = resolveAboutHeroImage();
 ---
 
 <BaseLayout
@@ -12,6 +15,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p>
         Welcome to <strong>S.F.Brews</strong>—a personal homebrewing journal documenting recipes, brewday logs, experiments, and competition results.
       </p>
+
+      {
+        aboutHeroImage && (
+          <figure class="about-hero-figure">
+            <img src={aboutHeroImage} alt="S.F.Brews Brewhouse" />
+          </figure>
+        )
+      }
 
       <h2>The Brewhouse</h2>
       <p>
@@ -27,6 +38,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p>
         Every writeup lives as a Markdown file in <code>src/content/posts/</code>, with starter templates available in <code>_templates/</code>. Set <code>hidden: true</code> (or a future <code>publishAfter</code> date) in the frontmatter to keep drafts or upcoming competition entries hidden until you are ready to publish.
       </p>
+
+      <h2>Changing Images</h2>
+      <p>
+        You can change any image on the site either by <strong>uploading a file into the private <code>_images/</code> folder</strong> or by <strong>referencing a URL</strong>:
+      </p>
+      <ul>
+        <li><strong>Drop into <code>_images/</code>:</strong> Upload any photo into <code>_images/</code> (for example, <code>_images/hero.jpg</code> for the homepage banner or <code>_images/dark-rye-saison.jpg</code> matching a post filename) and it will be picked up automatically—or reference the filename in <code>heroImage: "my-photo.jpg"</code>.</li>
+        <li><strong>Central Image Config:</strong> Edit <code>src/data/images.ts</code> to swap the homepage banner, category defaults, or individual post images in one place using either a filename in <code>_images/</code> or a full <code>https://...</code> URL.</li>
+      </ul>
     </div>
   </div>
 </BaseLayout>
@@ -34,6 +54,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <style>
   .page-wrap {
     padding-top: 4rem;
+  }
+
+  .about-hero-figure {
+    margin: 1.75rem 0 2.25rem;
+  }
+
+  .about-hero-figure img {
+    width: 100%;
+    max-height: 440px;
+    object-fit: cover;
+    border-radius: var(--md-sys-shape-corner-large);
   }
 
   .page-wrap h1 {

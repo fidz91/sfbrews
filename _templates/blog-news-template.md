@@ -34,8 +34,10 @@ Write paragraphs as normal text. Use `**bold text**` for emphasis, `*italics*` f
 
 ## Adding Your Own Photos
 
-To use your own photos instead of Unsplash links:
-1. Drop your image file into the `public/images/` folder (e.g. `public/images/my-brewday.jpg`).
-2. For `heroImage` at the top of the file, use `"/sfbrews/images/my-brewday.jpg"`.
-3. Inside the post body, embed images with:
-   `![Description of photo](/sfbrews/images/my-brewday.jpg)`
+You can use either a **private folder upload** (`_images/`) or any **external URL** (`https://...`):
+1. **Private Folder (`_images/`)**:
+   - Drop your image file into the top-level `_images/` folder (e.g. `_images/my-brewday.jpg`).
+   - If you name the image to match your post filename (e.g. `_images/my-blog-post.jpg`), it will be used as the hero image automatically!
+   - Or set `heroImage: "my-brewday.jpg"` at the top of the file, and embed photos inside the post body with `![Description of photo](my-brewday.jpg)`.
+2. **External URL**:
+   - Paste any full image URL into `heroImage: "https://..."` (or in `src/data/images.ts`).

@@ -25,8 +25,14 @@ Starter copy-paste templates live in the [`_templates/`](./_templates/) folder (
 
 ---
 
-## Updating Other Pages
+## Updating Other Pages & Images
 
+- **Changing Website Images (Private Folder or URL):**
+  - **Upload to the private [`_images/`](./_images/) folder:** Drop any `.jpg`, `.png`, `.webp`, `.avif`, or `.gif` into `_images/`.
+    - Name a file `_images/hero.jpg` to automatically replace the homepage hero banner.
+    - Name a file after a post slug (e.g. `_images/dark-rye-saison.jpg`) to automatically use it as that post's hero image.
+    - Or reference any file in `_images/` by filename in a post's frontmatter (`heroImage: "my-brew.jpg"`) or inside the Markdown body (`![Mash](my-brew.jpg)`).
+  - **Central Image Config ([`src/data/images.ts`](./src/data/images.ts)):** Swap the homepage hero banner, category fallbacks, or per-post images in one place using either a filename from `_images/` or any `https://...` URL.
 - **Homepage Live Taplist & Fermenters:** Edit [`src/data/taplist.ts`](./src/data/taplist.ts)
 - **Competition Ledger & Medal Tally:** Edit [`src/data/competitions.ts`](./src/data/competitions.ts)
 - **About & Equipment Page:** Edit [`src/pages/about.astro`](./src/pages/about.astro)

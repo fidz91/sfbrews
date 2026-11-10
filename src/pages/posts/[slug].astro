@@ -6,6 +6,11 @@ import CompetitionScoreCard from '../../components/CompetitionScoreCard.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 import { CATEGORY_META, isPostVisible, withBase } from '../../utils/srm';
+import {
+  getPrivateImageClientMap,
+  resolvePostGallery,
+  resolvePostHeroImage,
+} from '../../utils/images';
 
 export async function getStaticPaths() {
   const posts = (await getCollection('posts')).filter(isPostVisible);
@@ -26,11 +31,15 @@ const {
   batchNumber,
   beerStyle,
   readingTime,
-  heroImage,
+  heroCaption,
   recipe,
   experiment,
   competition,
 } = post.data;
+
+const resolvedHeroImage = resolvePostHeroImage(post);
+const galleryItems = resolvePostGallery(post);
+const privateImageMapJson = JSON.stringify(getPrivateImageClientMap());
 
 const meta = CATEGORY_META[category];
 const formattedDate = pubDate.toLocaleDateString('en-US', {
@@ -65,20 +74,36 @@ const morePosts = (await getCollection('posts'))
     </header>
 
     {
-      heroImage && (
+      resolvedHeroImage && (
         <figure class="article-image inner">
-          <img src={heroImage} alt={title} />
+          <img src={resolvedHeroImage} alt={title} transition:name={`post-img-${post.slug}`} />
+          {heroCaption && <figcaption class="article-image-caption">{heroCaption}</figcaption>}
         </figure>
       )
     }
 
-    <div class="article-content canvas">
+    <div class="article-content canvas" data-private-images={privateImageMapJson}>
       {competition && <CompetitionScoreCard competition={competition} />}
       {experiment && <ExperimentCard experiment={experiment} title={title} />}
 
       <div class="prose">
         <Content />
       </div>
+
+      {
+        galleryItems.length > 0 && (
+          <section class="post-gallery" aria-label="Brewday & Recipe Photos">
+            <div class="post-gallery-grid">
+              {galleryItems.map((item) => (
+                <figure class="post-gallery-item">
+                  <img src={item.src} alt={item.alt} loading="lazy" />
+                  {item.caption && <figcaption>{item.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          </section>
+        )
+      }
 
       {
         recipe && (
@@ -102,6 +127,29 @@ const morePosts = (await getCollection('posts'))
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  function resolveInlinePrivateImages() {
+    const container = document.querySelector<HTMLElement>('.article-content[data-private-images]');
+    if (!container) return;
+    try {
+      const map: Record<string, string> = JSON.parse(container.dataset.privateImages || '{}');
+      container.querySelectorAll<HTMLImageElement>('.prose img').forEach((img) => {
+        const rawSrc = img.getAttribute('src') || '';
+        if (!rawSrc || /^(https?:)?\/\//i.test(rawSrc) || rawSrc.startsWith('data:')) return;
+        const clean = rawSrc.replace(/\\/g, '/').replace(/^\.\//, '').replace(/^\//, '').toLowerCase();
+        const fileName = clean.split('/').pop() || '';
+        const resolved = map[clean] || map[fileName];
+        if (resolved) {
+          img.src = resolved;
+        }
+      });
+    } catch {
+      // Ignore malformed JSON
+    }
+  }
+  document.addEventListener('astro:page-load', resolveInlinePrivateImages);
+</script>
 
 <style>
   .article {
@@ -149,6 +197,42 @@ const morePosts = (await getCollection('posts'))
     max-height: 540px;
     object-fit: cover;
     border-radius: var(--md-sys-shape-corner-large);
+  }
+
+  .article-image-caption {
+    margin-top: 0.65rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .post-gallery {
+    margin: 2.5rem 0;
+  }
+
+  .post-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .post-gallery-item {
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--border);
+    border-radius: var(--md-sys-shape-corner-large);
+    overflow: hidden;
+  }
+
+  .post-gallery-item img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .post-gallery-item figcaption {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.84rem;
+    color: var(--text-muted);
   }
 
   .read-more-section {

@@ -123,6 +123,18 @@ const postsCollection = defineCollection({
     readingTime: z.string().optional(),
     heroImage: z.string().optional(),
     heroCaption: z.string().optional(),
+    gallery: z
+      .array(
+        z.union([
+          z.string(),
+          z.object({
+            image: z.string(),
+            caption: z.string().optional(),
+            alt: z.string().optional(),
+          }),
+        ])
+      )
+      .optional(),
     recipe: recipeSchema.optional(),
     experiment: experimentSchema.optional(),
     competition: competitionSchema.optional(),

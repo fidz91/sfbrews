@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { CATEGORY_META, withBase } from '../utils/srm';
+import { resolvePostHeroImage } from '../utils/images';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -17,8 +18,9 @@ const {
   beerStyle,
   batchNumber,
   readingTime,
-  heroImage,
 } = post.data;
+
+const resolvedHeroImage = resolvePostHeroImage(post);
 
 const meta = CATEGORY_META[category];
 const categoryIcons: Record<string, string> = {
@@ -44,11 +46,11 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
   data-search={`${title} ${description} ${beerStyle || ''} ${batchNumber || ''} ${tags.join(' ')}`.toLowerCase()}
 >
   {
-    heroImage && (
+    resolvedHeroImage && (
       <a class="post-card-image-link" href={withBase(`/posts/${post.slug}`)} tabindex="-1" aria-hidden="true">
         <img
           class="post-card-image"
-          src={heroImage}
+          src={resolvedHeroImage}
           alt={title}
           loading={large ? 'eager' : 'lazy'}
           transition:name={`post-img-${post.slug}`}

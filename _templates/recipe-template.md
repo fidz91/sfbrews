@@ -15,8 +15,12 @@ featured: true                   # Set true to feature on the homepage
 batchNumber: "Batch #050"
 beerStyle: "Style Name — BJCP 00A"
 readingTime: "5 min read"
+# heroImage accepts EITHER a filename uploaded to `_images/` (e.g. "my-beer.jpg") OR a full URL ("https://...")
 heroImage: "https://images.unsplash.com/photo-1535958636474-b021ee887b13?auto=format&fit=crop&w=1200&q=80"
 # heroCaption: "Optional caption under the hero image"
+# gallery:                       # Optional: list filenames from `_images/` or URLs for a photo gallery
+#   - image: "mash-photo.jpg"
+#     caption: "Recirculating the mash"
 tags: ["style-tag", "hop-name", "yeast-strain", "recipe"]
 
 recipe:
