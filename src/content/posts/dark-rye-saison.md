@@ -1,12 +1,12 @@
 ---
-title: "Dark Rye Saison — Recipe & Brewday"
-subtitle: "Recipe formulation and brewday log for our Dark Rye Saison — currently on tap."
+title: "Dark Rye Saison - "Trye, Trye Again""
+subtitle: "Recipe & Brewday"
 description: "Recipe specifications, grist bill, hop schedule, and grain-to-glass brewday notes for our Dark Rye Saison (ready to fill in)."
-pubDate: 2026-10-28
+pubDate: 2026-10-13
 category: "recipe"
 featured: true
 hidden: false
-beerStyle: "Specialty Dark Rye Saison — BJCP 25B"
+beerStyle: "BJCP 31A Alternative Grain Beer: 25B Saison"
 readingTime: "5 min read"
 heroImage: "https://images.unsplash.com/photo-1535958636474-b021ee887b13?auto=format&fit=crop&w=1200&q=80"
 tags: ["recipe", "brewday", "saison", "dark-rye-saison", "rye"]
@@ -15,53 +15,63 @@ tags: ["recipe", "brewday", "saison", "dark-rye-saison", "rye"]
 # Fill in your exact Dark Rye Saison recipe numbers and ingredients below:
 # ============================================================================
 recipe:
-  batchSize: "21.0 L"
+  batchSize: "15.0 L"
   boilTime: "60 min"
-  efficiency: "75%"
-  og: 1.056
+  efficiency: "67.7%"
+  og: 1.062
   fg: 1.006
-  abv: 6.5
-  ibu: 28
-  srm: 18.0
+  abv: 7.4
+  ibu: 25
+  srm: 16.5
 
   fermentables:
-    - name: "Pilsner / Base Malt (fill in brand & weight)"
-      weight: "0.00 kg"
+    - name: "Pilsner"
+      weight: "1.8 kg"
       percentage: 70.0
       lovibond: "2.0 °L"
-      notes: "Base malt foundation"
-    - name: "Rye Malt (fill in weight)"
-      weight: "0.00 kg"
+      notes: "Base malt"
+    - name: "Rye Malt"
+      weight: "1.2 kg"
       percentage: 20.0
       lovibond: "3.5 °L"
-      notes: "Spicy rye character and rustic mouthfeel"
-    - name: "Dark / Roasted / Specialty Malt (fill in weight)"
-      weight: "0.00 kg"
+      notes: "Spicy rye character and mouthfeel"
+    - name: "Light Munich"
+      weight: "1.0 kg"
       percentage: 10.0
       lovibond: "300 °L"
-      notes: "Dark color and subtle roasted complexity"
+      notes: "Adding some biscuity complexity"
+    - name: "Roasted Rye"
+      weight: "0.2 kg"
+      percentage: 10.0
+      lovibond: "300 °L"
+      notes: "Gives a rich ruby hue and some sourdough crust flavour"
+    - name: "Table Sugar"
+      weight: "0.25 kg"
+      percentage: 10.0
+      lovibond: "300 °L"
+      notes: "Helps to dry out the beer"
 
   hops:
-    - name: "Bittering Hop (fill in variety)"
-      weight: "0 g"
-      alphaAcid: "0.0%"
+    - name: "German Magnum"
+      weight: "10 g"
+      alphaAcid: "11.7%"
       timing: "60 min"
       use: "Boil"
-      ibuContribution: 20
-    - name: "Late / Aroma Hop (fill in variety)"
-      weight: "0 g"
-      alphaAcid: "0.0%"
+      ibuContribution: 19
+    - name: "German Tradition"
+      weight: "25 g"
+      alphaAcid: "4.3%"
       timing: "10 min"
       use: "Boil"
-      ibuContribution: 8
+      ibuContribution: 6
 
   yeast:
-    name: "Saison Yeast Strain (fill in strain)"
-    lab: "Yeast Lab"
-    code: "Strain Code"
-    attenuation: "85%"
-    tempRange: "20.0°C – 26.0°C"
-    pitchNotes: "Add your starter, pitch rate, and temperature schedule notes here."
+    name: "Farmhouse Vibes"
+    lab: "WHC"
+    code: ""
+    attenuation: "90%"
+    tempRange: "20.0°C – 24.0°C"
+    pitchNotes: "Pitched whole packet (11 g) at 24°C "
 
   mash:
     - step: "Saccharification Rest"
