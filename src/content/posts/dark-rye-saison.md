@@ -1,5 +1,5 @@
 ---
-title: "Dark Rye Saison - "Trye, Trye Again""
+title: "Dark Rye Saison - Trye, Trye Again"
 subtitle: "Recipe & Brewday"
 description: "Recipe specifications, grist bill, hop schedule, and grain-to-glass brewday notes for our Dark Rye Saison (ready to fill in)."
 pubDate: 2026-10-13
