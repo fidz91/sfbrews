@@ -16,6 +16,7 @@ const recipePosts = (await getCollection('posts'))
   <div class="outer page-wrap">
     <div class="inner">
       <header class="page-head">
+        <span class="page-eyebrow">Formulation Ledger</span>
         <h1>Recipes &amp; Brewdays</h1>
         <p>All-grain formulations with grist bill percentages, hop schedules, water profiles, and brewday logs.</p>
       </header>
@@ -37,52 +38,64 @@ const recipePosts = (await getCollection('posts'))
 
 <style>
   .page-wrap {
-    padding-top: 4rem;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
   }
 
   .page-head {
-    margin-bottom: 4rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .page-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--md-sys-color-primary);
+    display: block;
+    margin-bottom: 0.35rem;
   }
 
   .page-head h1 {
     font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.02em;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
   }
 
   .page-head p {
-    color: var(--text-muted);
-    font-size: 1.08rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 1.05rem;
   }
 
   .post-feed {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3.75rem 2.75rem;
+    gap: 1.75rem;
   }
 
   .empty-msg {
-    color: var(--text-muted);
+    color: var(--md-sys-color-outline);
     padding: 2.5rem 0;
   }
 
-  @media (max-width: 960px) {
+  @media (max-width: 1024px) {
     .post-feed {
       grid-template-columns: repeat(2, 1fr);
-      gap: 3rem 2rem;
     }
   }
 
   @media (max-width: 640px) {
     .page-wrap {
-      padding-top: 2.5rem;
+      padding-top: 2rem;
     }
+
     .post-feed {
       grid-template-columns: 1fr;
-      gap: 2.75rem;
+      gap: 1.25rem;
     }
   }
 </style>

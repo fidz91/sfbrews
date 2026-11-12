@@ -10,11 +10,14 @@ const aboutHeroImage = resolveAboutHeroImage();
   description="About SFBrews, our homebrewing setup, and brewing notes."
 >
   <div class="outer page-wrap">
-    <div class="canvas prose">
-      <h1>About S.F.Brews</h1>
-      <p>
-        Welcome to <strong>S.F.Brews</strong>—a personal homebrewing journal documenting recipes, brewday logs, experiments, and competition results.
-      </p>
+    <div class="canvas m3-about-sheet">
+      <header class="m3-page-header">
+        <span class="m3-page-eyebrow">Brewhouse &amp; Cellar Notes</span>
+        <h1>About S.F.Brews</h1>
+        <p class="m3-page-lead">
+          Welcome to <strong>S.F.Brews</strong>—a personal homebrewing journal documenting recipes, brewday logs, experiments, and competition results.
+        </p>
+      </header>
 
       {
         aboutHeroImage && (
@@ -24,59 +27,101 @@ const aboutHeroImage = resolveAboutHeroImage();
         )
       }
 
-      <h2>The Brewhouse</h2>
-      <p>
-        <em>Update this section in <code>src/pages/about.astro</code> with your equipment details, batch sizes, and brewing philosophy:</em>
-      </p>
-      <ul>
-        <li><strong>System &amp; Batch Size:</strong> KegLand BrewZilla Gen 4.1.1 all-in-one brewing system [add your typical batch volume &amp; accessories]</li>
-        <li><strong>Fermentation:</strong> [Add your fermenters and temperature control setup]</li>
-        <li><strong>Dispense &amp; Packaging:</strong> [Add your kegging / tap or bottling setup]</li>
-      </ul>
+      <div class="m3-content-card prose">
+        <h2>The Brewhouse</h2>
+        <p>
+          <em>Update this section in <code>src/pages/about.astro</code> with your equipment details, batch sizes, and brewing philosophy:</em>
+        </p>
+        <ul>
+          <li><strong>System &amp; Batch Size:</strong> KegLand BrewZilla Gen 4.1.1 all-in-one brewing system [add your typical batch volume &amp; accessories]</li>
+          <li><strong>Fermentation:</strong> [Add your fermenters and temperature control setup]</li>
+          <li><strong>Dispense &amp; Packaging:</strong> [Add your kegging / tap or bottling setup]</li>
+        </ul>
 
-      <h2>Adding &amp; Updating Posts</h2>
-      <p>
-        Every writeup lives as a Markdown file in <code>src/content/posts/</code>, with starter templates available in <code>_templates/</code>. Set <code>hidden: true</code> (or a future <code>publishAfter</code> date) in the frontmatter to keep drafts or upcoming competition entries hidden until you are ready to publish.
-      </p>
+        <h2>Adding &amp; Updating Posts</h2>
+        <p>
+          Every writeup lives as a Markdown file in <code>src/content/posts/</code>, with starter templates available in <code>_templates/</code>. Set <code>hidden: true</code> (or a future <code>publishAfter</code> date) in the frontmatter to keep drafts or upcoming competition entries hidden until you are ready to publish.
+        </p>
 
-      <h2>Changing Images</h2>
-      <p>
-        You can change any image on the site either by <strong>uploading a file into the private <code>_images/</code> folder</strong> or by <strong>referencing a URL</strong>:
-      </p>
-      <ul>
-        <li><strong>Drop into <code>_images/</code>:</strong> Upload any photo into <code>_images/</code> (for example, <code>_images/hero.jpg</code> for the homepage banner or <code>_images/dark-rye-saison.jpg</code> matching a post filename) and it will be picked up automatically—or reference the filename in <code>heroImage: "my-photo.jpg"</code>.</li>
-        <li><strong>Central Image Config:</strong> Edit <code>src/data/images.ts</code> to swap the homepage banner, category defaults, or individual post images in one place using either a filename in <code>_images/</code> or a full <code>https://...</code> URL.</li>
-      </ul>
+        <h2>Changing Images</h2>
+        <p>
+          You can change any image on the site either by <strong>uploading a file into the private <code>_images/</code> folder</strong> or by <strong>referencing a URL</strong>:
+        </p>
+        <ul>
+          <li><strong>Drop into <code>_images/</code>:</strong> Upload any photo into <code>_images/</code> (for example, <code>_images/hero.jpg</code> for the homepage banner or <code>_images/dark-rye-saison.jpg</code> matching a post filename) and it will be picked up automatically—or reference the filename in <code>heroImage: "my-photo.jpg"</code>.</li>
+          <li><strong>Central Image Config:</strong> Edit <code>src/data/images.ts</code> to swap the homepage banner, category defaults, or individual post images in one place using either a filename in <code>_images/</code> or a full <code>https://...</code> URL.</li>
+        </ul>
+      </div>
     </div>
   </div>
 </BaseLayout>
 
 <style>
   .page-wrap {
-    padding-top: 4rem;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  .m3-page-header {
+    margin-bottom: 2rem;
+  }
+
+  .m3-page-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--md-sys-color-primary);
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .m3-page-header h1 {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  .m3-page-lead {
+    font-size: 1.08rem;
+    color: var(--md-sys-color-on-surface-variant);
+    line-height: 1.65;
   }
 
   .about-hero-figure {
-    margin: 1.75rem 0 2.25rem;
+    margin: 0 0 2rem;
   }
 
   .about-hero-figure img {
     width: 100%;
     max-height: 440px;
     object-fit: cover;
-    border-radius: var(--md-sys-shape-corner-large);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: var(--md-sys-elevation-1);
   }
 
-  .page-wrap h1 {
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 1.25rem;
+  .m3-content-card {
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    padding: 2.25rem;
+    box-shadow: var(--md-sys-elevation-1);
+  }
+
+  .m3-content-card h2:first-child {
+    margin-top: 0;
   }
 
   @media (max-width: 640px) {
     .page-wrap {
-      padding-top: 2.5rem;
+      padding-top: 2rem;
+    }
+
+    .m3-content-card {
+      padding: 1.5rem;
     }
   }
 </style>

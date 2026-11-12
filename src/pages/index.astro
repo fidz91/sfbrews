@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import TaplistBoard from '../components/TaplistBoard.astro';
 import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
-import { isPostVisible } from '../utils/srm';
+import { isPostVisible, withBase } from '../utils/srm';
 import { resolveHomeHeroImage } from '../utils/images';
 
 const homeHeroImage = resolveHomeHeroImage();
@@ -14,25 +14,61 @@ const allPosts = (await getCollection('posts'))
 ---
 
 <BaseLayout>
-  <!-- Minimalist Cover Header -->
-  <div class="site-header-content outer">
-    <img
-      class="site-header-cover"
-      src={homeHeroImage}
-      alt="S.F.Brews"
-    />
-    <div class="site-header-inner inner">
-      <h1 class="site-title">S.F.Brews</h1>
-      <p class="site-description">
-        Brewday and recipe writeups, competitions, experiments and everything beer related.
-      </p>
+  <!-- Streamlined M3 Hero Header & Active Pipeline Dossier -->
+  <section class="m3-hero-section">
+    {homeHeroImage && <img class="m3-hero-bg-image" src={homeHeroImage} alt="" aria-hidden="true" />}
+    <div class="m3-hero-backdrop"></div>
+
+    <div class="m3-hero-container">
+      <div class="m3-hero-grid">
+        <!-- Left 7 Columns: Main Pitch & Title (Content from GitHub) -->
+        <div class="m3-hero-pitch">
+          <div class="m3-hero-badges">
+            <span class="m3-hero-kicker">
+              <span class="material-symbols-outlined">biotech</span>
+              Cellar &amp; Homebrewing Journal
+            </span>
+          </div>
+
+          <h1 class="m3-hero-title">S.F.Brews</h1>
+
+          <p class="m3-hero-lead">
+            Brewday and recipe writeups, competitions, experiments and everything beer related.
+          </p>
+
+          <div class="m3-hero-actions">
+            <a href={withBase('/recipes')} class="m3-btn-primary">
+              <span class="material-symbols-outlined">menu_book</span>
+              <span>Recipes &amp; Brewdays</span>
+            </a>
+            <a href={withBase('/competitions')} class="m3-btn-tonal">
+              <span class="material-symbols-outlined">military_tech</span>
+              <span>Competitions &amp; Lab</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right 5 Columns: Active Pipeline Telemetry (TaplistBoard) -->
+        <div class="m3-hero-pipeline">
+          <TaplistBoard />
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- Main Content & Post Feed -->
-  <div class="outer">
+  <section class="m3-feed-section outer">
     <div class="inner">
-      <TaplistBoard />
+      <div class="m3-section-head">
+        <div>
+          <span class="m3-section-eyebrow">Cellar Archives</span>
+          <h2 class="m3-section-title">Recent Brew Logs &amp; Writeups</h2>
+        </div>
+        <a href={withBase('/journal')} class="m3-section-link">
+          <span>View All Posts ({allPosts.length})</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      </div>
 
       <div class="post-feed">
         {
@@ -42,84 +78,248 @@ const allPosts = (await getCollection('posts'))
         }
       </div>
     </div>
-  </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .site-header-content {
+  .m3-hero-section {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 360px;
-    padding-top: 5.5rem;
-    padding-bottom: 5.5rem;
-    text-align: center;
-    color: #ffffff;
-    background-color: var(--palette-deep-forest);
+    width: 100%;
     overflow: hidden;
-    margin-bottom: 4rem;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--md-sys-color-surface-container-low) 85%, transparent) 0%,
+      var(--md-sys-color-surface) 100%
+    );
+    border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 50%, transparent);
   }
 
-  .site-header-cover {
+  .m3-hero-bg-image {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.32;
-    mix-blend-mode: luminosity;
+    opacity: 0.08;
+    pointer-events: none;
+    filter: saturate(0.85);
   }
 
-  .site-header-inner {
+  .m3-hero-backdrop {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 18% 25%,
+      color-mix(in srgb, var(--md-sys-color-secondary-container) 38%, transparent),
+      transparent 60%
+    );
+    pointer-events: none;
+  }
+
+  .m3-hero-container {
     position: relative;
     z-index: 2;
-    max-width: 680px;
+    max-width: var(--site-width);
+    margin: 0 auto;
+    padding: 3rem max(1.5rem, 4vw) 3.5rem;
   }
 
-  .site-title {
-    font-family: var(--font-brand);
-    font-size: clamp(2.85rem, 6.5vw, 4.5rem);
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    line-height: 1.1;
-    color: #ffffff;
-    margin-bottom: 0.9rem;
+  .m3-hero-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2.25rem;
+    align-items: center;
   }
 
-  .site-description {
-    font-family: var(--font-accent);
-    font-size: clamp(1.08rem, 2.2vw, 1.3rem);
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    color: var(--palette-pale-green);
+  .m3-hero-pitch {
+    grid-column: span 7;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .m3-hero-pipeline {
+    grid-column: span 5;
+  }
+
+  .m3-hero-badges {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .m3-hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.32rem 0.85rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent);
+    color: var(--md-sys-color-primary);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+
+  .m3-hero-kicker .material-symbols-outlined {
+    font-size: 1rem;
+  }
+
+  .m3-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 5vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .m3-hero-lead {
+    font-family: var(--font-editorial);
+    font-size: clamp(1.05rem, 1.8vw, 1.2rem);
     line-height: 1.6;
+    color: var(--md-sys-color-on-surface-variant);
+    max-width: 560px;
+  }
+
+  .m3-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.35rem;
+  }
+
+  .m3-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 44px;
+    padding: 0 1.35rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: var(--md-sys-elevation-1);
+  }
+
+  .m3-btn-primary:hover {
+    background-color: var(--md-sys-color-primary-container);
+    box-shadow: var(--md-sys-elevation-2);
+  }
+
+  .m3-btn-tonal {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 44px;
+    padding: 0 1.25rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface);
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 65%, transparent);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .m3-btn-tonal .material-symbols-outlined {
+    color: var(--md-sys-color-primary);
+  }
+
+  .m3-btn-tonal:hover {
+    background-color: var(--md-sys-color-surface-container-high);
+    border-color: var(--md-sys-color-outline);
+  }
+
+  /* Feed Section */
+  .m3-feed-section {
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  .m3-section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .m3-section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--md-sys-color-primary);
+    display: block;
+  }
+
+  .m3-section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    margin-top: 0.2rem;
+  }
+
+  .m3-section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--md-sys-color-primary);
+  }
+
+  .m3-section-link:hover {
+    text-decoration: underline;
+  }
+
+  .m3-section-link .material-symbols-outlined {
+    font-size: 1rem;
   }
 
   .post-feed {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3.75rem 2.75rem;
+    gap: 1.75rem;
   }
 
-  @media (max-width: 960px) {
+  @media (max-width: 1024px) {
+    .m3-hero-pitch,
+    .m3-hero-pipeline {
+      grid-column: span 12;
+    }
+
     .post-feed {
       grid-template-columns: repeat(2, 1fr);
-      gap: 3rem 2rem;
     }
   }
 
   @media (max-width: 640px) {
-    .site-header-content {
-      min-height: 260px;
-      padding-top: 3.5rem;
-      padding-bottom: 3.5rem;
-      margin-bottom: 2.75rem;
+    .m3-hero-container {
+      padding: 1.75rem 1rem 2.25rem;
     }
 
     .post-feed {
       grid-template-columns: 1fr;
-      gap: 2.75rem;
+      gap: 1.25rem;
     }
   }
 </style>

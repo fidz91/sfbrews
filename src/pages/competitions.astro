@@ -7,11 +7,12 @@ const visibleCompetitions = COMPETITION_RECORDS.filter(isCompetitionVisible);
 ---
 
 <BaseLayout
-  title="Competitions — SFBrews"
-  description="Competition entries, BJCP scoresheets, and judge feedback."
+  title="Competition Results & BJCP Scoresheets — SFBrews"
+  description="Homebrewing competition entries, BJCP scoresheets, and judge feedback."
 >
   <div class="outer page-wrap">
     <div class="canvas prose">
+      <span class="page-eyebrow">BJCP Scoresheet Archive</span>
       <h1>Competitions &amp; Scoresheets</h1>
       <p>
         Regional and national homebrew competition entries, BJCP scoresheet breakdowns, and recipe iteration notes.
@@ -116,14 +117,27 @@ const visibleCompetitions = COMPETITION_RECORDS.filter(isCompetitionVisible);
 
 <style>
   .page-wrap {
-    padding-top: 4rem;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  .page-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--md-sys-color-primary);
+    display: block;
+    margin-bottom: 0.35rem;
   }
 
   .page-wrap h1 {
     font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.02em;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
+    margin-top: 0;
   }
 
   .table-scroll {
@@ -137,13 +151,17 @@ const visibleCompetitions = COMPETITION_RECORDS.filter(isCompetitionVisible);
   }
 
   .muted {
-    color: var(--text-muted);
-    font-size: 0.9rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.92rem;
   }
 
   .comp-item {
-    padding: 2rem 0;
-    border-bottom: 1px solid var(--border);
+    padding: 1.75rem;
+    margin-bottom: 1rem;
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    box-shadow: var(--md-sys-elevation-1);
   }
 
   .comp-item h3 {
@@ -151,17 +169,18 @@ const visibleCompetitions = COMPETITION_RECORDS.filter(isCompetitionVisible);
   }
 
   .comp-meta {
-    font-size: 0.88rem;
-    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--md-sys-color-outline);
     margin-bottom: 0.9rem;
   }
 
   .comp-empty-notice {
-    margin-top: 2.5rem;
+    margin-top: 2rem;
     padding: 2rem 2.25rem;
-    border-radius: var(--md-sys-shape-corner-large);
-    background-color: var(--bg-soft);
-    border: 1px solid var(--border);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
   }
 
   .comp-empty-notice p {
@@ -170,7 +189,7 @@ const visibleCompetitions = COMPETITION_RECORDS.filter(isCompetitionVisible);
 
   @media (max-width: 640px) {
     .page-wrap {
-      padding-top: 2.5rem;
+      padding-top: 2rem;
     }
   }
 </style>

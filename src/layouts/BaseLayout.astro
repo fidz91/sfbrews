@@ -1,45 +1,49 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
 import { withBase } from '../utils/srm';
+import { ACTIVE_TAPS, ACTIVE_FERMENTERS } from '../data/taplist';
 
 interface Props {
   title?: string;
   description?: string;
-  currentPath?: string;
+  ogImage?: string;
 }
 
 const {
-  title = 'S.F.Brews',
-  description = 'Homebrewing writeups, recipe formulations, experiments, competitions and brewing notes.',
-  currentPath = Astro.url.pathname,
+  title = 'S.F.Brews — Homebrewing Recipes, Brewdays, Competitions & Experiments',
+  description = 'Personal homebrewing journal documenting recipes, brewday logs, split-batch experiments, and competition results.',
+  ogImage,
 } = Astro.props;
 
-const homeHref = withBase('/');
+const pathname = Astro.url.pathname;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+const cleanPath = pathname.startsWith(baseUrl) ? pathname.slice(baseUrl.length) || '/' : pathname;
+
+const isActive = (href: string) => {
+  if (href === '/') return cleanPath === '/';
+  return cleanPath.startsWith(href);
+};
+
 const navLinks = [
-  { href: homeHref, label: 'Home', icon: 'home' },
-  { href: withBase('/recipes'), label: 'Recipes & Brewdays', icon: 'menu_book' },
-  { href: withBase('/experiments'), label: 'Experiments', icon: 'science' },
-  { href: withBase('/competitions'), label: 'Competitions', icon: 'emoji_events' },
-  { href: withBase('/journal?category=news'), label: 'News', icon: 'campaign' },
-  { href: withBase('/about'), label: 'About', icon: 'info' },
+  { href: '/', label: 'Cellar Dashboard', shortLabel: 'Cellar', icon: 'roofing' },
+  { href: '/recipes', label: 'Recipes & Brewdays', shortLabel: 'Recipes', icon: 'menu_book' },
+  { href: '/journal', label: 'Journal', shortLabel: 'Journal', icon: 'article' },
+  { href: '/experiments', label: 'Experiments', shortLabel: 'Lab', icon: 'science' },
+  { href: '/competitions', label: 'Competitions', shortLabel: 'Awards', icon: 'military_tech' },
+  { href: '/about', label: 'About', shortLabel: 'About', icon: 'precision_manufacturing' },
 ];
 
 const bottomNavLinks = [
-  { href: homeHref, label: 'Home', icon: 'home' },
-  { href: withBase('/recipes'), label: 'Recipes', icon: 'menu_book' },
-  { href: withBase('/experiments'), label: 'Lab', icon: 'science' },
-  { href: withBase('/competitions'), label: 'Awards', icon: 'emoji_events' },
-  { href: withBase('/journal'), label: 'Archive', icon: 'manage_search' },
+  { href: '/', label: 'Cellar', icon: 'roofing' },
+  { href: '/recipes', label: 'Recipes', icon: 'science' },
+  { href: '/journal', label: 'Journal', icon: 'article' },
+  { href: '/competitions', label: 'Awards', icon: 'military_tech' },
+  { href: '/about', label: 'Brewhouse', icon: 'precision_manufacturing' },
 ];
 
-function checkActive(itemHref: string, path: string): boolean {
-  const cleanHref = itemHref.split('?')[0];
-  if (cleanHref === homeHref || cleanHref === homeHref.replace(/\/$/, '')) {
-    return path === homeHref || path === homeHref.replace(/\/$/, '');
-  }
-  return path.startsWith(cleanHref);
-}
+const tapCount = ACTIVE_TAPS.length;
+const fermenterCount = ACTIVE_FERMENTERS.length;
 ---
 
 <!doctype html>
@@ -49,195 +53,212 @@ function checkActive(itemHref: string, path: string): boolean {
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#f5fcec" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
-    <ViewTransitions />
+
+    <!-- Google Fonts: Outfit, Manrope, DM Sans, Space Grotesk & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+      rel="stylesheet"
+    />
+
     <script is:inline>
-      function applyTheme() {
-        const saved = localStorage.getItem('md-theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = saved || (prefersDark ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', theme);
-      }
-      applyTheme();
-      document.addEventListener('astro:after-swap', applyTheme);
+      (function () {
+        try {
+          const saved = localStorage.getItem('sfbrews-theme');
+          if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.removeAttribute('data-theme');
+          }
+        } catch (e) {}
+      })();
     </script>
+
+    <ViewTransitions />
   </head>
   <body>
-    <!-- Material 3 Top App Bar -->
-    <header class="md-top-app-bar outer" id="top-app-bar">
-      <div class="md-top-app-bar-inner inner">
-        <div class="md-brand-row">
-          <a class="md-brand-logo md-ripple-surface" href={homeHref}>
-            <span class="md-brand-badge">
-              <span class="material-symbols-outlined filled" aria-hidden="true">sports_bar</span>
-            </span>
-            <span class="md-brand-text">
-              <span class="md-brand-title">S.F.Brews</span>
-              <span class="md-brand-subtitle">Homebrewing</span>
-            </span>
-          </a>
-        </div>
-
-        <!-- Desktop Navigation Pills -->
-        <nav class="md-desktop-nav" aria-label="Primary Navigation">
-          <ul class="md-nav-list">
-            {
-              navLinks.map((item) => {
-                const isActive = checkActive(item.href, currentPath);
-                return (
-                  <li>
-                    <a
-                      href={item.href}
-                      class:list={['md-nav-pill', 'md-ripple-surface', { active: isActive }]}
-                      aria-current={isActive ? 'page' : undefined}
-                    >
-                      <span class:list={['material-symbols-outlined', 'nav-icon', { filled: isActive }]} aria-hidden="true">
-                        {item.icon}
-                      </span>
-                      <span>{item.label}</span>
-                    </a>
-                  </li>
-                );
-              })
-            }
-          </ul>
-        </nav>
-
-        <!-- App Bar Actions -->
-        <div class="md-app-bar-actions">
-          <a
-            href={withBase('/journal')}
-            class="md-icon-btn"
-            aria-label="Search & Archive"
-            title="Search & Archive"
-          >
-            <span class="material-symbols-outlined" aria-hidden="true">search</span>
-          </a>
-
+    <!-- Stitch M3 Streamlined Top App Bar -->
+    <header class="m3-top-bar" id="site-app-bar">
+      <div class="m3-top-bar-inner">
+        <!-- Brand & Quick Status Chips -->
+        <div class="m3-brand-group">
           <button
+            class="m3-icon-btn m3-mobile-menu-btn"
+            id="mobile-menu-open"
             type="button"
-            class="md-icon-btn"
-            id="theme-toggle-btn"
-            aria-label="Toggle dark or light theme"
-            title="Toggle color theme"
-          >
-            <span class="material-symbols-outlined theme-icon-light" aria-hidden="true">dark_mode</span>
-            <span class="material-symbols-outlined theme-icon-dark" aria-hidden="true">light_mode</span>
-          </button>
-
-          <button
-            type="button"
-            class="md-icon-btn md-mobile-menu-btn"
-            id="mobile-drawer-toggle"
             aria-label="Open navigation menu"
             aria-expanded="false"
             aria-controls="mobile-nav-drawer"
           >
-            <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+
+          <a class="m3-brand-link" href={withBase('/')}>
+            <span class="m3-brand-pill">S.F.Brews</span>
+          </a>
+
+          <a href={withBase('/#taplist')} class="m3-status-chip" title="Live Cellar Status">
+            <span class="beacon-dot"></span>
+            <span class="m3-status-tap-text">{tapCount} ON TAP</span>
+            {
+              fermenterCount > 0 && (
+                <>
+                  <span class="m3-status-sep">·</span>
+                  <span class="m3-status-fv-dot" />
+                  <span class="m3-status-fv-text">{fermenterCount} FERMENTING</span>
+                </>
+              )
+            }
+          </a>
+        </div>
+
+        <!-- Desktop Navigation Pills -->
+        <nav class="m3-desktop-nav" aria-label="Primary Navigation">
+          {
+            navLinks.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <a
+                  href={withBase(item.href)}
+                  class:list={['m3-nav-pill', { active }]}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              );
+            })
+          }
+        </nav>
+
+        <!-- Utility Actions -->
+        <div class="m3-utility-group">
+          <a
+            href={withBase('/journal')}
+            class="m3-search-pill"
+            title="Search cellar & logs"
+          >
+            <span class="material-symbols-outlined m3-search-icon">search</span>
+            <span class="m3-search-placeholder">Search cellar &amp; logs...</span>
+          </a>
+
+          <button
+            class="m3-icon-btn"
+            id="theme-toggle-btn"
+            type="button"
+            aria-label="Toggle light/dark mode"
+            title="Toggle Light / Dark Mode"
+          >
+            <span class="material-symbols-outlined" id="theme-toggle-icon">dark_mode</span>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Material 3 Modal Navigation Drawer (Mobile / Tablet) -->
-    <div class="md-drawer-scrim" id="drawer-scrim" aria-hidden="true"></div>
-    <aside class="md-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation Drawer" aria-hidden="true">
-      <div class="md-drawer-header">
-        <div class="md-brand-logo">
-          <span class="md-brand-badge">
-            <span class="material-symbols-outlined filled" aria-hidden="true">sports_bar</span>
-          </span>
-          <span class="md-brand-text">
-            <span class="md-brand-title">S.F.Brews</span>
-            <span class="md-brand-subtitle">Homebrewing</span>
-          </span>
+    <!-- Mobile Navigation Drawer (Stitch "Log Navigator") -->
+    <div class="m3-drawer-scrim" id="mobile-drawer-scrim" aria-hidden="true"></div>
+    <aside class="m3-drawer" id="mobile-nav-drawer" aria-label="Log Navigator" aria-hidden="true">
+      <div class="m3-drawer-top">
+        <div class="m3-drawer-header">
+          <div class="m3-drawer-title-wrap">
+            <span class="m3-brand-pill sm">S.F.Brews</span>
+            <span class="m3-drawer-title">Log Navigator</span>
+          </div>
+          <button
+            class="m3-icon-btn"
+            id="mobile-menu-close"
+            type="button"
+            aria-label="Close navigation menu"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
         </div>
-        <button type="button" class="md-icon-btn" id="mobile-drawer-close" aria-label="Close navigation menu">
-          <span class="material-symbols-outlined" aria-hidden="true">close</span>
-        </button>
-      </div>
 
-      <div class="md-drawer-section-label">Destinations</div>
-      <ul class="md-drawer-list">
-        {
-          navLinks.map((item) => {
-            const isActive = checkActive(item.href, currentPath);
-            return (
-              <li>
-                <a
-                  href={item.href}
-                  class:list={['md-drawer-item', 'md-ripple-surface', { active: isActive }]}
-                >
-                  <span class:list={['material-symbols-outlined', { filled: isActive }]} aria-hidden="true">
+        <nav class="m3-drawer-list">
+          {
+            navLinks.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <a href={withBase(item.href)} class:list={['m3-drawer-link', { active }]}>
+                  <span class:list={['material-symbols-outlined m3-drawer-icon', { filled: active }]}>
                     {item.icon}
                   </span>
                   <span>{item.label}</span>
                 </a>
-              </li>
-            );
-          })
-        }
-        <li>
-          <a
-            href={withBase('/journal')}
-            class:list={[
-              'md-drawer-item',
-              'md-ripple-surface',
-              { active: checkActive(withBase('/journal'), currentPath) },
-            ]}
-          >
-            <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
-            <span>Search &amp; Full Archive</span>
-          </a>
-        </li>
-      </ul>
+              );
+            })
+          }
+        </nav>
+      </div>
+
+      <div class="m3-drawer-footer">
+        <p class="m3-drawer-footer-label">Cellar Status</p>
+        <p class="m3-drawer-footer-val">
+          {tapCount} On Tap &bull; {fermenterCount} Fermenting
+        </p>
+      </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- Main Page Content -->
     <main class="site-main">
       <slot />
     </main>
 
-    <!-- Material 3 Footer -->
-    <footer class="md-footer outer">
-      <div class="md-footer-inner inner">
-        <div class="md-footer-brand">
-          <span class="md-brand-badge small">
-            <span class="material-symbols-outlined filled" aria-hidden="true">sports_bar</span>
-          </span>
-          <div>
-            <strong>S.F.Brews</strong> &copy; {new Date().getFullYear()}
-            <p class="md-footer-tagline">All-Grain BrewZilla 4.1.1 Brewhouse &bull; Recipes, Trials &amp; Scoresheets</p>
+    <!-- Stitch M3 Clean Light Footer -->
+    <footer class="m3-footer">
+      <div class="m3-footer-main">
+        <div class="m3-footer-brand-col">
+          <div class="m3-footer-brand-row">
+            <span class="m3-brand-pill sm">S.F.Brews</span>
+            <span class="m3-footer-version">Homebrewing Journal</span>
+          </div>
+          <p class="m3-footer-desc">
+            Brewday and recipe writeups, competitions, experiments and everything beer related.
+          </p>
+        </div>
+
+        <div class="m3-footer-links-grid">
+          <div class="m3-footer-col">
+            <span class="m3-footer-col-title">Cellar Records</span>
+            <a href={withBase('/')}>Cellar Dashboard</a>
+            <a href={withBase('/recipes')}>Recipes &amp; Brewdays</a>
+            <a href={withBase('/journal')}>Batch Journal</a>
+          </div>
+          <div class="m3-footer-col">
+            <span class="m3-footer-col-title">Sensory &amp; Lab</span>
+            <a href={withBase('/experiments')}>Experiments</a>
+            <a href={withBase('/competitions')}>Competitions &amp; Scoresheets</a>
+            <a href={withBase('/about')}>About &amp; Brewhouse</a>
           </div>
         </div>
-        <nav class="md-footer-nav" aria-label="Footer Navigation">
-          <a href={homeHref} class="md-footer-link">Home</a>
-          <a href={withBase('/recipes')} class="md-footer-link">Recipes</a>
-          <a href={withBase('/experiments')} class="md-footer-link">Experiments</a>
-          <a href={withBase('/competitions')} class="md-footer-link">Competitions</a>
-          <a href={withBase('/journal')} class="md-footer-link">Archive</a>
-          <a href={withBase('/about')} class="md-footer-link">About</a>
-        </nav>
+      </div>
+
+      <div class="m3-footer-bottom">
+        <p>&copy; {new Date().getFullYear()} S.F.Brews. All rights reserved.</p>
+        <p class="m3-footer-calib">All-grain formulations, fermentation logs &amp; BJCP notes</p>
       </div>
     </footer>
 
-    <!-- Material 3 Mobile Bottom Navigation Bar -->
-    <nav class="md-bottom-nav" aria-label="Mobile Quick Navigation">
+    <!-- Stitch M3 Mobile Bottom Navigation Bar -->
+    <nav class="m3-bottom-nav" aria-label="Mobile Primary Navigation">
       {
         bottomNavLinks.map((item) => {
-          const isActive = checkActive(item.href, currentPath);
+          const active = isActive(item.href);
           return (
             <a
-              href={item.href}
-              class:list={['md-bottom-nav-item', 'md-ripple-surface', { active: isActive }]}
-              aria-current={isActive ? 'page' : undefined}
+              href={withBase(item.href)}
+              class:list={['m3-bottom-item', { active }]}
+              aria-current={active ? 'page' : undefined}
             >
-              <span class="md-bottom-nav-indicator">
-                <span class:list={['material-symbols-outlined', { filled: isActive }]} aria-hidden="true">
+              <span class="m3-bottom-pill">
+                <span class:list={['material-symbols-outlined', { filled: active }]}>
                   {item.icon}
                 </span>
               </span>
-              <span class="md-bottom-nav-label">{item.label}</span>
+              <span class="m3-bottom-label">{item.label}</span>
             </a>
           );
         })
@@ -245,512 +266,537 @@ function checkActive(itemHref: string, path: string): boolean {
     </nav>
 
     <script>
-      function initMaterialInteractions() {
-        const topBar = document.getElementById('top-app-bar');
-        const drawerToggle = document.getElementById('mobile-drawer-toggle');
-        const drawerClose = document.getElementById('mobile-drawer-close');
+      function initShellUI() {
+        const openBtn = document.getElementById('mobile-menu-open');
+        const closeBtn = document.getElementById('mobile-menu-close');
         const drawer = document.getElementById('mobile-nav-drawer');
-        const scrim = document.getElementById('drawer-scrim');
+        const scrim = document.getElementById('mobile-drawer-scrim');
         const themeBtn = document.getElementById('theme-toggle-btn');
+        const themeIcon = document.getElementById('theme-toggle-icon');
 
-        // Scroll elevation state on Top App Bar
-        const onScroll = () => {
-          if (!topBar) return;
-          if (window.scrollY > 12) {
-            topBar.classList.add('is-scrolled');
+        const closeDrawer = () => {
+          drawer?.classList.remove('is-open');
+          scrim?.classList.remove('is-open');
+          openBtn?.setAttribute('aria-expanded', 'false');
+          drawer?.setAttribute('aria-hidden', 'true');
+        };
+
+        const openDrawer = () => {
+          drawer?.classList.add('is-open');
+          scrim?.classList.add('is-open');
+          openBtn?.setAttribute('aria-expanded', 'true');
+          drawer?.setAttribute('aria-hidden', 'false');
+        };
+
+        openBtn?.addEventListener('click', openDrawer);
+        closeBtn?.addEventListener('click', closeDrawer);
+        scrim?.addEventListener('click', closeDrawer);
+
+        const syncThemeIcon = () => {
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          if (themeIcon) {
+            themeIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
+          }
+        };
+        syncThemeIcon();
+
+        themeBtn?.addEventListener('click', () => {
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          if (isDark) {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('sfbrews-theme', 'light');
           } else {
-            topBar.classList.remove('is-scrolled');
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('sfbrews-theme', 'dark');
           }
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-
-        // Mobile Modal Navigation Drawer
-        const setDrawerOpen = (open: boolean) => {
-          drawer?.classList.toggle('is-open', open);
-          scrim?.classList.toggle('is-open', open);
-          drawer?.setAttribute('aria-hidden', String(!open));
-          drawerToggle?.setAttribute('aria-expanded', String(open));
-          document.body.style.overflow = open ? 'hidden' : '';
-        };
-
-        drawerToggle?.addEventListener('click', () => setDrawerOpen(true));
-        drawerClose?.addEventListener('click', () => setDrawerOpen(false));
-        scrim?.addEventListener('click', () => setDrawerOpen(false));
-
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && drawer?.classList.contains('is-open')) {
-            setDrawerOpen(false);
-          }
+          syncThemeIcon();
         });
-
-        // Theme toggle button
-        if (themeBtn && !themeBtn.dataset.bound) {
-          themeBtn.dataset.bound = 'true';
-          themeBtn.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme') || 'light';
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('md-theme', next);
-          });
-        }
-
-        // Material Ripple Effect on interactive surfaces
-        const rippleTargets = document.querySelectorAll<HTMLElement>(
-          '.md-ripple-surface, .md-btn, .md-icon-btn, .cat-btn'
-        );
-        rippleTargets.forEach((surface) => {
-          if (surface.dataset.rippleBound) return;
-          surface.dataset.rippleBound = 'true';
-          surface.addEventListener('pointerdown', (e: PointerEvent) => {
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-            const rect = surface.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-
-            const wave = document.createElement('span');
-            wave.className = 'md-ripple-wave';
-            wave.style.width = `${size}px`;
-            wave.style.height = `${size}px`;
-            wave.style.left = `${x}px`;
-            wave.style.top = `${y}px`;
-            surface.appendChild(wave);
-            wave.addEventListener('animationend', () => wave.remove());
-          });
-        });
-
-        // Scroll-triggered Material Entrance Animations
-        const revealItems = document.querySelectorAll<HTMLElement>('.md-reveal');
-        if ('IntersectionObserver' in window) {
-          const observer = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                  entry.target.classList.add('is-visible');
-                  observer.unobserve(entry.target);
-                }
-              });
-            },
-            { threshold: 0.08, rootMargin: '0px 0px -32px 0px' }
-          );
-
-          revealItems.forEach((item, index) => {
-            if (!item.style.getPropertyValue('--reveal-delay')) {
-              const stagger = (index % 6) * 55;
-              item.style.setProperty('--reveal-delay', `${stagger}ms`);
-            }
-            observer.observe(item);
-          });
-        } else {
-          revealItems.forEach((item) => item.classList.add('is-visible'));
-        }
       }
 
-      document.addEventListener('astro:page-load', initMaterialInteractions);
+      document.addEventListener('astro:page-load', initShellUI);
     </script>
   </body>
 </html>
 
 <style>
-  /* Material 3 Top App Bar — Clean & Airy */
-  .md-top-app-bar {
-    height: var(--top-bar-height);
-    display: flex;
-    align-items: center;
-    background-color: color-mix(in srgb, var(--md-sys-color-surface) 92%, transparent);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  /* M3 Top App Bar */
+  .m3-top-bar {
     position: sticky;
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 60;
-    transition:
-      background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
-      box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
-      border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    background-color: color-mix(in srgb, var(--md-sys-color-surface) 88%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 55%, transparent);
   }
 
-  .md-top-app-bar.is-scrolled {
-    background-color: color-mix(in srgb, var(--md-sys-color-surface) 96%, transparent);
-    box-shadow: var(--md-sys-elevation-1);
-    border-bottom-color: var(--md-sys-color-outline-variant);
-  }
-
-  .md-top-app-bar-inner {
+  .m3-top-bar-inner {
+    height: var(--header-height);
+    max-width: var(--site-width);
+    margin: 0 auto;
+    padding: 0 max(1.25rem, 3vw);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
-  .md-brand-logo {
-    display: inline-flex;
+  .m3-brand-group {
+    display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.35rem 0.65rem 0.35rem 0.35rem;
-    border-radius: var(--md-sys-shape-corner-full);
   }
 
-  .md-brand-badge {
-    width: 42px;
-    height: 42px;
-    border-radius: var(--md-sys-shape-corner-medium);
-    background-color: var(--palette-hop-green);
-    color: #ffffff;
+  .m3-brand-link {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .m3-brand-pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--md-sys-elevation-1);
-    transition:
-      transform var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-spring),
-      background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-  }
-
-  .md-brand-badge.small {
-    width: 36px;
-    height: 36px;
-    border-radius: var(--md-sys-shape-corner-small);
-  }
-
-  .md-brand-logo:hover .md-brand-badge {
-    transform: rotate(-6deg) scale(1.05);
-    background-color: var(--palette-amber-orange);
-  }
-
-  .md-brand-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.05;
-    gap: 0.14rem;
-  }
-
-  .md-brand-title {
-    font-family: var(--font-brand);
-    font-size: 1.38rem;
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    color: var(--md-sys-color-on-surface);
-  }
-
-  .md-brand-subtitle {
-    font-family: var(--font-accent);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
+    padding: 0.42rem 0.9rem;
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    border-radius: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 700;
     text-transform: uppercase;
-    color: var(--md-sys-color-primary);
+    letter-spacing: 0.06em;
+    box-shadow: var(--md-sys-elevation-1);
+    transition: background-color 0.2s ease, transform 0.2s ease;
   }
 
-  /* Desktop Navigation Pills — Uncluttered with Ample Breathing Space */
-  .md-nav-list {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0;
+  .m3-brand-pill.sm {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.75rem;
   }
 
-  .md-nav-pill {
+  .m3-brand-link:hover .m3-brand-pill {
+    background-color: var(--md-sys-color-primary-container);
+  }
+
+  .m3-status-chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.5rem 1rem;
+    gap: 0.45rem;
+    padding: 0.35rem 0.8rem;
+    background-color: var(--md-sys-color-surface-container);
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 60%, transparent);
     border-radius: var(--md-sys-shape-corner-full);
-    font-family: var(--font-display);
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--md-sys-color-on-surface-variant);
-    transition:
-      background-color var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-emphasized),
-      color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
-      transform var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-spring);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
-  .md-nav-pill .nav-icon {
-    font-size: 18px;
-    color: var(--md-sys-color-primary);
-    opacity: 0.85;
+  .m3-status-chip:hover {
+    border-color: var(--md-sys-color-primary);
   }
 
-  .md-nav-pill:hover {
-    background-color: var(--md-state-hover);
+  .m3-status-tap-text {
     color: var(--md-sys-color-on-surface);
   }
 
-  .md-nav-pill.active {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
+  .m3-status-sep {
+    color: var(--md-sys-color-outline);
+  }
+
+  .m3-status-fv-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--status-fermenting);
+  }
+
+  .m3-status-fv-text {
+    color: var(--md-sys-color-secondary);
+  }
+
+  /* Desktop Navigation Pills */
+  .m3-desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .m3-nav-pill {
+    padding: 0.48rem 0.9rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--md-sys-color-on-surface-variant);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .m3-nav-pill:hover {
+    color: var(--md-sys-color-on-surface);
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  .m3-nav-pill.active {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+    color: var(--md-sys-color-primary);
     font-weight: 700;
   }
 
-  .md-nav-pill.active .nav-icon {
-    color: var(--md-sys-color-primary);
-    opacity: 1;
-  }
-
-  .md-app-bar-actions {
+  /* Utility Group */
+  .m3-utility-group {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: 0.5rem;
   }
 
-  .theme-icon-dark {
-    display: none;
-  }
-
-  :global([data-theme='dark']) .theme-icon-light {
-    display: none;
-  }
-
-  :global([data-theme='dark']) .theme-icon-dark {
+  .m3-search-pill {
     display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.9rem;
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 65%, transparent);
+    border-radius: var(--md-sys-shape-corner-full);
+    font-size: 0.76rem;
+    color: var(--md-sys-color-outline);
   }
 
-  .md-mobile-menu-btn {
+  .m3-search-pill:hover {
+    border-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .m3-search-icon {
+    font-size: 1rem;
+  }
+
+  .m3-icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--md-sys-shape-corner-full);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .m3-icon-btn:hover {
+    background-color: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-primary);
+  }
+
+  .m3-mobile-menu-btn {
     display: none;
   }
 
-  /* Material 3 Modal Navigation Drawer */
-  .md-drawer-scrim {
+  /* Mobile Drawer */
+  .m3-drawer-scrim {
     position: fixed;
     inset: 0;
-    background-color: var(--md-sys-color-scrim);
-    backdrop-filter: blur(3px);
+    background-color: rgba(23, 29, 20, 0.35);
+    backdrop-filter: blur(4px);
+    z-index: 80;
     opacity: 0;
     pointer-events: none;
-    z-index: 80;
-    transition: opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    transition: opacity 0.25s ease;
   }
 
-  .md-drawer-scrim.is-open {
+  .m3-drawer-scrim.is-open {
     opacity: 1;
     pointer-events: auto;
   }
 
-  .md-nav-drawer {
+  .m3-drawer {
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     bottom: 0;
-    width: min(320px, 86vw);
-    background-color: var(--md-sys-color-surface);
-    border-radius: var(--md-sys-shape-corner-extra-large) 0 0 var(--md-sys-shape-corner-extra-large);
-    box-shadow: var(--md-sys-elevation-4);
+    width: min(310px, 84vw);
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border-right: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: var(--md-sys-elevation-3);
     z-index: 90;
-    padding: 1.25rem 1rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
-    transform: translateX(104%);
-    transition: transform var(--md-sys-motion-duration-medium3) var(--md-sys-motion-easing-emphasized);
-    overflow-y: auto;
+    justify-content: space-between;
+    transform: translateX(-104%);
+    transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1);
   }
 
-  .md-nav-drawer.is-open {
+  .m3-drawer.is-open {
     transform: translateX(0);
   }
 
-  .md-drawer-header {
+  .m3-drawer-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.25rem 0.5rem 1.25rem;
+    padding-bottom: 1rem;
     border-bottom: 1px solid var(--md-sys-color-outline-variant);
     margin-bottom: 1rem;
   }
 
-  .md-drawer-section-label {
-    font-family: var(--font-display);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--md-sys-color-outline);
-    padding: 0.5rem 1rem;
-  }
-
-  .md-drawer-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .md-drawer-item {
+  .m3-drawer-title-wrap {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
-    height: 52px;
-    padding: 0 1.1rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--md-sys-color-on-surface-variant);
+    gap: 0.6rem;
   }
 
-  .md-drawer-item:hover {
-    background-color: var(--md-state-hover);
+  .m3-drawer-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--md-sys-color-on-surface);
   }
 
-  .md-drawer-item.active {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
+  .m3-drawer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .m3-drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .m3-drawer-link:hover {
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .m3-drawer-link.active {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    font-weight: 700;
+  }
+
+  .m3-drawer-icon {
+    color: var(--md-sys-color-primary);
+  }
+
+  .m3-drawer-footer {
+    padding: 0.85rem 1rem;
+    border-radius: var(--md-sys-shape-corner-large);
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .m3-drawer-footer-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--md-sys-color-outline);
+  }
+
+  .m3-drawer-footer-val {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface);
+    margin-top: 0.2rem;
   }
 
   .site-main {
     flex: 1;
   }
 
-  /* Material 3 Footer — Generous Top Margin & Spacious Layout */
-  .md-footer {
-    margin-top: 7rem;
-    padding-top: 3.5rem;
-    padding-bottom: 4rem;
+  /* Stitch M3 Clean Light Footer */
+  .m3-footer {
+    width: 100%;
+    margin-top: 4rem;
     background-color: var(--md-sys-color-surface-container-low);
-    border-top: 1px solid var(--md-sys-color-outline-variant);
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 0.9rem;
+    border-top: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 55%, transparent);
   }
 
-  .md-footer-inner {
+  .m3-footer-main {
+    max-width: var(--site-width);
+    margin: 0 auto;
+    padding: 3rem max(1.5rem, 4vw);
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
+    gap: 2.5rem;
   }
 
-  .md-footer-brand {
+  .m3-footer-brand-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 360px;
+  }
+
+  .m3-footer-brand-row {
     display: flex;
     align-items: center;
-    gap: 1rem;
-  }
-
-  .md-footer-brand strong {
-    font-family: var(--font-brand);
-    font-size: 1.15rem;
-    font-weight: 400;
-    color: var(--md-sys-color-on-surface);
-    letter-spacing: 0.02em;
-  }
-
-  .md-footer-tagline {
-    font-size: 0.82rem;
-    color: var(--md-sys-color-outline);
-    margin-top: 0.2rem;
-  }
-
-  .md-footer-nav {
-    display: flex;
     gap: 0.65rem;
-    flex-wrap: wrap;
   }
 
-  .md-footer-link {
-    padding: 0.45rem 0.85rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    font-weight: 500;
+  .m3-footer-version {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--md-sys-color-outline);
+  }
+
+  .m3-footer-desc {
+    font-size: 0.82rem;
+    line-height: 1.6;
     color: var(--md-sys-color-on-surface-variant);
   }
 
-  .md-footer-link:hover {
-    background-color: var(--md-state-hover);
+  .m3-footer-links-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .m3-footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .m3-footer-col-title {
+    color: var(--md-sys-color-primary);
+    font-weight: 700;
+  }
+
+  .m3-footer-col a {
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 500;
+  }
+
+  .m3-footer-col a:hover {
     color: var(--md-sys-color-primary);
   }
 
-  /* Material 3 Bottom Navigation Bar (Mobile / Tablet) */
-  .md-bottom-nav {
+  .m3-footer-bottom {
+    max-width: var(--site-width);
+    margin: 0 auto;
+    padding: 1rem max(1.5rem, 4vw);
+    border-top: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 45%, transparent);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--md-sys-color-outline);
+  }
+
+  .m3-footer-calib {
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  /* Stitch M3 Mobile Bottom Navigation Bar */
+  .m3-bottom-nav {
     display: none;
     position: fixed;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
     height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    background-color: color-mix(in srgb, var(--md-sys-color-surface) 95%, transparent);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background-color: color-mix(in srgb, var(--md-sys-color-surface-container-lowest) 92%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-top: 1px solid var(--md-sys-color-outline-variant);
-    box-shadow: var(--md-sys-elevation-2);
-    z-index: 70;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+    z-index: 65;
     justify-content: space-around;
     align-items: center;
   }
 
-  .md-bottom-nav-item {
-    flex: 1;
+  .m3-bottom-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.22rem;
-    height: 100%;
+    min-width: 60px;
+    height: 54px;
     color: var(--md-sys-color-on-surface-variant);
-    text-decoration: none;
-    user-select: none;
   }
 
-  .md-bottom-nav-indicator {
-    width: 60px;
-    height: 30px;
-    border-radius: var(--md-sys-shape-corner-full);
-    display: inline-flex;
+  .m3-bottom-pill {
+    display: flex;
     align-items: center;
     justify-content: center;
-    transition:
-      background-color var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-emphasized),
-      transform var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-spring);
+    width: 48px;
+    height: 28px;
+    border-radius: var(--md-sys-shape-corner-full);
+    transition: background-color 0.2s ease, transform 0.2s ease;
   }
 
-  .md-bottom-nav-item.active .md-bottom-nav-indicator {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
-    transform: scale(1.04);
+  .m3-bottom-item.active .m3-bottom-pill {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
   }
 
-  .md-bottom-nav-item:active .md-bottom-nav-indicator {
-    transform: scale(0.92);
-  }
-
-  .md-bottom-nav-label {
-    font-family: var(--font-display);
-    font-size: 0.72rem;
+  .m3-bottom-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
     font-weight: 600;
-    letter-spacing: 0.01em;
-    transition: color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.2rem;
   }
 
-  .md-bottom-nav-item.active .md-bottom-nav-label {
-    color: var(--md-sys-color-on-surface);
+  .m3-bottom-item.active .m3-bottom-label {
+    color: var(--md-sys-color-primary);
     font-weight: 700;
   }
 
-  /* Responsive Breakpoints */
-  @media (max-width: 1020px) {
-    .md-desktop-nav {
+  @media (max-width: 1080px) {
+    .m3-desktop-nav {
       display: none;
     }
 
-    .md-mobile-menu-btn {
+    .m3-mobile-menu-btn {
       display: inline-flex;
     }
   }
 
   @media (max-width: 860px) {
-    .md-bottom-nav {
+    .m3-bottom-nav {
       display: flex;
     }
 
-    .md-footer {
-      margin-top: 4.5rem;
-      padding-bottom: 2.5rem;
+    .m3-search-placeholder {
+      display: none;
     }
 
-    .md-footer-inner {
-      flex-direction: column;
-      align-items: flex-start;
+    .m3-search-pill {
+      padding: 0.45rem;
     }
   }
 </style>

@@ -1,5 +1,5 @@
 ---
-import { srmToHex, srmDescriptor } from '../utils/srm';
+import { srmToHex, srmDescription } from '../utils/srm';
 
 interface Fermentable {
   name: string;
@@ -9,12 +9,12 @@ interface Fermentable {
   notes?: string;
 }
 
-interface HopAddition {
+interface Hop {
   name: string;
   weight: string;
-  alphaAcid: string;
+  alphaAcid?: string;
   timing: string;
-  use: 'Boil' | 'First Wort' | 'Flameout' | 'Whirlpool' | 'Dry Hop' | 'Mash Hop';
+  use?: string;
   ibuContribution?: number;
 }
 
@@ -28,196 +28,267 @@ interface MashStep {
 interface RecipeData {
   batchSize: string;
   boilTime: string;
-  efficiency: string;
+  efficiency?: string;
   og: number;
   fg: number;
   abv: number;
   ibu: number;
   srm: number;
   fermentables: Fermentable[];
-  hops: HopAddition[];
+  hops: Hop[];
   yeast: {
     name: string;
-    lab: string;
-    code: string;
-    attenuation: string;
-    tempRange: string;
+    lab?: string;
+    code?: string;
+    attenuation?: string;
+    tempRange?: string;
     pitchNotes?: string;
   };
-  mash: MashStep[];
+  mash?: MashStep[];
   waterProfile?: {
-    profileName: string;
-    ca: number;
-    mg: number;
-    na: number;
-    cl: number;
-    so4: number;
+    profileName?: string;
+    ca?: number;
+    mg?: number;
+    na?: number;
+    cl?: number;
+    so4?: number;
     hco3?: number;
-    mashPh: number;
+    mashPh?: number;
     notes?: string;
   };
+  fermentationNotes?: string;
 }
 
 interface Props {
   recipe: RecipeData;
-  beerName?: string;
+  beerName: string;
   beerStyle?: string;
   batchNumber?: string;
 }
 
-const { recipe } = Astro.props;
-const hexColor = srmToHex(recipe.srm);
-const colorDesc = srmDescriptor(recipe.srm);
+const { recipe, beerName, beerStyle, batchNumber } = Astro.props;
+const glassColor = srmToHex(recipe.srm);
+const colorName = srmDescription(recipe.srm);
 ---
 
-<section class="md-recipe-sheet md-reveal prose">
-  <div class="recipe-header-card">
-    <div class="recipe-header-top">
-      <div class="recipe-title-row">
-        <span class="recipe-icon-badge">
+<section class="m3-recipe-sheet" aria-label="Technical Recipe Sheet">
+  <!-- Telemetry Header Card -->
+  <div class="m3-recipe-header-card">
+    <div class="m3-recipe-header-top">
+      <div class="m3-recipe-title-row">
+        <span class="m3-recipe-icon">
           <span class="material-symbols-outlined filled" aria-hidden="true">menu_book</span>
         </span>
         <div>
-          <h2 class="recipe-sheet-title">Recipe Specifications</h2>
-          <p class="recipe-sheet-sub">
-            Batch: {recipe.batchSize} &bull; Boil: {recipe.boilTime} &bull; Brewhouse Efficiency: {recipe.efficiency}
+          <h2 class="m3-recipe-title">{beerName} — Recipe Sheet</h2>
+          <p class="m3-recipe-sub">
+            {batchNumber && <span>{batchNumber} &bull; </span>}
+            {beerStyle && <span>{beerStyle} &bull; </span>}
+            <span>Batch {recipe.batchSize}</span> &bull; <span>Boil {recipe.boilTime}</span>
+            {recipe.efficiency && <span> &bull; Efficiency {recipe.efficiency}</span>}
           </p>
         </div>
       </div>
 
-      <div class="srm-badge-pill">
-        <span class="srm-circle" style={`background-color: ${hexColor};`}></span>
-        <span><strong>{recipe.srm} SRM</strong> ({colorDesc})</span>
+      <div class="m3-srm-badge" title={`Estimated color: ${recipe.srm} SRM (${colorName})`}>
+        <span class="m3-srm-swatch" style={`background-color: ${glassColor};`}></span>
+        <span>
+          <strong>{recipe.srm} SRM</strong> ({colorName})
+        </span>
       </div>
     </div>
 
-    <div class="recipe-metrics-grid">
-      <div class="metric-tile">
-        <span class="metric-label">ABV</span>
-        <strong class="metric-value">{recipe.abv.toFixed(1)}%</strong>
+    <div class="m3-metrics-grid">
+      <div class="m3-metric-tile">
+        <span class="m3-metric-label">OG &rarr; FG</span>
+        <strong class="m3-metric-val">
+          {recipe.og.toFixed(3)} &rarr; {recipe.fg.toFixed(3)}
+        </strong>
       </div>
-      <div class="metric-tile">
-        <span class="metric-label">Original Gravity</span>
-        <strong class="metric-value">{recipe.og.toFixed(3)}</strong>
+      <div class="m3-metric-tile">
+        <span class="m3-metric-label">ABV</span>
+        <strong class="m3-metric-val">{recipe.abv.toFixed(1)}%</strong>
       </div>
-      <div class="metric-tile">
-        <span class="metric-label">Final Gravity</span>
-        <strong class="metric-value">{recipe.fg.toFixed(3)}</strong>
+      <div class="m3-metric-tile">
+        <span class="m3-metric-label">Bitterness</span>
+        <strong class="m3-metric-val">{recipe.ibu} IBU</strong>
       </div>
-      <div class="metric-tile">
-        <span class="metric-label">Bitterness</span>
-        <strong class="metric-value">{recipe.ibu} IBU</strong>
+      <div class="m3-metric-tile">
+        <span class="m3-metric-label">Yeast</span>
+        <strong class="m3-metric-val sm">
+          {recipe.yeast.lab ? `${recipe.yeast.lab} ` : ''}
+          {recipe.yeast.name}
+        </strong>
       </div>
     </div>
   </div>
 
-  <h3>Malt Bill &amp; Fermentables</h3>
-  <div class="table-scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>Fermentable</th>
-          <th>Weight</th>
-          <th>Grist Share</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          recipe.fermentables.map((grain) => (
-            <tr>
-              <td>
-                <strong>{grain.name}</strong>
-                {grain.notes && <div class="grain-note">{grain.notes}</div>}
-              </td>
-              <td class="nowrap">{grain.weight}</td>
-              <td class="nowrap grist-cell">
-                <div class="grist-bar-wrap">
-                  <span class="grist-pct">{grain.percentage.toFixed(1)}%</span>
-                  <div class="grist-track">
-                    <div class="grist-fill" style={`width: ${Math.min(grain.percentage, 100)}%;`} />
+  <!-- Grist / Fermentables -->
+  <div class="m3-table-section">
+    <h3 class="m3-sec-heading">Fermentables &amp; Grist Bill</h3>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fermentable</th>
+            <th>Weight</th>
+            <th>Grist %</th>
+            <th>Color</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            recipe.fermentables.map((grain) => (
+              <tr>
+                <td>
+                  <strong>{grain.name}</strong>
+                  {grain.notes && <div class="grain-note">{grain.notes}</div>}
+                </td>
+                <td class="nowrap font-stat-numeric">{grain.weight}</td>
+                <td class="grist-cell">
+                  <div class="grist-bar-wrap">
+                    <span class="grist-pct font-stat-numeric">{grain.percentage}%</span>
+                    <div class="grist-track">
+                      <div class="grist-fill" style={`width: ${Math.min(grain.percentage, 100)}%;`} />
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
-  </div>
-
-  <h3>Hop Schedule</h3>
-  <div class="table-scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>Hop Variety</th>
-          <th>Amount</th>
-          <th>Timing</th>
-          <th>Stage</th>
-          <th>Alpha</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          recipe.hops.map((hop) => (
-            <tr>
-              <td><strong>{hop.name}</strong></td>
-              <td class="nowrap">{hop.weight}</td>
-              <td class="nowrap">{hop.timing}</td>
-              <td><span class="hop-use-chip">{hop.use}</span></td>
-              <td class="nowrap">{hop.alphaAcid}</td>
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
-  </div>
-
-  <h3>Mash, Fermentation &amp; Water Chemistry</h3>
-  <div class="recipe-subcards">
-    <div class="recipe-subcard">
-      <div class="subcard-head">
-        <span class="material-symbols-outlined" aria-hidden="true">thermostat</span>
-        <strong>Mash Schedule</strong>
-      </div>
-      <ul class="subcard-list">
-        {
-          recipe.mash.map((step) => (
-            <li>
-              <strong>{step.step}:</strong> {step.temp} for {step.duration}
-              {step.notes ? ` — ${step.notes}` : ''}
-            </li>
-          ))
-        }
-      </ul>
+                </td>
+                <td class="nowrap font-stat-numeric">{grain.lovibond || '—'}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
     </div>
+  </div>
 
-    <div class="recipe-subcard">
-      <div class="subcard-head">
+  <!-- Hop Schedule -->
+  <div class="m3-table-section">
+    <h3 class="m3-sec-heading">Hop Additions</h3>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Hop Variety</th>
+            <th>Weight</th>
+            <th>AA%</th>
+            <th>Stage &amp; Timing</th>
+            <th>IBUs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            recipe.hops.map((hop) => (
+              <tr>
+                <td>
+                  <strong>{hop.name}</strong>
+                </td>
+                <td class="nowrap font-stat-numeric">{hop.weight}</td>
+                <td class="nowrap font-stat-numeric">{hop.alphaAcid || '—'}</td>
+                <td class="nowrap">
+                  <span class="hop-use-chip">
+                    {hop.use ? `${hop.use} @ ${hop.timing}` : hop.timing}
+                  </span>
+                </td>
+                <td class="nowrap font-stat-numeric">
+                  {hop.ibuContribution !== undefined ? `${hop.ibuContribution} IBU` : '—'}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Mash, Yeast & Water Sub-Cards -->
+  <div class="m3-subcards-grid">
+    {
+      recipe.mash && recipe.mash.length > 0 && (
+        <div class="m3-subcard">
+          <div class="m3-subcard-head">
+            <span class="material-symbols-outlined" aria-hidden="true">device_thermostat</span>
+            <strong>Mash Schedule</strong>
+          </div>
+          <ul class="m3-subcard-list">
+            {recipe.mash.map((step) => (
+              <li>
+                <strong>{step.step}:</strong> {step.temp} for {step.duration}
+                {step.notes ? ` — ${step.notes}` : ''}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+
+    <div class="m3-subcard">
+      <div class="m3-subcard-head">
         <span class="material-symbols-outlined" aria-hidden="true">biotech</span>
         <strong>Yeast &amp; Fermentation</strong>
       </div>
-      <p class="subcard-text">
-        <strong>{recipe.yeast.name}</strong> ({recipe.yeast.lab} {recipe.yeast.code})<br />
-        Temp Range: {recipe.yeast.tempRange} &bull; Attenuation: {recipe.yeast.attenuation}
+      <p class="m3-subcard-text">
+        <strong>
+          {recipe.yeast.lab ? `${recipe.yeast.lab} ` : ''}
+          {recipe.yeast.code ? `${recipe.yeast.code} ` : ''}
+          {recipe.yeast.name}
+        </strong>
+        {recipe.yeast.attenuation && ` • Attenuation: ${recipe.yeast.attenuation}`}
+        {recipe.yeast.tempRange && ` • Temp: ${recipe.yeast.tempRange}`}
+        {recipe.yeast.pitchNotes && <br />}
+        {recipe.yeast.pitchNotes && <span>{recipe.yeast.pitchNotes}</span>}
       </p>
-      {recipe.yeast.pitchNotes && <p class="subcard-note">{recipe.yeast.pitchNotes}</p>}
+      {recipe.fermentationNotes && <p class="m3-subcard-note">{recipe.fermentationNotes}</p>}
     </div>
 
     {
       recipe.waterProfile && (
-        <div class="recipe-subcard full-span">
-          <div class="subcard-head">
+        <div class="m3-subcard full-span">
+          <div class="m3-subcard-head">
             <span class="material-symbols-outlined" aria-hidden="true">water_drop</span>
-            <strong>Water Profile — {recipe.waterProfile.profileName} (Mash pH {recipe.waterProfile.mashPh.toFixed(2)})</strong>
+            <strong>
+              Water Chemistry
+              {recipe.waterProfile.profileName ? ` (${recipe.waterProfile.profileName})` : ''}
+            </strong>
           </div>
           <div class="ion-pills">
-            <span class="ion-pill"><strong>Ca²⁺</strong> {recipe.waterProfile.ca} ppm</span>
-            <span class="ion-pill"><strong>Mg²⁺</strong> {recipe.waterProfile.mg} ppm</span>
-            <span class="ion-pill"><strong>Na⁺</strong> {recipe.waterProfile.na} ppm</span>
-            <span class="ion-pill"><strong>SO₄²⁻</strong> {recipe.waterProfile.so4} ppm</span>
-            <span class="ion-pill"><strong>Cl⁻</strong> {recipe.waterProfile.cl} ppm</span>
+            {recipe.waterProfile.ca !== undefined && (
+              <span class="ion-pill">
+                Ca²⁺ <strong>{recipe.waterProfile.ca}</strong> ppm
+              </span>
+            )}
+            {recipe.waterProfile.mg !== undefined && (
+              <span class="ion-pill">
+                Mg²⁺ <strong>{recipe.waterProfile.mg}</strong> ppm
+              </span>
+            )}
+            {recipe.waterProfile.na !== undefined && (
+              <span class="ion-pill">
+                Na⁺ <strong>{recipe.waterProfile.na}</strong> ppm
+              </span>
+            )}
+            {recipe.waterProfile.so4 !== undefined && (
+              <span class="ion-pill">
+                SO₄²⁻ <strong>{recipe.waterProfile.so4}</strong> ppm
+              </span>
+            )}
+            {recipe.waterProfile.cl !== undefined && (
+              <span class="ion-pill">
+                Cl⁻ <strong>{recipe.waterProfile.cl}</strong> ppm
+              </span>
+            )}
+            {recipe.waterProfile.hco3 !== undefined && (
+              <span class="ion-pill">
+                HCO₃⁻ <strong>{recipe.waterProfile.hco3}</strong> ppm
+              </span>
+            )}
+            {recipe.waterProfile.mashPh !== undefined && (
+              <span class="ion-pill ph">
+                Mash pH <strong>{recipe.waterProfile.mashPh.toFixed(2)}</strong>
+              </span>
+            )}
           </div>
+          {recipe.waterProfile.notes && <p class="m3-subcard-note">{recipe.waterProfile.notes}</p>}
         </div>
       )
     }
@@ -225,210 +296,241 @@ const colorDesc = srmDescriptor(recipe.srm);
 </section>
 
 <style>
-  .md-recipe-sheet {
-    margin: 3.5rem 0;
+  .m3-recipe-sheet {
+    margin: 0 0 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
-  .recipe-header-card {
+  .m3-recipe-header-card {
     background-color: var(--md-sys-color-surface-container-low);
     border: 1px solid var(--md-sys-color-outline-variant);
     border-radius: var(--md-sys-shape-corner-extra-large);
-    padding: 2rem;
+    padding: 1.75rem;
     box-shadow: var(--md-sys-elevation-1);
-    margin-bottom: 2.5rem;
   }
 
-  .recipe-header-top {
+  .m3-recipe-header-top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 1.25rem;
+    gap: 1rem;
     flex-wrap: wrap;
-    margin-bottom: 1.65rem;
+    margin-bottom: 1.35rem;
   }
 
-  .recipe-title-row {
+  .m3-recipe-title-row {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.9rem;
   }
 
-  .recipe-icon-badge {
-    width: 48px;
-    height: 48px;
+  .m3-recipe-icon {
+    width: 44px;
+    height: 44px;
     border-radius: var(--md-sys-shape-corner-medium);
-    background-color: var(--palette-pale-green);
-    color: var(--palette-hop-green);
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
 
-  .recipe-sheet-title {
-    margin: 0 !important;
-    font-size: 1.4rem !important;
-  }
-
-  .recipe-sheet-sub {
-    margin: 0.2rem 0 0 !important;
-    font-size: 0.88rem;
-    color: var(--md-sys-color-on-surface-variant);
-  }
-
-  .srm-badge-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.5rem 1rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    font-size: 0.84rem;
+  .m3-recipe-title {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0;
     color: var(--md-sys-color-on-surface);
   }
 
-  .srm-circle {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(47, 62, 31, 0.25);
-  }
-
-  .recipe-metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-  }
-
-  .metric-tile {
-    background-color: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-large);
-    padding: 1.1rem 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .metric-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--md-sys-color-outline);
-  }
-
-  .metric-value {
-    font-family: var(--font-display);
-    font-size: 1.3rem;
-    font-weight: 800;
-    color: var(--palette-hop-green);
-  }
-
-  .grain-note {
-    font-size: 0.82rem;
-    color: var(--md-sys-color-outline);
+  .m3-recipe-sub {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--md-sys-color-on-surface-variant);
     margin-top: 0.2rem;
   }
 
+  .m3-srm-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.42rem 0.9rem;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .m3-srm-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(23, 29, 20, 0.25);
+  }
+
+  .m3-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.85rem;
+  }
+
+  .m3-metric-tile {
+    background-color: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    padding: 0.95rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .m3-metric-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--md-sys-color-outline);
+  }
+
+  .m3-metric-val {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .m3-metric-val.sm {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .m3-sec-heading {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .grain-note {
+    font-size: 0.8rem;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-top: 0.15rem;
+  }
+
   .grist-cell {
-    min-width: 150px;
+    min-width: 140px;
   }
 
   .grist-bar-wrap {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
 
   .grist-pct {
-    font-weight: 700;
-    min-width: 46px;
-    color: var(--md-sys-color-on-surface);
+    min-width: 44px;
+    font-size: 0.85rem;
   }
 
   .grist-track {
     flex: 1;
     height: 8px;
-    background-color: var(--palette-pale-green);
+    background-color: var(--md-sys-color-surface-container-high);
     border-radius: var(--md-sys-shape-corner-full);
     overflow: hidden;
   }
 
   .grist-fill {
     height: 100%;
-    background-color: var(--palette-hop-green);
+    background-color: var(--md-sys-color-primary);
     border-radius: var(--md-sys-shape-corner-full);
   }
 
   .hop-use-chip {
     display: inline-block;
-    padding: 0.25rem 0.7rem;
+    padding: 0.2rem 0.65rem;
     border-radius: var(--md-sys-shape-corner-full);
-    background-color: var(--palette-pale-green);
-    color: var(--palette-deep-forest);
-    font-size: 0.75rem;
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
     font-weight: 700;
   }
 
-  .recipe-subcards {
+  .m3-subcards-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.35rem;
-    margin-top: 1.25rem;
+    gap: 1rem;
   }
 
-  .recipe-subcard {
+  .m3-subcard {
     background-color: var(--md-sys-color-surface-container-low);
     border: 1px solid var(--md-sys-color-outline-variant);
     border-radius: var(--md-sys-shape-corner-large);
-    padding: 1.5rem;
+    padding: 1.35rem;
   }
 
-  .recipe-subcard.full-span {
+  .m3-subcard.full-span {
     grid-column: 1 / -1;
   }
 
-  .subcard-head {
+  .m3-subcard-head {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
-    color: var(--palette-hop-green);
-    margin-bottom: 0.9rem;
+    gap: 0.5rem;
+    color: var(--md-sys-color-primary);
     font-family: var(--font-display);
-  }
-
-  .subcard-list {
-    margin: 0 !important;
-    padding-left: 1.25rem !important;
-    font-size: 0.94rem;
-  }
-
-  .subcard-text {
-    margin: 0 !important;
     font-size: 0.95rem;
-    line-height: 1.7;
+    margin-bottom: 0.75rem;
   }
 
-  .subcard-note {
-    margin: 0.6rem 0 0 !important;
-    font-size: 0.86rem;
+  .m3-subcard-list {
+    padding-left: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .m3-subcard-text {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .m3-subcard-note {
+    margin-top: 0.55rem;
+    font-size: 0.84rem;
     color: var(--md-sys-color-outline);
   }
 
   .ion-pills {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.7rem;
+    gap: 0.55rem;
   }
 
   .ion-pill {
     background-color: var(--md-sys-color-surface-container-lowest);
     border: 1px solid var(--md-sys-color-outline-variant);
     border-radius: var(--md-sys-shape-corner-full);
-    padding: 0.4rem 0.95rem;
-    font-size: 0.85rem;
+    padding: 0.35rem 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .ion-pill.ph {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    border-color: var(--md-sys-color-secondary);
   }
 
   .table-scroll {
@@ -441,16 +543,12 @@ const colorDesc = srmDescriptor(recipe.srm);
     white-space: nowrap;
   }
 
-  @media (max-width: 640px) {
-    .recipe-header-card {
-      padding: 1.35rem;
-    }
-
-    .recipe-metrics-grid {
+  @media (max-width: 720px) {
+    .m3-metrics-grid {
       grid-template-columns: repeat(2, 1fr);
     }
 
-    .recipe-subcards {
+    .m3-subcards-grid {
       grid-template-columns: 1fr;
     }
   }
