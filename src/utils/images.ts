@@ -197,3 +197,5 @@ export function getPrivateImageClientMap(): Record<string, string> {
   }
   return map;
 }
+
+export const buildPrivateImageLookup = getPrivateImageClientMap;

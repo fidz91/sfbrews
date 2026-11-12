@@ -56,39 +56,46 @@ export function srmDescriptor(srm: number): string {
   return 'Opaque Black';
 }
 
+export const srmDescription = srmDescriptor;
+
 export const CATEGORY_META: Record<
   'brewday' | 'recipe' | 'experiment' | 'competition' | 'news',
-  { label: string; plural: string; badgeClass: string; description: string }
+  { label: string; plural: string; badgeClass: string; description: string; href: string }
 > = {
   brewday: {
     label: 'Brewday Log',
     plural: 'Brewdays',
     badgeClass: 'badge-brewday',
     description: 'Grain-to-glass field notes, mash performance, boil-day logs, and fermentation notes.',
+    href: '/recipes',
   },
   recipe: {
     label: 'Recipe & Brewday',
     plural: 'Recipes & Brewdays',
     badgeClass: 'badge-recipe',
     description: 'All-grain formulations, grist builds, hop schedules, water profiles, and brewday logs.',
+    href: '/recipes',
   },
   experiment: {
     label: 'Split-Batch & Lab',
     plural: 'Experiments',
     badgeClass: 'badge-experiment',
     description: 'Controlled side-by-side brewing trials, triangle tests, and variable comparisons.',
+    href: '/experiments',
   },
   competition: {
     label: 'Competition Report',
     plural: 'Competitions',
     badgeClass: 'badge-competition',
     description: 'BJCP scoresheet breakdowns, judge feedback analysis, and competition entries.',
+    href: '/competitions',
   },
   news: {
     label: 'Equipment & News',
     plural: 'Equipment & News',
     badgeClass: 'badge-news',
     description: 'Brewhouse upgrades, seasonal releases, and SFBrews updates.',
+    href: '/journal?category=news',
   },
 };
 
@@ -100,7 +107,7 @@ export function isPostVisible(post: {
   return true;
 }
 
-export function withBase(path: string): string {
+export function withBase(path = '/'): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${base}${cleanPath}` || '/';
