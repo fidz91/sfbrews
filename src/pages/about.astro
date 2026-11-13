@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { resolveAboutHeroImage } from '../utils/images';
+import { getHalftoneImage } from '../utils/halftone';
 
 const aboutHeroImage = resolveAboutHeroImage();
+const aboutHeroHalftone = await getHalftoneImage(aboutHeroImage);
 ---
 
 <BaseLayout
@@ -23,6 +25,11 @@ const aboutHeroImage = resolveAboutHeroImage();
         aboutHeroImage && (
           <figure class="about-hero-figure zine-media">
             <img class="zine-img" src={aboutHeroImage} alt="S.F.Brews Brewhouse" />
+            {
+              aboutHeroHalftone && (
+                <img class="zine-halftone-img" src={aboutHeroHalftone} alt="" aria-hidden="true" />
+              )
+            }
           </figure>
         )
       }

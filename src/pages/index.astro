@@ -5,8 +5,10 @@ import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 import { isPostVisible } from '../utils/srm';
 import { resolveHomeHeroImage } from '../utils/images';
+import { getHalftoneImage } from '../utils/halftone';
 
 const homeHeroImage = resolveHomeHeroImage();
+const homeHeroHalftone = await getHalftoneImage(homeHeroImage);
 
 const allPosts = (await getCollection('posts'))
   .filter(isPostVisible)
@@ -34,6 +36,17 @@ const allPosts = (await getCollection('posts'))
               alt="S.F.Brews"
               loading="eager"
             />
+            {
+              homeHeroHalftone && (
+                <img
+                  class="zine-halftone-img"
+                  src={homeHeroHalftone}
+                  alt=""
+                  aria-hidden="true"
+                  loading="eager"
+                />
+              )
+            }
           </div>
         )
       }
