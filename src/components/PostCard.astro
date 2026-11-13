@@ -38,9 +38,9 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 >
   {
     resolvedHeroImage && (
-      <a class="post-card-media threshold-media" href={withBase(`/posts/${post.slug}`)} tabindex="-1" aria-hidden="true">
+      <a class="post-card-media zine-media" href={withBase(`/posts/${post.slug}`)} tabindex="-1" aria-hidden="true">
         <img
-          class="post-card-img threshold-img"
+          class="post-card-img zine-img"
           src={resolvedHeroImage}
           alt={title}
           loading={large ? 'eager' : 'lazy'}

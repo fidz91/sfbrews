@@ -40,7 +40,7 @@ const navLinks = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#f4f0e6" />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
 
@@ -55,26 +55,6 @@ const navLinks = [
     <ViewTransitions />
   </head>
   <body>
-    <!-- Global SVG Two-Tone Threshold + Forest Green Duotone Filter -->
-    <svg width="0" height="0" style="position:absolute;pointer-events:none;" aria-hidden="true">
-      <defs>
-        <filter id="sfbrews-threshold-duotone" color-interpolation-filters="sRGB">
-          <feColorMatrix type="saturate" values="0" result="gray" />
-          <feComponentTransfer in="gray" result="contrasted">
-            <feFuncR type="linear" slope="2.2" intercept="-0.52" />
-            <feFuncG type="linear" slope="2.2" intercept="-0.52" />
-            <feFuncB type="linear" slope="2.2" intercept="-0.52" />
-          </feComponentTransfer>
-          <feComponentTransfer in="contrasted">
-            <!-- Maps shadows -> #111311, midtones -> #1B4D2E, highlights -> #FFFFFF -->
-            <feFuncR type="table" tableValues="0.067 0.106 1 1" />
-            <feFuncG type="table" tableValues="0.075 0.302 1 1" />
-            <feFuncB type="table" tableValues="0.067 0.180 1 1" />
-          </feComponentTransfer>
-        </filter>
-      </defs>
-    </svg>
-
     <!-- Ultra-Minimal 3-Link Top Bar -->
     <header class="site-header">
       <div class="container header-inner">
@@ -113,13 +93,17 @@ const navLinks = [
         </nav>
       </div>
     </footer>
+
+    <script>
+      import '../scripts/zine-halftone';
+    </script>
   </body>
 </html>
 
 <style>
   .site-header {
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.94);
+    background-color: rgba(244, 240, 230, 0.94);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);

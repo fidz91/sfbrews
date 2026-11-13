@@ -120,9 +120,8 @@ const morePosts = (await getCollection('posts'))
       {
         resolvedHeroImage && (
           <figure class="post-hero-figure">
-            <div class="threshold-media post-hero-frame">
+            <div class="post-hero-frame">
               <img
-                class="threshold-img"
                 src={resolvedHeroImage}
                 alt={title}
                 transition:name={`post-img-${post.slug}`}

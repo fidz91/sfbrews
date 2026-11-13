@@ -1,22 +1,22 @@
 /* ==========================================================================
-   SFBrews — "Threshold Ink & Forest" Minimalist Editorial Design System
-   Crisp white (#FFFFFF), almost-black ink (#111311), forest green (#1B4D2E)
+   SFBrews — Warm Newsprint & Zine Editorial Design System
+   Newsprint (#F4F0E6), almost-black ink (#111311), forest green (#1B4D2E)
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 :root {
   /* Core Palette */
-  --bg: #ffffff;
-  --bg-subtle: #f7f8f7;
+  --bg: #f4f0e6;
+  --bg-subtle: #ebe5d8;
   --ink: #111311;
   --ink-secondary: #525852;
   --ink-muted: #767d76;
   --forest: #1b4d2e;
   --forest-hover: #143b23;
-  --forest-tint: #edf3ef;
-  --border: #e2e5e2;
-  --border-strong: #c6cbc6;
+  --forest-tint: #e3e8dc;
+  --border: #ddd6c7;
+  --border-strong: #bfb7a5;
 
   /* Typography */
   --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -94,19 +94,48 @@ h6 {
 }
 
 /* ==========================================================================
-   Two-Tone Threshold Image Filter
-   Applies high-contrast almost-black + forest-green on crisp white
+   CMYK Newsprint Halftone Image Treatment
+   Renders 4-color CMYK halftone overlay on newsprint, revealing crisp photo on hover
    ========================================================================== */
 
-.threshold-media {
+.zine-media {
   position: relative;
   overflow: hidden;
-  background-color: var(--bg-subtle);
+  background-color: var(--bg);
 }
 
-.threshold-img {
-  filter: url(#sfbrews-threshold-duotone);
+.zine-img {
   transition: transform 0.35s ease;
+}
+
+.zine-halftone-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+.zine-halftone-canvas[data-rendered='true'] {
+  opacity: 1;
+}
+
+.zine-media:hover .zine-halftone-canvas,
+.zine-media:focus-within .zine-halftone-canvas,
+.post-card:hover .zine-halftone-canvas,
+.post-card:focus-within .zine-halftone-canvas {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zine-halftone-canvas,
+  .zine-img {
+    transition: none;
+  }
 }
 
 /* ==========================================================================
