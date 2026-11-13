@@ -1,174 +1,35 @@
 /* ==========================================================================
-   SFBrews — Stitch "Artisanal Cellar Journal" (Streamlined M3 Design System)
+   SFBrews — "Threshold Ink & Forest" Minimalist Editorial Design System
+   Crisp white (#FFFFFF), almost-black ink (#111311), forest green (#1B4D2E)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 :root {
-  /* ==========================================================================
-     Stitch "Artisanal Cellar Journal" — Light Mode Default (Material 3)
-     ========================================================================== */
-  --palette-botanical-green: #0e5000;
-  --palette-primary-container: #166b00;
-  --palette-hop-olive: #366a26;
-  --palette-meadow-wash: #b6f39e;
-  --palette-copper-tap: #c2611a;
-  --palette-fermenting: #546e2a;
-  --palette-conditioning: #7a4e2d;
-  --palette-planned: #6b6f60;
+  /* Core Palette */
+  --bg: #ffffff;
+  --bg-subtle: #f7f8f7;
+  --ink: #111311;
+  --ink-secondary: #525852;
+  --ink-muted: #767d76;
+  --forest: #1b4d2e;
+  --forest-hover: #143b23;
+  --forest-tint: #edf3ef;
+  --border: #e2e5e2;
+  --border-strong: #c6cbc6;
 
-  /* M3 Surface Hierarchy */
-  --md-sys-color-background: #f5fcec;
-  --md-sys-color-on-background: #171d14;
-  --md-sys-color-surface: #f5fcec;
-  --md-sys-color-surface-dim: #d5dccd;
-  --md-sys-color-surface-bright: #f5fcec;
-  --md-sys-color-surface-container-lowest: #ffffff;
-  --md-sys-color-surface-container-low: #eff6e6;
-  --md-sys-color-surface-container: #e9f0e0;
-  --md-sys-color-surface-container-high: #e4ebdb;
-  --md-sys-color-surface-container-highest: #dee5d5;
-  --md-sys-color-on-surface: #171d14;
-  --md-sys-color-on-surface-variant: #40493b;
-  --md-sys-color-outline: #707a69;
-  --md-sys-color-outline-variant: #c0cab7;
+  /* Typography */
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-  /* M3 Accent Roles */
-  --md-sys-color-primary: #0e5000;
-  --md-sys-color-on-primary: #ffffff;
-  --md-sys-color-primary-container: #166b00;
-  --md-sys-color-on-primary-container: #93ea77;
-  --md-sys-color-primary-fixed: #a0f883;
-  --md-sys-color-on-primary-fixed: #032100;
+  /* Crisp Minimal Radii */
+  --radius: 4px;
+  --radius-sm: 2px;
 
-  --md-sys-color-secondary: #366a26;
-  --md-sys-color-on-secondary: #ffffff;
-  --md-sys-color-secondary-container: #b6f39e;
-  --md-sys-color-on-secondary-container: #1e510f;
-
-  --md-sys-color-tertiary: #86094c;
-  --md-sys-color-on-tertiary: #ffffff;
-  --md-sys-color-tertiary-container: #ffd9e3;
-  --md-sys-color-on-tertiary-container: #3e0020;
-
-  /* Status Colors */
-  --status-tap: #c2611a;
-  --status-fermenting: #546e2a;
-  --status-conditioning: #7a4e2d;
-  --status-planned: #6b6f60;
-
-  /* Semantic Aliases for Legacy/Prose Selectors */
-  --palette-deep-forest: #171d14;
-  --palette-hop-green: #0e5000;
-  --palette-pale-green: #b6f39e;
-  --bg: var(--md-sys-color-surface);
-  --bg-soft: var(--md-sys-color-surface-container-low);
-  --bg-elevated: var(--md-sys-color-surface-container-lowest);
-  --text-main: var(--md-sys-color-on-surface);
-  --text-body: var(--md-sys-color-on-surface-variant);
-  --text-muted: var(--md-sys-color-outline);
-  --accent: var(--md-sys-color-primary);
-  --accent-hover: var(--md-sys-color-primary-container);
-  --accent-soft: var(--md-sys-color-secondary-container);
-  --border: rgba(112, 122, 105, 0.24);
-  --border-strong: rgba(112, 122, 105, 0.42);
-
-  /* Elevation & State Layers */
-  --md-sys-elevation-1: 0 2px 8px -2px rgba(23, 29, 20, 0.05), 0 1px 3px rgba(23, 29, 20, 0.04);
-  --md-sys-elevation-2: 0 8px 24px -4px rgba(63, 74, 57, 0.08), 0 2px 6px rgba(63, 74, 57, 0.04);
-  --md-sys-elevation-3: 0 16px 32px -8px rgba(63, 74, 57, 0.12), 0 4px 12px rgba(63, 74, 57, 0.06);
-
-  --md-state-hover: rgba(14, 80, 0, 0.06);
-  --md-state-focus: rgba(14, 80, 0, 0.12);
-  --md-state-pressed: rgba(14, 80, 0, 0.16);
-
-  /* Typography — Stitch "Artisanal Cellar Journal"
-     Headlines & Labels: Outfit
-     Body & Scientific Prose: Manrope
-     Technical Telemetry & Numerals: Space Grotesk */
-  --font-brand: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-editorial: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'Space Grotesk', ui-monospace, SFMono-Regular, monospace;
-  --font-accent: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-
-  /* M3 Softened Artisanal Radii */
-  --md-sys-shape-corner-extra-small: 0.25rem;
-  --md-sys-shape-corner-small: 0.5rem;
-  --md-sys-shape-corner-medium: 0.75rem;
-  --md-sys-shape-corner-large: 1rem;
-  --md-sys-shape-corner-extra-large: 1.5rem;
-  --md-sys-shape-corner-full: 9999px;
-
-  /* Motion */
-  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
-  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
-  --md-sys-motion-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --md-sys-motion-duration-short4: 200ms;
-  --md-sys-motion-duration-medium1: 250ms;
-  --md-sys-motion-duration-medium2: 300ms;
-
-  /* Layout Metrics */
-  --site-width: 1240px;
-  --canvas-width: 820px;
-  --header-height: 76px;
-  --bottom-nav-height: 64px;
-}
-
-/* Optional Dark Mode ("Artisanal Cellar & Brewlog" Dark Slate) */
-html[data-theme='dark'] {
-  --md-sys-color-background: #131410;
-  --md-sys-color-on-background: #e4e3dc;
-  --md-sys-color-surface: #131410;
-  --md-sys-color-surface-dim: #0e0f0b;
-  --md-sys-color-surface-bright: #252620;
-  --md-sys-color-surface-container-lowest: #181914;
-  --md-sys-color-surface-container-low: #1c1d18;
-  --md-sys-color-surface-container: #22231e;
-  --md-sys-color-surface-container-high: #2a2b25;
-  --md-sys-color-surface-container-highest: #343530;
-  --md-sys-color-on-surface: #fefdf5;
-  --md-sys-color-on-surface-variant: #c8c6bc;
-  --md-sys-color-outline: #8e9185;
-  --md-sys-color-outline-variant: #3f4239;
-
-  --md-sys-color-primary: #85db6a;
-  --md-sys-color-on-primary: #032100;
-  --md-sys-color-primary-container: #1e510f;
-  --md-sys-color-on-primary-container: #b6f39e;
-  --md-sys-color-primary-fixed: #2b441f;
-  --md-sys-color-on-primary-fixed: #d0f8bd;
-
-  --md-sys-color-secondary: #bccf83;
-  --md-sys-color-on-secondary: #161f00;
-  --md-sys-color-secondary-container: #313f12;
-  --md-sys-color-on-secondary-container: #d7eb9d;
-
-  --status-tap: #e08b3e;
-  --status-fermenting: #85db6a;
-  --status-conditioning: #ffb785;
-  --status-planned: #9ca192;
-
-  --bg: var(--md-sys-color-surface);
-  --bg-soft: var(--md-sys-color-surface-container-low);
-  --bg-elevated: var(--md-sys-color-surface-container-lowest);
-  --text-main: var(--md-sys-color-on-surface);
-  --text-body: var(--md-sys-color-on-surface-variant);
-  --text-muted: var(--md-sys-color-outline);
-  --accent: var(--md-sys-color-primary);
-  --accent-hover: #a0f883;
-  --accent-soft: var(--md-sys-color-secondary-container);
-  --border: rgba(228, 227, 220, 0.12);
-  --border-strong: rgba(228, 227, 220, 0.24);
-
-  --md-sys-elevation-1: 0 2px 8px rgba(0, 0, 0, 0.35);
-  --md-sys-elevation-2: 0 8px 24px rgba(0, 0, 0, 0.45);
-  --md-sys-elevation-3: 0 16px 32px rgba(0, 0, 0, 0.55);
-
-  --md-state-hover: rgba(133, 219, 106, 0.08);
-  --md-state-focus: rgba(133, 219, 106, 0.14);
-  --md-state-pressed: rgba(133, 219, 106, 0.2);
+  /* Layout */
+  --site-width: 1040px;
+  --reading-width: 760px;
 }
 
 /* ==========================================================================
@@ -186,9 +47,9 @@ html[data-theme='dark'] {
 html {
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.6;
-  color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-background);
+  line-height: 1.65;
+  color: var(--ink);
+  background-color: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
@@ -198,15 +59,9 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--md-sys-color-surface);
-  color: var(--md-sys-color-on-surface);
+  background-color: var(--bg);
+  color: var(--ink);
   overflow-x: hidden;
-}
-
-@media (max-width: 860px) {
-  body {
-    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
-  }
 }
 
 img,
@@ -222,11 +77,7 @@ svg {
 a {
   color: inherit;
   text-decoration: none;
-  transition:
-    color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
-    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
-    border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
-    box-shadow var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
 
 h1,
@@ -236,124 +87,44 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-  color: var(--md-sys-color-on-surface);
+  color: var(--ink);
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.02em;
-}
-
-/* Google Material Symbols Outlined */
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 1.25rem;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
-  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
-  vertical-align: middle;
-  user-select: none;
-}
-
-.material-symbols-outlined.filled {
-  font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+  letter-spacing: -0.025em;
 }
 
 /* ==========================================================================
-   Stitch Typography & Utility Classes
+   Two-Tone Threshold Image Filter
+   Applies high-contrast almost-black + forest-green on crisp white
    ========================================================================== */
 
-.font-label-caps {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+.threshold-media {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-subtle);
 }
 
-.font-label-badge {
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0.03em;
-}
-
-.font-stat-numeric {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-
-@keyframes pulse-beacon {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.45;
-    transform: scale(0.92);
-  }
-}
-
-.beacon-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--status-tap);
-  display: inline-block;
-  animation: pulse-beacon 2.2s infinite ease-in-out;
+.threshold-img {
+  filter: url(#sfbrews-threshold-duotone);
+  transition: transform 0.35s ease;
 }
 
 /* ==========================================================================
    Layout Containers
    ========================================================================== */
 
-.outer {
-  position: relative;
-  padding-left: max(1.5rem, 4vw);
-  padding-right: max(1.5rem, 4vw);
-}
-
-.inner {
-  margin: 0 auto;
+.container {
   max-width: var(--site-width);
   width: 100%;
-}
-
-.canvas {
   margin: 0 auto;
-  max-width: var(--canvas-width);
+  padding-left: max(1.25rem, 3vw);
+  padding-right: max(1.25rem, 3vw);
+}
+
+.reading-container {
+  max-width: var(--reading-width);
   width: 100%;
-}
-
-/* ==========================================================================
-   Material 3 Cards & Interactive Surfaces
-   ========================================================================== */
-
-.md-card {
-  background-color: var(--md-sys-color-surface-container-lowest);
-  border-radius: var(--md-sys-shape-corner-extra-large);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  box-shadow: var(--md-sys-elevation-1);
-  transition:
-    transform var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized),
-    box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized),
-    border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
-}
-
-.md-card-interactive:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--md-sys-elevation-2);
-  border-color: var(--md-sys-color-outline);
+  margin: 0 auto;
 }
 
 /* ==========================================================================
@@ -362,93 +133,93 @@ h6 {
 
 .prose {
   font-family: var(--font-sans);
-  font-size: 1.05rem;
-  line-height: 1.78;
-  color: var(--md-sys-color-on-surface-variant);
+  font-size: 1.03rem;
+  line-height: 1.75;
+  color: var(--ink);
 }
 
 .prose > * + * {
-  margin-top: 1.45rem;
+  margin-top: 1.35rem;
 }
 
 .prose h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.45rem, 2.5vw, 1.85rem);
-  margin-top: 2.75rem;
-  margin-bottom: 0.75rem;
+  font-size: clamp(1.35rem, 2.4vw, 1.65rem);
+  margin-top: 2.5rem;
+  margin-bottom: 0.65rem;
   font-weight: 700;
-  color: var(--md-sys-color-on-surface);
+  color: var(--ink);
   padding-bottom: 0.45rem;
   border-bottom: 1px solid var(--border);
 }
 
 .prose h3 {
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2vw, 1.4rem);
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: clamp(1.12rem, 1.9vw, 1.3rem);
+  margin-top: 1.85rem;
+  margin-bottom: 0.45rem;
   font-weight: 600;
-  color: var(--md-sys-color-on-surface);
+  color: var(--ink);
 }
 
 .prose p {
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--ink-secondary);
 }
 
 .prose strong {
-  color: var(--md-sys-color-on-surface);
-  font-weight: 700;
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .prose a {
-  color: var(--md-sys-color-primary);
-  font-weight: 600;
+  color: var(--forest);
+  font-weight: 500;
   text-decoration: underline;
-  text-decoration-color: rgba(14, 80, 0, 0.35);
+  text-decoration-color: rgba(27, 77, 46, 0.35);
   text-underline-offset: 3px;
 }
 
 .prose a:hover {
-  text-decoration-color: var(--md-sys-color-primary);
+  text-decoration-color: var(--forest);
 }
 
 .prose ul,
 .prose ol {
-  padding-left: 1.5rem;
+  padding-left: 1.4rem;
+  color: var(--ink-secondary);
 }
 
 .prose li + li {
-  margin-top: 0.45rem;
+  margin-top: 0.4rem;
 }
 
 .prose blockquote {
-  margin: 2rem 0;
-  padding: 1.2rem 1.5rem;
-  border-left: 4px solid var(--md-sys-color-primary);
-  background-color: var(--md-sys-color-surface-container-low);
-  border-radius: 0 var(--md-sys-shape-corner-large) var(--md-sys-shape-corner-large) 0;
-  color: var(--md-sys-color-on-surface);
+  margin: 1.75rem 0;
+  padding: 0.85rem 1.25rem;
+  border-left: 2px solid var(--forest);
+  background-color: var(--bg-subtle);
+  color: var(--ink);
   font-style: italic;
 }
 
 .prose code {
   font-family: var(--font-mono);
-  font-size: 0.86em;
-  background-color: var(--md-sys-color-surface-container);
-  color: var(--md-sys-color-primary);
-  padding: 0.18em 0.45em;
-  border-radius: var(--md-sys-shape-corner-extra-small);
+  font-size: 0.85em;
+  background-color: var(--bg-subtle);
+  color: var(--forest);
+  padding: 0.14em 0.38em;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
 }
 
 .prose pre {
   font-family: var(--font-mono);
-  font-size: 0.88rem;
-  line-height: 1.65;
-  background-color: #171d14;
-  color: #ecf3e3;
-  padding: 1.35rem 1.5rem;
-  border-radius: var(--md-sys-shape-corner-large);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  background-color: var(--ink);
+  color: var(--bg);
+  padding: 1.2rem 1.35rem;
+  border-radius: var(--radius);
   overflow-x: auto;
 }
 
@@ -459,48 +230,47 @@ h6 {
   border: none;
 }
 
+/* In-article brewday photos stay full color for clarity */
 .prose img {
-  margin: 2rem auto;
-  border-radius: var(--md-sys-shape-corner-large);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  box-shadow: var(--md-sys-elevation-1);
+  margin: 1.75rem auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
 }
 
 /* ==========================================================================
-   Cellar Data Tables
+   Minimalist Hairline Data Tables
    ========================================================================== */
 
 .prose table,
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.5rem 0;
-  font-size: 0.92rem;
-  background-color: var(--md-sys-color-surface-container-lowest);
-  border-radius: var(--md-sys-shape-corner-large);
-  overflow: hidden;
-  border: 1px solid var(--md-sys-color-outline-variant);
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+  background-color: var(--bg);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--border-strong);
 }
 
 .prose th,
 .data-table th {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   text-align: left;
-  font-weight: 700;
-  font-size: 0.74rem;
+  font-weight: 600;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--md-sys-color-on-surface-variant);
-  padding: 0.8rem 1rem;
-  border-bottom: 1px solid var(--md-sys-color-outline);
-  background-color: var(--md-sys-color-surface-dim);
+  color: var(--ink-secondary);
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid var(--border-strong);
+  background-color: var(--bg-subtle);
 }
 
 .prose td,
 .data-table td {
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-  color: var(--md-sys-color-on-surface);
+  padding: 0.72rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 
@@ -511,54 +281,28 @@ h6 {
 
 .prose tbody tr:hover td,
 .data-table tbody tr:hover td {
-  background-color: var(--md-sys-color-surface-container-low);
+  background-color: var(--bg-subtle);
 }
 
 /* ==========================================================================
-   Tags & Status Chips
+   Utility Elements
    ========================================================================== */
 
-.primary-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-display);
+.mono-label {
+  font-family: var(--font-mono);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.28rem 0.75rem;
-  border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-}
-
-.primary-tag.tag-recipe {
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-}
-
-.primary-tag.tag-brewday {
-  background-color: #ffdbc8;
-  color: #4a1c00;
-}
-
-.primary-tag.tag-experiment {
-  background-color: var(--md-sys-color-primary-fixed);
-  color: var(--md-sys-color-on-primary-fixed);
-}
-
-.primary-tag.tag-competition {
-  background-color: #ffe08b;
-  color: #3d2e00;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
 }
 
 .srm-dot {
   display: inline-block;
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  border: 1px solid rgba(23, 29, 20, 0.25);
+  border: 1px solid rgba(17, 19, 17, 0.25);
   vertical-align: middle;
   flex-shrink: 0;
 }

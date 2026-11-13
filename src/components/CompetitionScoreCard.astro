@@ -36,30 +36,25 @@ const breakdownItems = competition.scoresBreakdown
   : [];
 ---
 
-<section class="m3-comp-card">
-  <div class="comp-header">
-    <div class="comp-title-group">
-      <span class="comp-medal-badge">
-        <span class="material-symbols-outlined filled" aria-hidden="true">emoji_events</span>
+<section class="comp-sheet">
+  <div class="comp-head">
+    <div>
+      <span class="mono-label">
+        {competition.eventName}
+        {competition.location ? ` · ${competition.location}` : ''} ({competition.date})
       </span>
-      <div>
-        <span class="comp-kicker">
-          {competition.eventName}
-          {competition.location ? ` • ${competition.location}` : ''} ({competition.date})
-        </span>
-        <h3 class="comp-entry">
-          {competition.entryBeer}
-          {competition.batchNumber ? ` (${competition.batchNumber})` : ''} &bull; BJCP {competition.bjcpCategory}
-        </h3>
-      </div>
+      <h3 class="comp-title">
+        {competition.entryBeer}
+        {competition.batchNumber ? ` (${competition.batchNumber})` : ''} &middot; BJCP {competition.bjcpCategory}
+      </h3>
     </div>
 
-    <div class="comp-award-pill">
-      <span class="award-label">{competition.award}</span>
+    <div class="comp-result-pill">
+      <span>{competition.award}</span>
       {
         competition.score !== undefined && (
-          <strong class="award-score">
-            {competition.score} / {competition.maxScore} pts
+          <strong>
+            {competition.score}/{competition.maxScore}
           </strong>
         )
       }
@@ -68,23 +63,15 @@ const breakdownItems = competition.scoresBreakdown
 
   {
     breakdownItems.length > 0 && (
-      <div class="comp-bars-grid">
-        {breakdownItems.map((item) => {
-          const pct = Math.round((item.val / item.max) * 100);
-          return (
-            <div class="score-bar-card">
-              <div class="score-bar-top">
-                <span class="score-bar-label">{item.label}</span>
-                <strong class="score-bar-num">
-                  {item.val}/{item.max}
-                </strong>
-              </div>
-              <div class="score-bar-track">
-                <div class="score-bar-fill" style={`width: ${pct}%;`} />
-              </div>
-            </div>
-          );
-        })}
+      <div class="comp-scores-bar">
+        {breakdownItems.map((item) => (
+          <div class="score-cell">
+            <span class="score-label">{item.label}</span>
+            <strong class="score-val">
+              {item.val}/{item.max}
+            </strong>
+          </div>
+        ))}
       </div>
     )
   }
@@ -99,7 +86,7 @@ const breakdownItems = competition.scoresBreakdown
         )}
         {competition.recipeImprovements && (
           <p class="comp-next">
-            <strong>Next Iteration Plan:</strong> {competition.recipeImprovements}
+            <strong>Next Iteration:</strong> {competition.recipeImprovements}
           </p>
         )}
       </div>
@@ -108,149 +95,88 @@ const breakdownItems = competition.scoresBreakdown
 </section>
 
 <style>
-  .m3-comp-card {
-    background-color: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    padding: 1.75rem;
-    margin: 0 0 2.25rem;
-    box-shadow: var(--md-sys-elevation-1);
+  .comp-sheet {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 0 0 2rem;
+    background-color: var(--bg);
   }
 
-  .comp-header {
+  .comp-head {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 1.25rem;
+    gap: 1rem;
     flex-wrap: wrap;
-    margin-bottom: 1.35rem;
+    margin-bottom: 1rem;
   }
 
-  .comp-title-group {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
+  .comp-title {
+    font-size: 1.1rem;
+    margin-top: 0.25rem;
   }
 
-  .comp-medal-badge {
-    width: 44px;
-    height: 44px;
-    border-radius: var(--md-sys-shape-corner-medium);
-    background-color: var(--md-sys-color-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
+  .comp-result-pill {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .comp-kicker {
-    display: block;
+    gap: 0.5rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--forest);
+    background-color: var(--forest-tint);
+    color: var(--forest);
+    border-radius: var(--radius);
     font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--md-sys-color-outline);
+    font-size: 0.76rem;
+    font-weight: 600;
   }
 
-  .comp-entry {
-    font-family: var(--font-display);
-    font-size: 1.18rem;
-    font-weight: 700;
-    color: var(--md-sys-color-on-surface);
-    margin: 0.15rem 0 0;
-  }
-
-  .comp-award-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    background-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
-    padding: 0.42rem 1rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    font-family: var(--font-display);
-    font-size: 0.82rem;
-    box-shadow: var(--md-sys-elevation-1);
-  }
-
-  .award-label {
-    font-weight: 700;
-  }
-
-  .award-score {
-    background-color: rgba(255, 255, 255, 0.2);
-    padding: 0.15rem 0.55rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-  }
-
-  .comp-bars-grid {
+  .comp-scores-bar {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0.75rem;
-    margin-bottom: 1.35rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background-color: var(--bg-subtle);
+    margin-bottom: 1rem;
   }
 
-  .score-bar-card {
-    background-color: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-large);
-    padding: 0.8rem 0.9rem;
-  }
-
-  .score-bar-top {
+  .score-cell {
+    padding: 0.6rem 0.75rem;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.45rem;
+    flex-direction: column;
+    gap: 0.15rem;
   }
 
-  .score-bar-label {
+  .score-cell + .score-cell {
+    border-left: 1px solid var(--border);
+  }
+
+  .score-label {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 700;
+    font-size: 0.66rem;
     text-transform: uppercase;
-    color: var(--md-sys-color-outline);
+    color: var(--ink-muted);
   }
 
-  .score-bar-num {
+  .score-val {
     font-family: var(--font-mono);
-    font-size: 0.82rem;
-    color: var(--md-sys-color-on-surface);
-  }
-
-  .score-bar-track {
-    height: 7px;
-    background-color: var(--md-sys-color-surface-container-high);
-    border-radius: var(--md-sys-shape-corner-full);
-    overflow: hidden;
-  }
-
-  .score-bar-fill {
-    height: 100%;
-    background-color: var(--md-sys-color-primary);
-    border-radius: var(--md-sys-shape-corner-full);
+    font-size: 0.88rem;
+    color: var(--ink);
   }
 
   .comp-notes {
-    background-color: var(--md-sys-color-surface-container);
-    border-radius: var(--md-sys-shape-corner-large);
-    padding: 1.15rem 1.35rem;
-    font-size: 0.92rem;
-    line-height: 1.65;
-    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-secondary);
   }
 
   .comp-next {
-    margin-top: 0.5rem;
+    margin-top: 0.45rem;
   }
 
-  @media (max-width: 720px) {
-    .comp-bars-grid {
-      grid-template-columns: repeat(2, 1fr);
+  @media (max-width: 640px) {
+    .comp-scores-bar {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 </style>

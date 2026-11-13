@@ -9,25 +9,25 @@ const aboutHeroImage = resolveAboutHeroImage();
   title="About — SFBrews"
   description="About SFBrews, our homebrewing setup, and brewing notes."
 >
-  <div class="outer page-wrap">
-    <div class="canvas m3-about-sheet">
-      <header class="m3-page-header">
-        <span class="m3-page-eyebrow">Brewhouse &amp; Cellar Notes</span>
+  <div class="container page-wrap">
+    <div class="reading-container">
+      <header class="page-head">
+        <span class="mono-label page-kicker">Brewhouse &amp; Notes</span>
         <h1>About S.F.Brews</h1>
-        <p class="m3-page-lead">
+        <p class="page-lead">
           Welcome to <strong>S.F.Brews</strong>—a personal homebrewing journal documenting recipes, brewday logs, experiments, and competition results.
         </p>
       </header>
 
       {
         aboutHeroImage && (
-          <figure class="about-hero-figure">
-            <img src={aboutHeroImage} alt="S.F.Brews Brewhouse" />
+          <figure class="about-hero-figure threshold-media">
+            <img class="threshold-img" src={aboutHeroImage} alt="S.F.Brews Brewhouse" />
           </figure>
         )
       }
 
-      <div class="m3-content-card prose">
+      <div class="prose">
         <h2>The Brewhouse</h2>
         <p>
           <em>Update this section in <code>src/pages/about.astro</code> with your equipment details, batch sizes, and brewing philosophy:</em>
@@ -58,70 +58,42 @@ const aboutHeroImage = resolveAboutHeroImage();
 
 <style>
   .page-wrap {
-    padding-top: 3rem;
-    padding-bottom: 2rem;
+    padding-top: 2.5rem;
   }
 
-  .m3-page-header {
-    margin-bottom: 2rem;
+  .page-head {
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
   }
 
-  .m3-page-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--md-sys-color-primary);
+  .page-kicker {
     display: block;
-    margin-bottom: 0.35rem;
+    color: var(--forest);
+    margin-bottom: 0.4rem;
   }
 
-  .m3-page-header h1 {
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.75rem;
+  .page-head h1 {
+    font-size: clamp(1.9rem, 3.8vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 0.55rem;
   }
 
-  .m3-page-lead {
-    font-size: 1.08rem;
-    color: var(--md-sys-color-on-surface-variant);
-    line-height: 1.65;
+  .page-lead {
+    color: var(--ink-secondary);
+    font-size: 1.05rem;
+    line-height: 1.6;
   }
 
   .about-hero-figure {
     margin: 0 0 2rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
   }
 
   .about-hero-figure img {
     width: 100%;
-    max-height: 440px;
+    max-height: 400px;
     object-fit: cover;
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    box-shadow: var(--md-sys-elevation-1);
-  }
-
-  .m3-content-card {
-    background-color: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    padding: 2.25rem;
-    box-shadow: var(--md-sys-elevation-1);
-  }
-
-  .m3-content-card h2:first-child {
-    margin-top: 0;
-  }
-
-  @media (max-width: 640px) {
-    .page-wrap {
-      padding-top: 2rem;
-    }
-
-    .m3-content-card {
-      padding: 1.5rem;
-    }
   }
 </style>

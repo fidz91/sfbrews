@@ -54,97 +54,126 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 const morePosts = (await getCollection('posts'))
   .filter((p) => isPostVisible(p) && p.slug !== post.slug)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
+  .slice(0, 2);
 ---
 
 <BaseLayout title={`${title} — SFBrews`} description={description} ogImage={resolvedHeroImage}>
-  <article class="article outer">
-    <header class="article-header canvas">
-      <div class="article-meta-pills">
-        <a href={withBase(meta.href)} class:list={['primary-tag', `tag-${category}`]}>
-          {meta.label}
-        </a>
-        {beerStyle && <span class="m3-style-pill">{beerStyle}</span>}
-        {batchNumber && <span class="m3-batch-pill">{batchNumber}</span>}
-      </div>
+  <article class="container post-article">
+    <div class="reading-container">
+      <a href={withBase('/')} class="back-link">&larr; Back to Journal</a>
 
-      <h1 class="article-title" transition:name={`post-title-${post.slug}`}>
-        {title}
-      </h1>
-      {subtitle && <p class="article-subtitle">{subtitle}</p>}
-      <p class="article-excerpt">{description}</p>
+      <header class="post-header">
+        <div class="post-meta-line">
+          <a href={withBase(`/?category=${category}`)} class="post-cat-link">
+            {meta.label}
+          </a>
+          <span>&middot;</span>
+          <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+          {
+            beerStyle && (
+              <>
+                <span>&middot;</span>
+                <span>{beerStyle}</span>
+              </>
+            )
+          }
+          {
+            batchNumber && (
+              <>
+                <span>&middot;</span>
+                <span>{batchNumber}</span>
+              </>
+            )
+          }
+          {
+            readingTime && (
+              <>
+                <span>&middot;</span>
+                <span>{readingTime}</span>
+              </>
+            )
+          }
+          {
+            updatedDate && (
+              <>
+                <span>&middot;</span>
+                <span>
+                  Updated{' '}
+                  {updatedDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </span>
+              </>
+            )
+          }
+        </div>
 
-      <div class="article-byline">
-        <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+        <h1 class="post-title" transition:name={`post-title-${post.slug}`}>
+          {title}
+        </h1>
+        {subtitle && <p class="post-subtitle">{subtitle}</p>}
+        <p class="post-excerpt">{description}</p>
+      </header>
+
+      {
+        resolvedHeroImage && (
+          <figure class="post-hero-figure">
+            <div class="threshold-media post-hero-frame">
+              <img
+                class="threshold-img"
+                src={resolvedHeroImage}
+                alt={title}
+                transition:name={`post-img-${post.slug}`}
+              />
+            </div>
+            {heroCaption && <figcaption class="post-hero-caption">{heroCaption}</figcaption>}
+          </figure>
+        )
+      }
+
+      <div class="post-body" data-private-images={privateImageMapJson}>
+        {competition && <CompetitionScoreCard competition={competition} />}
+        {experiment && <ExperimentCard experiment={experiment} title={title} />}
+
         {
-          updatedDate && (
-            <>
-              <span>&bull;</span>
-              <span>
-                Updated{' '}
-                {updatedDate.toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                })}
-              </span>
-            </>
+          recipe && (
+            <RecipeCard
+              recipe={recipe}
+              beerName={title}
+              beerStyle={beerStyle}
+              batchNumber={batchNumber}
+            />
           )
         }
-        {readingTime && <span>&bull;</span>}
-        {readingTime && <span>{readingTime}</span>}
+
+        <div class="prose">
+          <Content />
+        </div>
+
+        {
+          galleryItems.length > 0 && (
+            <section class="post-gallery" aria-label="Brewday & Recipe Photos">
+              <div class="post-gallery-grid">
+                {galleryItems.map((item) => (
+                  <figure class="post-gallery-item">
+                    <img src={item.src} alt={item.alt} loading="lazy" />
+                    {item.caption && <figcaption>{item.caption}</figcaption>}
+                  </figure>
+                ))}
+              </div>
+            </section>
+          )
+        }
       </div>
-    </header>
-
-    {
-      resolvedHeroImage && (
-        <figure class="article-image inner">
-          <img src={resolvedHeroImage} alt={title} transition:name={`post-img-${post.slug}`} />
-          {heroCaption && <figcaption class="article-image-caption">{heroCaption}</figcaption>}
-        </figure>
-      )
-    }
-
-    <div class="article-content canvas" data-private-images={privateImageMapJson}>
-      {competition && <CompetitionScoreCard competition={competition} />}
-      {experiment && <ExperimentCard experiment={experiment} title={title} />}
-
-      {
-        recipe && (
-          <RecipeCard
-            recipe={recipe}
-            beerName={title}
-            beerStyle={beerStyle}
-            batchNumber={batchNumber}
-          />
-        )
-      }
-
-      <div class="prose m3-prose-sheet">
-        <Content />
-      </div>
-
-      {
-        galleryItems.length > 0 && (
-          <section class="post-gallery" aria-label="Brewday & Recipe Photos">
-            <div class="post-gallery-grid">
-              {galleryItems.map((item) => (
-                <figure class="post-gallery-item">
-                  <img src={item.src} alt={item.alt} loading="lazy" />
-                  {item.caption && <figcaption>{item.caption}</figcaption>}
-                </figure>
-              ))}
-            </div>
-          </section>
-        )
-      }
     </div>
   </article>
 
   {
     morePosts.length > 0 && (
-      <section class="read-more-section outer">
-        <div class="inner">
+      <section class="container read-more-section">
+        <div class="reading-container">
           <h3 class="read-more-heading">More from S.F.Brews</h3>
           <div class="read-more-grid">
             {morePosts.map((related) => (
@@ -159,7 +188,7 @@ const morePosts = (await getCollection('posts'))
 
 <script>
   function resolveInlinePrivateImages() {
-    const container = document.querySelector<HTMLElement>('.article-content[data-private-images]');
+    const container = document.querySelector<HTMLElement>('.post-body[data-private-images]');
     if (!container) return;
     try {
       const map: Record<string, string> = JSON.parse(container.dataset.privateImages || '{}');
@@ -181,134 +210,112 @@ const morePosts = (await getCollection('posts'))
 </script>
 
 <style>
-  .article {
-    padding-top: 3rem;
+  .post-article {
+    padding-top: 2.25rem;
   }
 
-  .article-header {
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .back-link:hover {
+    color: var(--forest);
+  }
+
+  .post-header {
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-meta-line {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .post-cat-link {
+    color: var(--forest);
+  }
+
+  .post-cat-link:hover {
+    text-decoration: underline;
+  }
+
+  .post-title {
+    font-size: clamp(1.9rem, 4vw, 2.65rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .post-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--forest);
+    margin-bottom: 0.65rem;
+  }
+
+  .post-excerpt {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--ink-secondary);
+  }
+
+  .post-hero-figure {
     margin-bottom: 2.25rem;
   }
 
-  .article-meta-pills {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
+  .post-hero-frame {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
   }
 
-  .m3-style-pill,
-  .m3-batch-pill {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: var(--md-sys-color-surface-container);
-    color: var(--md-sys-color-on-surface-variant);
-    border: 1px solid var(--md-sys-color-outline-variant);
-  }
-
-  .article-title {
-    font-size: clamp(2rem, 4.2vw, 2.85rem);
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.025em;
-    color: var(--md-sys-color-on-surface);
-    margin-bottom: 0.6rem;
-  }
-
-  .article-subtitle {
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--md-sys-color-primary);
-    margin-bottom: 0.6rem;
-  }
-
-  .article-excerpt {
-    font-size: clamp(1.04rem, 1.8vw, 1.18rem);
-    line-height: 1.6;
-    color: var(--md-sys-color-on-surface-variant);
-    margin-bottom: 1.35rem;
-  }
-
-  .article-byline {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    color: var(--md-sys-color-outline);
-    padding-top: 1rem;
-    border-top: 1px solid var(--md-sys-color-outline-variant);
-  }
-
-  .comments-jump-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    color: var(--md-sys-color-primary);
-    font-weight: 600;
-  }
-
-  .comments-jump-link:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .comments-jump-link .material-symbols-outlined {
-    font-size: 16px;
-  }
-
-  .article-image {
-    max-width: 980px;
-    margin: 0 auto 2.75rem;
-  }
-
-  .article-image img {
+  .post-hero-frame img {
     width: 100%;
-    max-height: 520px;
+    max-height: 440px;
     object-fit: cover;
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    box-shadow: var(--md-sys-elevation-1);
   }
 
-  .article-image-caption {
-    margin-top: 0.65rem;
-    font-size: 0.85rem;
-    color: var(--md-sys-color-outline);
+  .post-hero-caption {
+    margin-top: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-muted);
     text-align: center;
   }
 
-  .m3-prose-sheet {
-    background-color: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    padding: 2.25rem;
-    box-shadow: var(--md-sys-elevation-1);
-  }
-
-  .m3-prose-sheet :global(> :first-child) {
-    margin-top: 0;
-  }
-
   .post-gallery {
-    margin: 2.5rem 0;
+    margin: 2.25rem 0;
   }
 
   .post-gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.25rem;
+    gap: 1rem;
   }
 
   .post-gallery-item {
-    background-color: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-large);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     overflow: hidden;
   }
 
@@ -319,48 +326,35 @@ const morePosts = (await getCollection('posts'))
   }
 
   .post-gallery-item figcaption {
-    padding: 0.65rem 0.9rem;
-    font-size: 0.84rem;
-    color: var(--md-sys-color-on-surface-variant);
+    padding: 0.55rem 0.8rem;
+    font-size: 0.82rem;
+    color: var(--ink-secondary);
+    border-top: 1px solid var(--border);
   }
 
   .read-more-section {
-    margin-top: 4.5rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--md-sys-color-outline-variant);
+    margin-top: 3.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
   }
 
   .read-more-heading {
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: 0.76rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--md-sys-color-primary);
-    margin-bottom: 1.75rem;
+    letter-spacing: 0.07em;
+    color: var(--forest);
+    margin-bottom: 1.25rem;
   }
 
   .read-more-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.75rem;
-  }
-
-  @media (max-width: 1024px) {
-    .read-more-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
   }
 
   @media (max-width: 640px) {
-    .article {
-      padding-top: 2rem;
-    }
-
-    .m3-prose-sheet {
-      padding: 1.4rem;
-    }
-
     .read-more-grid {
       grid-template-columns: 1fr;
     }

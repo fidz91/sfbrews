@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { CATEGORY_META, srmToHex, withBase } from '../utils/srm';
+import { CATEGORY_META, withBase } from '../utils/srm';
 import { resolvePostHeroImage } from '../utils/images';
 
 interface Props {
@@ -17,22 +17,11 @@ const {
   tags,
   beerStyle,
   batchNumber,
-  readingTime,
   recipe,
-  competition,
 } = post.data;
 
 const resolvedHeroImage = resolvePostHeroImage(post);
-
 const meta = CATEGORY_META[category];
-const categoryIcons: Record<string, string> = {
-  brewday: 'local_fire_department',
-  recipe: 'menu_book',
-  experiment: 'science',
-  competition: 'emoji_events',
-  news: 'campaign',
-};
-const catIcon = categoryIcons[category] || 'article';
 
 const formattedDate = pubDate.toLocaleDateString('en-US', {
   month: 'short',
@@ -42,396 +31,142 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 ---
 
 <article
-  class:list={['m3-post-card', { 'm3-post-card-large': large }]}
+  class="post-card"
   data-category={category}
   data-tags={tags.join(',').toLowerCase()}
   data-search={`${title} ${description} ${beerStyle || ''} ${batchNumber || ''} ${tags.join(' ')}`.toLowerCase()}
 >
   {
     resolvedHeroImage && (
-      <a class="m3-card-media" href={withBase(`/posts/${post.slug}`)} tabindex="-1" aria-hidden="true">
+      <a class="post-card-media threshold-media" href={withBase(`/posts/${post.slug}`)} tabindex="-1" aria-hidden="true">
         <img
-          class="m3-card-img"
+          class="post-card-img threshold-img"
           src={resolvedHeroImage}
           alt={title}
           loading={large ? 'eager' : 'lazy'}
           transition:name={`post-img-${post.slug}`}
         />
-        <div class="m3-card-media-gradient" />
-
-        <div class="m3-card-media-top">
-          <span class:list={['m3-media-badge', `cat-${category}`]}>
-            <span class="material-symbols-outlined">{catIcon}</span>
-            <span>{beerStyle ? beerStyle : meta.plural}</span>
-          </span>
-          {batchNumber && <span class="m3-media-batch">{batchNumber}</span>}
-        </div>
-
-        <div class="m3-card-media-bottom">
-          <time class="m3-media-date" datetime={pubDate.toISOString()}>{formattedDate}</time>
-          {
-            competition && (
-              <span class="m3-media-award">
-                <span class="material-symbols-outlined filled">military_tech</span>
-                <span>
-                  {competition.score !== undefined
-                    ? `${competition.score}/${competition.maxScore}`
-                    : competition.award}
-                </span>
-              </span>
-            )
-          }
-        </div>
       </a>
     )
   }
 
-  <div class="m3-card-body">
-    <div class="m3-card-main">
-      <div class="m3-card-eyebrow-row">
-        <span class:list={['primary-tag', `tag-${category}`]}>
-          <span class="material-symbols-outlined tag-icon" aria-hidden="true">{catIcon}</span>
-          {meta.plural}
-        </span>
-        {!resolvedHeroImage && <time class="m3-inline-date" datetime={pubDate.toISOString()}>{formattedDate}</time>}
-      </div>
-
-      <a class="m3-card-link" href={withBase(`/posts/${post.slug}`)}>
-        <h3 class="m3-card-title" transition:name={`post-title-${post.slug}`}>{title}</h3>
-      </a>
-
-      <p class="m3-card-desc">{description}</p>
-
+  <div class="post-card-body">
+    <div class="post-card-meta">
+      <span class="post-card-cat">{meta.label}</span>
+      <span class="meta-dot">&middot;</span>
+      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
       {
-        recipe && (
-          <div class="m3-specs-strip" aria-label="Recipe Specs">
-            <div class="m3-spec-cell">
-              <span class="m3-spec-label">ABV</span>
-              <span class="m3-spec-val">{recipe.abv.toFixed(1)}%</span>
-            </div>
-            <div class="m3-spec-cell">
-              <span class="m3-spec-label">IBU</span>
-              <span class="m3-spec-val">{recipe.ibu}</span>
-            </div>
-            <div class="m3-spec-cell">
-              <span class="m3-spec-label">OG → FG</span>
-              <span class="m3-spec-val">
-                {recipe.og.toFixed(3)} → {recipe.fg.toFixed(3)}
-              </span>
-            </div>
-            <div class="m3-spec-cell">
-              <span class="m3-spec-label">SRM</span>
-              <span class="m3-spec-val srm-val">
-                <span class="srm-dot" style={`background-color: ${srmToHex(recipe.srm)};`} />
-                {recipe.srm}
-              </span>
-            </div>
-          </div>
+        batchNumber && (
+          <>
+            <span class="meta-dot">&middot;</span>
+            <span>{batchNumber}</span>
+          </>
         )
       }
     </div>
 
-    <footer class="m3-card-footer">
-      <span class="m3-card-readtime">
-        <span class="material-symbols-outlined">timer</span>
-        <span>{readingTime || '4 min read'}</span>
-      </span>
+    <a class="post-card-title-link" href={withBase(`/posts/${post.slug}`)}>
+      <h2 class="post-card-title" transition:name={`post-title-${post.slug}`}>{title}</h2>
+    </a>
 
-      <a class="m3-card-cta" href={withBase(`/posts/${post.slug}`)}>
-        <span>Full Log</span>
-        <span class="material-symbols-outlined">arrow_outward</span>
-      </a>
-    </footer>
+    <p class="post-card-excerpt">{description}</p>
+
+    {
+      recipe && (
+        <p class="post-card-specs">
+          {recipe.abv.toFixed(1)}% ABV &middot; {recipe.ibu} IBU &middot; {recipe.srm} SRM
+        </p>
+      )
+    }
   </div>
 </article>
 
 <style>
-  .m3-post-card {
-    background-color: var(--md-sys-color-surface-container-lowest);
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 65%, transparent);
-    box-shadow: var(--md-sys-elevation-1);
-    overflow: hidden;
+  .post-card {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  }
-
-  .m3-post-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--md-sys-elevation-2);
-    border-color: var(--md-sys-color-outline);
-  }
-
-  /* Featured Large Card (First item on Home) */
-  @media (min-width: 1025px) {
-    .m3-post-card-large {
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: 1.15fr 1fr;
-    }
-
-    .m3-post-card-large .m3-card-media {
-      height: 100%;
-      min-height: 320px;
-    }
-
-    .m3-post-card-large .m3-card-title {
-      font-size: 1.65rem;
-    }
-  }
-
-  .m3-card-media {
-    position: relative;
-    display: block;
-    height: 205px;
-    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background-color: var(--bg);
     overflow: hidden;
-    background-color: var(--md-sys-color-surface-container);
+    transition: border-color 0.15s ease;
   }
 
-  .m3-card-img {
+  .post-card:hover {
+    border-color: var(--forest);
+  }
+
+  .post-card-media {
+    display: block;
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-card-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
   }
 
-  .m3-post-card:hover .m3-card-img {
-    transform: scale(1.04);
+  .post-card:hover .post-card-img {
+    transform: scale(1.03);
   }
 
-  .m3-card-media-gradient {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, transparent 45%, rgba(0, 0, 0, 0.52) 100%);
-    pointer-events: none;
-  }
-
-  .m3-card-media-top {
-    position: absolute;
-    top: 0.75rem;
-    left: 0.75rem;
-    right: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .m3-media-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.25rem 0.65rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(8px);
-    color: #171d14;
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .m3-media-badge .material-symbols-outlined {
-    font-size: 0.85rem;
-    color: #0e5000;
-  }
-
-  .m3-media-batch {
-    padding: 0.2rem 0.55rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: rgba(23, 29, 20, 0.75);
-    color: #ffffff;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: 700;
-  }
-
-  .m3-card-media-bottom {
-    position: absolute;
-    bottom: 0.75rem;
-    left: 0.75rem;
-    right: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .m3-media-date {
-    margin-left: auto;
-    padding: 0.2rem 0.65rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: rgba(0, 0, 0, 0.48);
-    backdrop-filter: blur(6px);
-    color: #ffffff;
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 600;
-  }
-
-  .m3-media-award {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.22rem 0.6rem;
-    border-radius: var(--md-sys-shape-corner-small);
-    background-color: rgba(255, 255, 255, 0.95);
-    color: #0e5000;
-    font-family: var(--font-display);
-    font-size: 0.72rem;
-    font-weight: 700;
-  }
-
-  .m3-media-award .material-symbols-outlined {
-    font-size: 0.9rem;
-  }
-
-  /* Card Body */
-  .m3-card-body {
-    padding: 1.25rem 1.35rem;
+  .post-card-body {
+    padding: 1.15rem 1.25rem 1.25rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 0.45rem;
     flex: 1;
-    gap: 1rem;
   }
 
-  .m3-card-main {
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-  }
-
-  .m3-card-eyebrow-row {
+  .post-card-meta {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .tag-icon {
-    font-size: 0.85rem;
-  }
-
-  .m3-inline-date {
+    gap: 0.4rem;
+    flex-wrap: wrap;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--md-sys-color-outline);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
   }
 
-  .m3-card-title {
+  .post-card-cat {
+    color: var(--forest);
+  }
+
+  .post-card-title {
     font-family: var(--font-display);
-    font-size: 1.2rem;
+    font-size: 1.18rem;
     font-weight: 700;
     line-height: 1.28;
-    color: var(--md-sys-color-on-surface);
-    transition: color 0.2s ease;
+    color: var(--ink);
   }
 
-  .m3-post-card:hover .m3-card-title {
-    color: var(--md-sys-color-primary);
+  .post-card:hover .post-card-title {
+    color: var(--forest);
   }
 
-  .m3-card-desc {
-    font-size: 0.86rem;
+  .post-card-excerpt {
+    font-size: 0.88rem;
     line-height: 1.55;
-    color: var(--md-sys-color-on-surface-variant);
+    color: var(--ink-secondary);
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
-  /* 4-Column Specs Strip */
-  .m3-specs-strip {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.35rem;
-    background-color: var(--md-sys-color-surface-container-low);
-    border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 55%, transparent);
-    border-radius: var(--md-sys-shape-corner-large);
-    padding: 0.6rem 0.5rem;
-    text-align: center;
-    margin-top: 0.35rem;
-  }
-
-  .m3-spec-cell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.15rem;
-  }
-
-  .m3-spec-label {
+  .post-card-specs {
+    margin-top: auto;
+    padding-top: 0.5rem;
     font-family: var(--font-mono);
-    font-size: 0.62rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--md-sys-color-outline);
-  }
-
-  .m3-spec-val {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--md-sys-color-on-surface);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .m3-spec-val.srm-val {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  /* Footer */
-  .m3-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 0.85rem;
-    border-top: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 50%, transparent);
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    color: var(--md-sys-color-outline);
-  }
-
-  .m3-card-readtime {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-  }
-
-  .m3-card-readtime .material-symbols-outlined {
-    font-size: 0.95rem;
-  }
-
-  .m3-card-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.2rem;
-    color: var(--md-sys-color-primary);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .m3-card-cta:hover {
-    text-decoration: underline;
-  }
-
-  .m3-card-cta .material-symbols-outlined {
-    font-size: 0.9rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    letter-spacing: 0.03em;
   }
 </style>

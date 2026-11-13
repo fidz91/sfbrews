@@ -13,89 +13,70 @@ const recipePosts = (await getCollection('posts'))
   title="Homebrewing Recipes — SFBrews"
   description="All-grain homebrewing recipes with grist bill percentages, hop schedules, and brewday notes."
 >
-  <div class="outer page-wrap">
-    <div class="inner">
-      <header class="page-head">
-        <span class="page-eyebrow">Formulation Ledger</span>
-        <h1>Recipes &amp; Brewdays</h1>
-        <p>All-grain formulations with grist bill percentages, hop schedules, water profiles, and brewday logs.</p>
-      </header>
+  <div class="container page-wrap">
+    <header class="page-head">
+      <span class="mono-label page-kicker">Formulation Archive</span>
+      <h1>Recipes &amp; Brewdays</h1>
+      <p>All-grain formulations with grist bill percentages, hop schedules, water profiles, and brewday logs.</p>
+    </header>
 
-      {
-        recipePosts.length > 0 ? (
-          <div class="post-feed">
-            {recipePosts.map((post) => (
-              <PostCard post={post} />
-            ))}
-          </div>
-        ) : (
-          <p class="empty-msg">No recipes published yet.</p>
-        )
-      }
-    </div>
+    {
+      recipePosts.length > 0 ? (
+        <div class="post-grid">
+          {recipePosts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-msg">No recipes published yet.</p>
+      )
+    }
   </div>
 </BaseLayout>
 
 <style>
   .page-wrap {
-    padding-top: 3rem;
-    padding-bottom: 2rem;
+    padding-top: 2.5rem;
   }
 
   .page-head {
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.75rem;
-    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
   }
 
-  .page-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--md-sys-color-primary);
+  .page-kicker {
     display: block;
-    margin-bottom: 0.35rem;
+    color: var(--forest);
+    margin-bottom: 0.4rem;
   }
 
   .page-head h1 {
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.5rem;
+    font-size: clamp(1.9rem, 3.8vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 0.45rem;
   }
 
   .page-head p {
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 1.05rem;
+    color: var(--ink-secondary);
+    font-size: 1rem;
   }
 
-  .post-feed {
+  .post-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
   }
 
   .empty-msg {
-    color: var(--md-sys-color-outline);
-    padding: 2.5rem 0;
+    font-family: var(--font-mono);
+    color: var(--ink-muted);
+    padding: 2rem 0;
   }
 
-  @media (max-width: 1024px) {
-    .post-feed {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 640px) {
-    .page-wrap {
-      padding-top: 2rem;
-    }
-
-    .post-feed {
+  @media (max-width: 760px) {
+    .post-grid {
       grid-template-columns: 1fr;
-      gap: 1.25rem;
     }
   }
 </style>

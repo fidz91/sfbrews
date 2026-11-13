@@ -18,194 +18,108 @@ interface Props {
 const { experiment } = Astro.props;
 ---
 
-<section class="m3-exp-card">
-  <div class="exp-header">
-    <div class="exp-title-group">
-      <span class="exp-badge-icon">
-        <span class="material-symbols-outlined filled" aria-hidden="true">science</span>
-      </span>
-      <div>
-        <span class="exp-kicker">Split-Batch Lab Summary</span>
-        <h3 class="exp-variable">{experiment.variableTested}</h3>
-      </div>
+<section class="exp-sheet">
+  <div class="exp-head">
+    <div>
+      <span class="mono-label">Split-Batch Experiment</span>
+      <h3 class="exp-title">{experiment.variableTested}</h3>
     </div>
 
-    <span class:list={['sig-pill', { significant: experiment.significantResult }]}>
-      <span class="material-symbols-outlined" aria-hidden="true">
-        {experiment.significantResult ? 'verified' : 'balance'}
-      </span>
+    <span class:list={['sig-badge', { significant: experiment.significantResult }]}>
       {experiment.pValueSummary}
     </span>
   </div>
 
-  <div class="exp-arms-grid">
-    <div class="exp-arm">
-      <span class="arm-label">Control Arm</span>
+  <div class="exp-arms">
+    <div class="arm-box">
+      <span class="mono-label">Control</span>
       <p class="arm-val">{experiment.controlBatch}</p>
     </div>
-    <div class="exp-arm experimental">
-      <span class="arm-label">Experimental Arm</span>
+    <div class="arm-box experimental">
+      <span class="mono-label">Experimental</span>
       <p class="arm-val">{experiment.experimentalBatch}</p>
     </div>
   </div>
 
-  <div class="exp-footer">
-    <div class="exp-stat-row">
-      <span class="material-symbols-outlined" aria-hidden="true">groups</span>
-      <span><strong>Triangle Test Panel:</strong> {experiment.panelSize}</span>
-    </div>
-    <p class="exp-verdict">
-      <strong>Verdict:</strong> {experiment.verdict}
-    </p>
+  <div class="exp-verdict">
+    <p><strong>Panel ({experiment.panelSize}):</strong> {experiment.verdict}</p>
   </div>
 </section>
 
 <style>
-  .m3-exp-card {
-    background-color: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    padding: 1.75rem;
-    margin: 0 0 2.25rem;
-    box-shadow: var(--md-sys-elevation-1);
+  .exp-sheet {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin: 0 0 2rem;
+    background-color: var(--bg);
   }
 
-  .exp-header {
+  .exp-head {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 1.25rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.35rem;
-  }
-
-  .exp-title-group {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-  }
-
-  .exp-badge-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: var(--md-sys-shape-corner-medium);
-    background-color: var(--md-sys-color-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .exp-kicker {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--md-sys-color-outline);
-  }
-
-  .exp-variable {
-    font-family: var(--font-display);
-    font-size: 1.18rem;
-    font-weight: 700;
-    color: var(--md-sys-color-on-surface);
-    margin: 0.15rem 0 0;
-  }
-
-  .sig-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.38rem 0.9rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    color: var(--md-sys-color-on-surface-variant);
-    font-family: var(--font-mono);
-    font-size: 0.76rem;
-    font-weight: 700;
-  }
-
-  .sig-pill.significant {
-    background-color: var(--md-sys-color-secondary-container);
-    border-color: var(--md-sys-color-secondary);
-    color: var(--md-sys-color-on-secondary-container);
-  }
-
-  .sig-pill .material-symbols-outlined {
-    font-size: 16px;
-  }
-
-  .exp-arms-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    margin-bottom: 1.15rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
   }
 
-  .exp-arm {
-    background-color: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-sys-shape-corner-large);
-    padding: 1.05rem 1.2rem;
+  .exp-title {
+    font-size: 1.1rem;
+    margin-top: 0.25rem;
   }
 
-  .exp-arm.experimental {
-    border-color: var(--md-sys-color-primary);
-  }
-
-  .arm-label {
-    display: block;
+  .sig-badge {
     font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--md-sys-color-outline);
-    margin-bottom: 0.3rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 0.28rem 0.7rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-strong);
+    color: var(--ink-secondary);
+    background-color: var(--bg-subtle);
   }
 
-  .exp-arm.experimental .arm-label {
-    color: var(--md-sys-color-primary);
+  .sig-badge.significant {
+    border-color: var(--forest);
+    background-color: var(--forest-tint);
+    color: var(--forest);
+  }
+
+  .exp-arms {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .arm-box {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.8rem 0.95rem;
+    background-color: var(--bg-subtle);
+  }
+
+  .arm-box.experimental {
+    border-color: var(--forest);
+    background-color: var(--bg);
   }
 
   .arm-val {
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--md-sys-color-on-surface);
-    margin: 0;
-  }
-
-  .exp-footer {
-    background-color: var(--md-sys-color-surface-container);
-    border-radius: var(--md-sys-shape-corner-large);
-    padding: 1.1rem 1.25rem;
-    font-size: 0.92rem;
-    color: var(--md-sys-color-on-surface-variant);
-  }
-
-  .exp-stat-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.45rem;
-    color: var(--md-sys-color-on-surface);
+    margin-top: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink);
   }
 
   .exp-verdict {
-    margin: 0;
-    line-height: 1.65;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-secondary);
   }
 
   @media (max-width: 640px) {
-    .m3-exp-card {
-      padding: 1.35rem;
-    }
-
-    .exp-arms-grid {
+    .exp-arms {
       grid-template-columns: 1fr;
     }
   }

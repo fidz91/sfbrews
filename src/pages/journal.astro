@@ -13,38 +13,33 @@ const allPosts = (await getCollection('posts'))
   title="Archive & Search — SFBrews"
   description="Browse and search all brewdays, recipes, experiments, competitions, and news."
 >
-  <div class="outer page-wrap">
-    <div class="inner">
-      <header class="page-head">
-        <span class="page-eyebrow">Cellar Archive</span>
-        <h1>Archive &amp; Search</h1>
-        <div class="filter-bar">
-          <div class="search-input-wrap">
-            <span class="material-symbols-outlined search-icon">search</span>
-            <input
-              type="search"
-              id="journal-search"
-              placeholder="Search recipes, hops, malts, or brewdays..."
-              aria-label="Search posts"
-            />
-          </div>
-          <div class="cat-pills" role="tablist">
-            <button class="cat-btn active" data-cat="all">All</button>
-            <button class="cat-btn" data-cat="brewday">Brewdays</button>
-            <button class="cat-btn" data-cat="recipe">Recipes</button>
-            <button class="cat-btn" data-cat="experiment">Experiments</button>
-            <button class="cat-btn" data-cat="competition">Competitions</button>
-            <button class="cat-btn" data-cat="news">Equipment &amp; News</button>
-          </div>
+  <div class="container page-wrap">
+    <header class="page-head">
+      <span class="mono-label page-kicker">Archive &amp; Search</span>
+      <h1>All Brew Logs</h1>
+      <div class="filter-bar">
+        <input
+          type="search"
+          id="journal-search"
+          placeholder="Search recipes, hops, malts, or brewdays..."
+          aria-label="Search posts"
+        />
+        <div class="cat-pills" role="tablist">
+          <button class="cat-btn active" data-cat="all" type="button">All</button>
+          <button class="cat-btn" data-cat="brewday" type="button">Brewdays</button>
+          <button class="cat-btn" data-cat="recipe" type="button">Recipes</button>
+          <button class="cat-btn" data-cat="experiment" type="button">Experiments</button>
+          <button class="cat-btn" data-cat="competition" type="button">Competitions</button>
+          <button class="cat-btn" data-cat="news" type="button">Equipment &amp; News</button>
         </div>
-      </header>
-
-      <div class="post-feed" id="journal-grid">
-        {allPosts.map((post) => <PostCard post={post} />)}
       </div>
+    </header>
 
-      <p id="empty-state" class="empty-msg" hidden>No matching articles found.</p>
+    <div class="post-grid" id="journal-grid">
+      {allPosts.map((post) => <PostCard post={post} />)}
     </div>
+
+    <p id="empty-state" class="empty-msg" hidden>No matching articles found.</p>
   </div>
 </BaseLayout>
 
@@ -52,7 +47,7 @@ const allPosts = (await getCollection('posts'))
   function initJournalSearch() {
     const searchInput = document.getElementById('journal-search') as HTMLInputElement | null;
     const catButtons = document.querySelectorAll<HTMLButtonElement>('.cat-btn');
-    const cards = document.querySelectorAll<HTMLElement>('#journal-grid .m3-post-card');
+    const cards = document.querySelectorAll<HTMLElement>('#journal-grid .post-card');
     const emptyState = document.getElementById('empty-state');
 
     let activeCat = 'all';
@@ -113,132 +108,96 @@ const allPosts = (await getCollection('posts'))
 
 <style>
   .page-wrap {
-    padding-top: 3rem;
-    padding-bottom: 2rem;
+    padding-top: 2.5rem;
   }
 
   .page-head {
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.75rem;
-    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
   }
 
-  .page-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--md-sys-color-primary);
+  .page-kicker {
     display: block;
-    margin-bottom: 0.35rem;
+    color: var(--forest);
+    margin-bottom: 0.4rem;
   }
 
   .page-head h1 {
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 1.25rem;
+    font-size: clamp(1.9rem, 3.8vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
   }
 
   .filter-bar {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-  }
-
-  .search-input-wrap {
-    position: relative;
-    max-width: 540px;
-    width: 100%;
-  }
-
-  .search-icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--md-sys-color-outline);
-    font-size: 1.15rem;
-    pointer-events: none;
+    gap: 0.9rem;
   }
 
   #journal-search {
     width: 100%;
-    padding: 0.78rem 1.15rem 0.78rem 2.75rem;
+    max-width: 480px;
+    padding: 0.65rem 0.9rem;
     font-family: var(--font-sans);
-    font-size: 0.94rem;
-    border: 1px solid var(--md-sys-color-outline);
-    border-radius: var(--md-sys-shape-corner-full);
-    background-color: var(--md-sys-color-surface-container-low);
-    color: var(--md-sys-color-on-surface);
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    font-size: 0.92rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background-color: var(--bg);
+    color: var(--ink);
   }
 
   #journal-search:focus {
     outline: none;
-    border: 2px solid var(--md-sys-color-primary);
-    background-color: var(--md-sys-color-surface-container-lowest);
+    border-color: var(--forest);
   }
 
   .cat-pills {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.45rem;
     flex-wrap: wrap;
   }
 
   .cat-btn {
-    background: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    height: 34px;
-    padding: 0 0.95rem;
-    border-radius: var(--md-sys-shape-corner-full);
-    font-family: var(--font-display);
-    font-size: 0.8rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 0.38rem 0.8rem;
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
     font-weight: 600;
-    color: var(--md-sys-color-on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
   }
 
   .cat-btn:hover {
-    border-color: var(--md-sys-color-primary);
-    background-color: var(--md-sys-color-surface-container-low);
-    color: var(--md-sys-color-on-surface);
+    border-color: var(--ink);
+    color: var(--ink);
   }
 
   .cat-btn.active {
-    background-color: var(--md-sys-color-secondary-container);
-    border-color: var(--md-sys-color-secondary);
-    color: var(--md-sys-color-on-secondary-container);
-    font-weight: 700;
+    background-color: var(--forest-tint);
+    border-color: var(--forest);
+    color: var(--forest);
   }
 
-  .post-feed {
+  .post-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
   }
 
   .empty-msg {
-    color: var(--md-sys-color-outline);
-    padding: 2.5rem 0;
+    font-family: var(--font-mono);
+    color: var(--ink-muted);
+    padding: 2rem 0;
   }
 
-  @media (max-width: 1024px) {
-    .post-feed {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 640px) {
-    .page-wrap {
-      padding-top: 2rem;
-    }
-
-    .post-feed {
+  @media (max-width: 760px) {
+    .post-grid {
       grid-template-columns: 1fr;
-      gap: 1.25rem;
     }
   }
 </style>
