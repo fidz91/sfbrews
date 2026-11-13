@@ -3,7 +3,7 @@
    Newsprint (#F4F0E6), almost-black ink (#111311), forest green (#1B4D2E)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
   /* Core Palette */
@@ -19,7 +19,7 @@
   --border-strong: #bfb7a5;
 
   /* Typography */
-  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Caprasimo', Georgia, serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
@@ -88,9 +88,9 @@ h5,
 h6 {
   font-family: var(--font-display);
   color: var(--ink);
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.2;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.015em;
 }
 
 /* ==========================================================================
