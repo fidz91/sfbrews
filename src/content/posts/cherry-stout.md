@@ -1,6 +1,6 @@
 ---
-title: "Oatmeal Stout — Recipe & Brewday"
-subtitle: "Recipe formulation and brewday log for our smooth, roast-forward Oatmeal Stout."
+title: "Cherry Stout — Recipe & Brewday"
+subtitle: "Placeholder for Christmas Cherry Stout recipe"
 description: "Recipe specifications, grist bill, hop schedule, and grain-to-glass brewday notes for our Oatmeal Stout (ready to fill in)."
 pubDate: 2026-10-12
 category: "recipe"
