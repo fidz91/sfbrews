@@ -17,26 +17,25 @@ const allPosts = (await getCollection('posts'))
   <div class="container page-main">
     <!-- Compact Editorial Header + Logo -->
     <header class="editorial-hero">
-      <div class="editorial-hero-copy">
-        <span class="mono-label hero-kicker">Homebrewing Journal</span>
-        <h1 class="hero-title">S.F.Brews</h1>
-        <p class="hero-bio">
-          Brewday and recipe writeups, competitions, experiments and everything beer related.
-        </p>
-      </div>
-
       {
         homeHeroImage && (
           <div class="editorial-hero-media">
             <img
               class="hero-img"
               src={homeHeroImage}
-              alt="S.F.Brews Logo"
+              alt="S F Brews"
               loading="eager"
             />
           </div>
         )
       }
+
+      <div class="editorial-hero-copy">
+        <span class="mono-label hero-kicker">Homebrewing Journal</span>
+        <p class="hero-bio">
+          Brewday and recipe writeups, competitions, experiments and everything beer related.
+        </p>
+      </div>
     </header>
 
     <!-- Slim 1-Row Taplist / Fermenting / Next Up Status Bar -->
@@ -113,7 +112,7 @@ const allPosts = (await getCollection('posts'))
 
   .editorial-hero {
     display: grid;
-    grid-template-columns: 1.25fr 1fr;
+    grid-template-columns: auto 1fr;
     gap: 2rem;
     align-items: center;
     padding-bottom: 2rem;
@@ -127,14 +126,6 @@ const allPosts = (await getCollection('posts'))
     margin-bottom: 0.45rem;
   }
 
-  .hero-title {
-    font-size: clamp(2.1rem, 4.2vw, 2.85rem);
-    font-weight: 400;
-    letter-spacing: -0.015em;
-    color: var(--ink);
-    margin-bottom: 0.55rem;
-  }
-
   .hero-bio {
     font-size: 1rem;
     line-height: 1.6;
@@ -143,10 +134,10 @@ const allPosts = (await getCollection('posts'))
   }
 
   .editorial-hero-media {
-    width: 100%;
-    max-width: 240px;
+    width: 220px;
+    max-width: 100%;
     aspect-ratio: 1 / 1;
-    justify-self: end;
+    justify-self: start;
     border-radius: var(--radius);
     overflow: hidden;
   }
@@ -215,11 +206,20 @@ const allPosts = (await getCollection('posts'))
     .editorial-hero {
       grid-template-columns: 1fr;
       gap: 1.25rem;
+      text-align: center;
     }
 
     .editorial-hero-media {
-      justify-self: start;
-      max-width: 200px;
+      justify-self: center;
+      width: 180px;
+    }
+
+    .editorial-hero-copy {
+      justify-self: center;
+    }
+
+    .hero-bio {
+      margin: 0 auto;
     }
 
     .post-grid {
