@@ -57,15 +57,19 @@ export const ACTIVE_TAPS: TapEntry[] = [
 
 export const ACTIVE_FERMENTERS: FermenterEntry[] = [
   // Currently empty — add an entry here when a batch is in the fermenter
+  {
+    tapNumber: 2,
+    tapLabel: 'FERMENTING',
+    name: 'Cherry Stout',
+    style: 'Fruited Stout',
+    bjcpCode: '',
+    srm: 48.5,
+    tastingNotes: 'Vigorous fermentation with S-04',
+    postSlug: 'cherry-stout',
+  },
 ];
 
 export const UPCOMING_BREWS: UpcomingEntry[] = [
-  {
-    name: 'Christmas Stout',
-    style: 'Black Forest Gateaux Stout',
-    srm: 48.0,
-    notes: 'Planned upcoming brew',
-  },
   {
     name: 'Hoppy Pilsner',
     style: 'Double Dry Hopped Pilsner',
