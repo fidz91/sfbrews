@@ -1,6 +1,5 @@
 # build output
 dist/
-public/halftones/
 
 # generated types
 .astro/

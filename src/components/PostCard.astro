@@ -2,7 +2,6 @@
 import type { CollectionEntry } from 'astro:content';
 import { CATEGORY_META, withBase } from '../utils/srm';
 import { resolvePostHeroImage } from '../utils/images';
-import { getHalftoneImage } from '../utils/halftone';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -22,7 +21,6 @@ const {
 } = post.data;
 
 const resolvedHeroImage = resolvePostHeroImage(post);
-const halftoneHeroImage = await getHalftoneImage(resolvedHeroImage);
 const meta = CATEGORY_META[category];
 
 const formattedDate = pubDate.toLocaleDateString('en-US', {
@@ -40,25 +38,14 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 >
   {
     resolvedHeroImage && (
-      <a class="post-card-media zine-media" href={withBase(`/posts/${post.slug}`)} tabindex="-1" aria-hidden="true">
+      <a class="post-card-media" href={withBase(`/posts/${post.slug}`)} tabindex="-1" aria-hidden="true">
         <img
-          class="post-card-img zine-img"
+          class="post-card-img"
           src={resolvedHeroImage}
           alt={title}
           loading={large ? 'eager' : 'lazy'}
           transition:name={`post-img-${post.slug}`}
         />
-        {
-          halftoneHeroImage && (
-            <img
-              class="zine-halftone-img"
-              src={halftoneHeroImage}
-              alt=""
-              aria-hidden="true"
-              loading={large ? 'eager' : 'lazy'}
-            />
-          )
-        }
       </a>
     )
   }

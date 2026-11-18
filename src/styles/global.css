@@ -94,48 +94,6 @@ h6 {
 }
 
 /* ==========================================================================
-   CMYK Newsprint Halftone Image Treatment
-   Renders 4-color CMYK halftone overlay on newsprint, revealing crisp photo on hover
-   ========================================================================== */
-
-.zine-media {
-  position: relative;
-  overflow: hidden;
-  background-color: var(--bg);
-}
-
-.zine-img {
-  transition: transform 0.35s ease;
-}
-
-.zine-halftone-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 1;
-  transition: opacity 0.28s ease;
-}
-
-.zine-media:hover .zine-halftone-img,
-.zine-media:focus-within .zine-halftone-img,
-.post-card:hover .zine-halftone-img,
-.post-card:focus-within .zine-halftone-img {
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .zine-halftone-img,
-  .zine-img {
-    transition: none;
-  }
-}
-
-/* ==========================================================================
    Layout Containers
    ========================================================================== */
 

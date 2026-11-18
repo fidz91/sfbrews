@@ -32,8 +32,7 @@ export const SITE_IMAGES = {
    *Tip: Drop `_images/hero.jpg` (or `.png`/`.webp`) into `_images/` to override automatically,
    * or change this string to a filename in `_images/` or a URL.
    */
-  homeHero:
-    'https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?auto=format&fit=crop&w=2000&q=80',
+  homeHero: '/images/sfbrews_logo.jpg',
 
   /**
    * Optional banner image for the About page (`/about`).
